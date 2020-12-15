@@ -70,7 +70,7 @@ CREATE TABLE IF NOT EXISTS neighborhoods
     sqmiles             NUMERIC(5, 2)   NOT NULL,
     lat                 NUMERIC(17, 14) NOT NULL,
     lng                 NUMERIC(17, 14) NOT NULL,
-    coords              TEXT            NOT NULL,
+    coords              TEXT            NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS blocks
