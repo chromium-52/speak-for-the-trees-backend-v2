@@ -71,7 +71,7 @@ CREATE TABLE IF NOT EXISTS neighborhoods
     lat                 NUMERIC(17, 14) NOT NULL,
     lng                 NUMERIC(17, 14) NOT NULL,
     coords              TEXT            NOT NULL,
-)
+);
 
 CREATE TABLE IF NOT EXISTS blocks
 (
