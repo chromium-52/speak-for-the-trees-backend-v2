@@ -55,10 +55,11 @@ CREATE TABLE IF NOT EXISTS goals
 
 CREATE TABLE IF NOT EXISTS users_teams
 (
-    user_id     INT NOT NULL PRIMARY KEY,
-    team_id     INT NOT NULL PRIMARY KEY,
+    user_id     INT NOT NULL,
+    team_id     INT NOT NULL,
     team_role   INT NOT NULL,
 
+    PRIMARY KEY(user_id, team_id),
     CONSTRAINT users_teams_users_fk FOREIGN KEY (user_id) REFERENCES users (id),
     CONSTRAINT users_teams_teams_fk FOREIGN KEY (team_id) REFERENCES teams (id)
 );
