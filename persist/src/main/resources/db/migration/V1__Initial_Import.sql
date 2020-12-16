@@ -103,7 +103,7 @@ CREATE TABLE IF NOT EXISTS reservation_owner
     user_id         INT,
     team_id         INT,
 
-    CONSTRAINT check_owner (user_id IS NOT NULL OR team_id IS NOT NULL),
+    CONSTRAINT check_owner CHECK (user_id IS NOT NULL OR team_id IS NOT NULL),
     CONSTRAINT reservation_owener_reservations FOREIGN KEY (reservation_id) REFERENCES reservations (id),
     CONSTRAINT reservation_owener_users FOREIGN KEY (user_id) REFERENCES users (id),
     CONSTRAINT reservation_owener_teams FOREIGN KEY (team_id) REFERENCES teams (id)
