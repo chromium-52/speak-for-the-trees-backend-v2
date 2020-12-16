@@ -98,6 +98,16 @@ CREATE TABLE IF NOT EXISTS reservations
     CONSTRAINT reservations_blocks_fk FOREIGN KEY (block_id) REFERENCES blocks (id)
 );
 
+CREATE TABLE IF NOT EXISTS reservations_teams
+(
+    reservation_id INT NOT NULL,
+    team_id INT NOT NULL,
+
+    PRIMARY KEY(reservation_id, team_id),
+    CONSTRAINT reservations_teams_reservations_fk FOREIGN KEY (reservation_id) REFERENCES reservations (id),
+    CONSTRAINT reservations_teams_teams_fk FOREIGN KEY (team_id) REFERENCES teams (id)
+);
+
 /* [jooq ignore start] */
 CREATE OR REPLACE FUNCTION func_set_updated_at_timestamp()
     RETURNS TRIGGER AS
