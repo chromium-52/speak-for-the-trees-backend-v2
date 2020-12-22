@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users
     first_name      VARCHAR(36) NOT NULL,
     last_name       VARCHAR(36) NOT NULL,
     username        VARCHAR(36) NOT NULL,
-    privilege_level INT         NOT NULL DEFAULT 0,
+    privilege_level VARCHAR(10) NOT NULL DEFAULT '0',
     password_hash   BYTEA       NOT NULL
 );
 
@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS goals
     id              SERIAL      NOT NULL PRIMARY KEY,
     team_id         INT         NOT NULL,
     goal            INT         NOT NULL,
+    start_at        TIMESTAMP   NOT NULL,
     complete_by     TIMESTAMP   NOT NULL,
     completed_at    TIMESTAMP,
 
@@ -55,9 +56,9 @@ CREATE TABLE IF NOT EXISTS goals
 
 CREATE TABLE IF NOT EXISTS users_teams
 (
-    user_id     INT NOT NULL,
-    team_id     INT NOT NULL,
-    team_role   INT NOT NULL,
+    user_id     INT         NOT NULL,
+    team_id     INT         NOT NULL,
+    team_role   VARCHAR(10) NOT NULL,
 
     PRIMARY KEY(user_id, team_id),
     CONSTRAINT users_teams_users_fk FOREIGN KEY (user_id) REFERENCES users (id),
@@ -89,9 +90,8 @@ CREATE TABLE IF NOT EXISTS reservations
 (
     id              SERIAL      NOT NULL PRIMARY KEY,
     block_id        INT         NOT NULL,
-    reserved_at     TIMESTAMP   NOT NULL,
-    completed_at    TIMESTAMP,
-    deleted         BOOLEAN     NOT NULL DEFAULT FALSE,
+    action_type     VARCHAR(20) NOT NULL,
+    performed_at    TIMESTAMP   NOT NULL,
 
     CONSTRAINT reservations_blocks_fk FOREIGN KEY (block_id) REFERENCES blocks (id)
 );
