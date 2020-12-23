@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users
     first_name      VARCHAR(36) NOT NULL,
     last_name       VARCHAR(36) NOT NULL,
     username        VARCHAR(36) NOT NULL,
-    privilege_level VARCHAR(10) NOT NULL DEFAULT '0',
+    privilege_level VARCHAR(20) NOT NULL DEFAULT 'Member',
     password_hash   BYTEA       NOT NULL
 );
 
