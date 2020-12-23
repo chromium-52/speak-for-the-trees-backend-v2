@@ -90,23 +90,15 @@ CREATE TABLE IF NOT EXISTS reservations
 (
     id              SERIAL      NOT NULL PRIMARY KEY,
     block_id        INT         NOT NULL,
+    user_id         INT,
+    team_id         INT,
     action_type     VARCHAR(20) NOT NULL,
     performed_at    TIMESTAMP   NOT NULL,
 
-    CONSTRAINT reservations_blocks_fk FOREIGN KEY (block_id) REFERENCES blocks (id)
-);
-
-CREATE TABLE IF NOT EXISTS reservation_owner
-(
-    id              SERIAL  NOT NULL PRIMARY KEY,
-    reservation_id  INT     NOT NULL,
-    user_id         INT,
-    team_id         INT,
-
     CONSTRAINT check_owner CHECK (user_id IS NOT NULL OR team_id IS NOT NULL),
-    CONSTRAINT reservation_owener_reservations FOREIGN KEY (reservation_id) REFERENCES reservations (id),
-    CONSTRAINT reservation_owener_users FOREIGN KEY (user_id) REFERENCES users (id),
-    CONSTRAINT reservation_owener_teams FOREIGN KEY (team_id) REFERENCES teams (id)
+    CONSTRAINT reservations_blocks_fk FOREIGN KEY (block_id) REFERENCES blocks (id),
+    CONSTRAINT reservation_users_fk FOREIGN KEY (user_id) REFERENCES users (id),
+    CONSTRAINT reservation_teams_fk FOREIGN KEY (team_id) REFERENCES teams (id)
 );
 
 /* [jooq ignore start] */
