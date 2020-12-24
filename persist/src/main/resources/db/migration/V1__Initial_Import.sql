@@ -72,7 +72,7 @@ CREATE TABLE IF NOT EXISTS neighborhoods
     sqmiles             NUMERIC(5, 2)   NOT NULL,
     lat                 NUMERIC(17, 14) NOT NULL,
     lng                 NUMERIC(17, 14) NOT NULL,
-    coords              TEXT            NOT NULL
+    geometry            TEXT            NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS blocks
@@ -81,7 +81,7 @@ CREATE TABLE IF NOT EXISTS blocks
     neighborhood_id INT             NOT NULL,
     lat             NUMERIC(17, 14) NOT NULL,
     lng             NUMERIC(17, 14) NOT NULL,
-    coords          TEXT            NOT NULL,
+    geometry        TEXT            NOT NULL,
 
     CONSTRAINT blocks_neighborhood_fk FOREIGN KEY (neighborhood_id) REFERENCES neighborhoods (id)
 );
