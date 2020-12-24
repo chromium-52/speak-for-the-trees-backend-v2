@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS users
     first_name      VARCHAR(36) NOT NULL,
     last_name       VARCHAR(36) NOT NULL,
     username        VARCHAR(36) NOT NULL,
-    privilege_level INT         NOT NULL DEFAULT 0,
+    privilege_level VARCHAR(20) NOT NULL DEFAULT 'standard',
     password_hash   BYTEA       NOT NULL
 );
 
@@ -47,6 +47,7 @@ CREATE TABLE IF NOT EXISTS goals
     id              SERIAL      NOT NULL PRIMARY KEY,
     team_id         INT         NOT NULL,
     goal            INT         NOT NULL,
+    start_at        TIMESTAMP   NOT NULL,
     complete_by     TIMESTAMP   NOT NULL,
     completed_at    TIMESTAMP,
 
@@ -55,9 +56,9 @@ CREATE TABLE IF NOT EXISTS goals
 
 CREATE TABLE IF NOT EXISTS users_teams
 (
-    user_id     INT NOT NULL,
-    team_id     INT NOT NULL,
-    team_role   INT NOT NULL,
+    user_id     INT         NOT NULL,
+    team_id     INT         NOT NULL,
+    team_role   VARCHAR(10) NOT NULL,
 
     PRIMARY KEY(user_id, team_id),
     CONSTRAINT users_teams_users_fk FOREIGN KEY (user_id) REFERENCES users (id),
@@ -71,7 +72,7 @@ CREATE TABLE IF NOT EXISTS neighborhoods
     sqmiles             NUMERIC(5, 2)   NOT NULL,
     lat                 NUMERIC(17, 14) NOT NULL,
     lng                 NUMERIC(17, 14) NOT NULL,
-    coords              TEXT            NOT NULL
+    geometry            TEXT            NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS blocks
@@ -80,7 +81,7 @@ CREATE TABLE IF NOT EXISTS blocks
     neighborhood_id INT             NOT NULL,
     lat             NUMERIC(17, 14) NOT NULL,
     lng             NUMERIC(17, 14) NOT NULL,
-    coords          TEXT            NOT NULL,
+    geometry        TEXT            NOT NULL,
 
     CONSTRAINT blocks_neighborhood_fk FOREIGN KEY (neighborhood_id) REFERENCES neighborhoods (id)
 );
@@ -89,24 +90,15 @@ CREATE TABLE IF NOT EXISTS reservations
 (
     id              SERIAL      NOT NULL PRIMARY KEY,
     block_id        INT         NOT NULL,
-    reserved_at     TIMESTAMP   NOT NULL,
-    completed_at    TIMESTAMP,
-    deleted         BOOLEAN     NOT NULL DEFAULT FALSE,
-
-    CONSTRAINT reservations_blocks_fk FOREIGN KEY (block_id) REFERENCES blocks (id)
-);
-
-CREATE TABLE IF NOT EXISTS reservation_owner
-(
-    id              SERIAL  NOT NULL PRIMARY KEY,
-    reservation_id  INT     NOT NULL,
     user_id         INT,
     team_id         INT,
+    action_type     VARCHAR(20) NOT NULL,
+    performed_at    TIMESTAMP   NOT NULL,
 
     CONSTRAINT check_owner CHECK (user_id IS NOT NULL OR team_id IS NOT NULL),
-    CONSTRAINT reservation_owener_reservations FOREIGN KEY (reservation_id) REFERENCES reservations (id),
-    CONSTRAINT reservation_owener_users FOREIGN KEY (user_id) REFERENCES users (id),
-    CONSTRAINT reservation_owener_teams FOREIGN KEY (team_id) REFERENCES teams (id)
+    CONSTRAINT reservations_blocks_fk FOREIGN KEY (block_id) REFERENCES blocks (id),
+    CONSTRAINT reservation_users_fk FOREIGN KEY (user_id) REFERENCES users (id),
+    CONSTRAINT reservation_teams_fk FOREIGN KEY (team_id) REFERENCES teams (id)
 );
 
 /* [jooq ignore start] */

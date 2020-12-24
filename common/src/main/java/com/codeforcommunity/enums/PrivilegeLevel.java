@@ -2,7 +2,8 @@ package com.codeforcommunity.enums;
 
 public enum PrivilegeLevel {
   STANDARD("standard"),
-  ADMIN("admin");
+  ADMIN("admin"),
+  SUPER_ADMIN("superAdmin");
 
   private String name;
 

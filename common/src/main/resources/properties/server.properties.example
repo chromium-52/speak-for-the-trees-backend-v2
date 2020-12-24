@@ -12,7 +12,7 @@ aws_s3_upload_dir = placeholder_s3_dir_name
 # DATABASE PROPERTIES
 # =======================================================================================================
 database_driver = org.postgresql.Driver
-database_url = jdbc:postgresql://localhost:5432/backend-scaffold?autoreconnect=true
+database_url = jdbc:postgresql://localhost:5432/speak-for-the-trees?autoreconnect=true
 database_username = postgres
 database_password = placeholder_db_password
 
@@ -20,9 +20,9 @@ database_password = placeholder_db_password
 # =======================================================================================================
 # EMAIL PROPERTIES
 # =======================================================================================================
-email_send_email = placeholder_email
-email_send_password = placeholder_email_password
-email_sender_name = placeholder_sender
+email_send_email = trees@sfttbos.org
+email_send_password = gmail-App-Password
+email_sender_name = Speak For The Trees Boston
 email_host = smtp.gmail.com
 email_port = 465
 email_should_send = false
@@ -37,7 +37,7 @@ email_subject_account_deleted = Your Account Has Been Deleted
 # =======================================================================================================
 # FRONTEND PROPERTIES
 # =======================================================================================================
-frontend_base_url = placeholder_url
+frontend_base_url = https://app.sfttbos.org
 frontend_password_reset_route = /forgot-password-reset/%s/
 
 
