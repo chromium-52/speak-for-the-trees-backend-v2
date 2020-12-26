@@ -35,7 +35,6 @@ public class ApiRouter implements IRouter {
 
     router.mountSubRouter("/user", authRouter.initializeRouter(vertx));
     router.mountSubRouter("/protected", defineProtectedRoutes(vertx));
-    router.mountSubRouter("/protected", defineProtectedRoutes(vertx));
 
     return router;
   }
