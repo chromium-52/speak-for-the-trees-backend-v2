@@ -123,6 +123,16 @@
                   <nullability>NOT_NULL</nullability>
                 </forcedType>
 
+                <!-- Enum converter for reservation actions -->
+                <forcedType>
+                  <userType>com.codeforcommunity.enums.ReservationAction</userType>
+                  <enumConverter>true</enumConverter>
+
+                  <includeExpression>.*\.reservation_action</includeExpression>
+                  <includeTypes>.*</includeTypes>
+                  <nullability>NOT_NULL</nullability>
+                </forcedType>
+
                 <!-- Enum converter for verification keys -->
                 <forcedType>
                   <userType>com.codeforcommunity.enums.VerificationKeyType</userType>
