@@ -18,97 +18,97 @@ import io.vertx.ext.web.RoutingContext;
 
 public class ReservationRouter implements IRouter {
 
-    private final IReservationProcessor processor;
+  private final IReservationProcessor processor;
 
-    public ReservationRouter(IReservationProcessor processor) {
-        this.processor = processor;
-    }
+  public ReservationRouter(IReservationProcessor processor) {
+    this.processor = processor;
+  }
 
-    @Override
-    public Router initializeRouter(Vertx vertx) {
-        Router router = Router.router(vertx);
+  @Override
+  public Router initializeRouter(Vertx vertx) {
+    Router router = Router.router(vertx);
 
-        registerMakeReservation(router);
-        registerCompleteReservation(router);
-        registerReleaseReservation(router);
-        registerUncompleteReservation(router);
-        registerMarkForQA(router);
+    registerMakeReservation(router);
+    registerCompleteReservation(router);
+    registerReleaseReservation(router);
+    registerUncompleteReservation(router);
+    registerMarkForQA(router);
 
-        return router;
-    }
+    return router;
+  }
 
-    private void registerMakeReservation(Router router) {
-        Route makeReservationRoute = router.post("/reserve");
-        makeReservationRoute.handler(this::handleMakeReservationRoute);
-    }
+  private void registerMakeReservation(Router router) {
+    Route makeReservationRoute = router.post("/reserve");
+    makeReservationRoute.handler(this::handleMakeReservationRoute);
+  }
 
-    private void registerCompleteReservation(Router router) {
-        Route completeReservationRoute = router.post("/complete");
-        completeReservationRoute.handler(this::handleCompleteReservationRoute);
-    }
+  private void registerCompleteReservation(Router router) {
+    Route completeReservationRoute = router.post("/complete");
+    completeReservationRoute.handler(this::handleCompleteReservationRoute);
+  }
 
-    private void registerReleaseReservation(Router router) {
-        Route releaseReservationRoute = router.post("/release");
-        releaseReservationRoute.handler(this::handleReleaseReservationRoute);
-    }
+  private void registerReleaseReservation(Router router) {
+    Route releaseReservationRoute = router.post("/release");
+    releaseReservationRoute.handler(this::handleReleaseReservationRoute);
+  }
 
-    private void registerUncompleteReservation(Router router) {
-        Route uncompleteReservationRoute = router.post("/uncomplete");
-        uncompleteReservationRoute.handler(this::handleUncompleteReservationRoute);
-    }
+  private void registerUncompleteReservation(Router router) {
+    Route uncompleteReservationRoute = router.post("/uncomplete");
+    uncompleteReservationRoute.handler(this::handleUncompleteReservationRoute);
+  }
 
-    private void registerMarkForQA(Router router) {
-        Route markForQARoute = router.post("/qa");
-        markForQARoute.handler(this::handleMarkForQARoute);
-    }
+  private void registerMarkForQA(Router router) {
+    Route markForQARoute = router.post("/qa");
+    markForQARoute.handler(this::handleMarkForQARoute);
+  }
 
-    private void handleMakeReservationRoute(RoutingContext ctx) {
-        JWTData userData = ctx.get("jwt_data");
-        MakeReservationRequest makeReservationRequest =
-                RestFunctions.getJsonBodyAsClass(ctx, MakeReservationRequest.class);
+  private void handleMakeReservationRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    MakeReservationRequest makeReservationRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, MakeReservationRequest.class);
 
-        processor.makeReservation(userData, makeReservationRequest);
+    processor.makeReservation(userData, makeReservationRequest);
 
-        end(ctx.response(), 200);
-    }
+    end(ctx.response(), 200);
+  }
 
-    private void handleCompleteReservationRoute(RoutingContext ctx) {
-        JWTData userData = ctx.get("jwt_data");
-        CompleteReservationRequest completeReservationRequest =
-                RestFunctions.getJsonBodyAsClass(ctx, CompleteReservationRequest.class);
+  private void handleCompleteReservationRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    CompleteReservationRequest completeReservationRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, CompleteReservationRequest.class);
 
-        processor.completeReservation(userData, completeReservationRequest);
+    processor.completeReservation(userData, completeReservationRequest);
 
-        end(ctx.response(), 200);
-    }
+    end(ctx.response(), 200);
+  }
 
-    private void handleReleaseReservationRoute(RoutingContext ctx) {
-        JWTData userData = ctx.get("jwt_data");
-        ReleaseReservationRequest releaseReservationRequest =
-                RestFunctions.getJsonBodyAsClass(ctx, ReleaseReservationRequest.class);
+  private void handleReleaseReservationRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    ReleaseReservationRequest releaseReservationRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, ReleaseReservationRequest.class);
 
-        processor.releaseReservation(userData, releaseReservationRequest);
+    processor.releaseReservation(userData, releaseReservationRequest);
 
-        end(ctx.response(), 200);
-    }
+    end(ctx.response(), 200);
+  }
 
-    private void handleUncompleteReservationRoute(RoutingContext ctx) {
-        JWTData userData = ctx.get("jwt_data");
-        UncompleteReservationRequest uncompleteReservationRequest =
-                RestFunctions.getJsonBodyAsClass(ctx, UncompleteReservationRequest.class);
+  private void handleUncompleteReservationRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    UncompleteReservationRequest uncompleteReservationRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, UncompleteReservationRequest.class);
 
-        processor.uncompleteReservation(userData, uncompleteReservationRequest);
+    processor.uncompleteReservation(userData, uncompleteReservationRequest);
 
-        end(ctx.response(), 200);
-    }
+    end(ctx.response(), 200);
+  }
 
-    private void handleMarkForQARoute(RoutingContext ctx) {
-        JWTData userData = ctx.get("jwt_data");
-        MarkForQARequest markForQARequest =
-                RestFunctions.getJsonBodyAsClass(ctx, MarkForQARequest.class);
+  private void handleMarkForQARoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    MarkForQARequest markForQARequest =
+        RestFunctions.getJsonBodyAsClass(ctx, MarkForQARequest.class);
 
-        processor.markForQA(userData, markForQARequest);
+    processor.markForQA(userData, markForQARequest);
 
-        end(ctx.response(), 200);
-    }
+    end(ctx.response(), 200);
+  }
 }
