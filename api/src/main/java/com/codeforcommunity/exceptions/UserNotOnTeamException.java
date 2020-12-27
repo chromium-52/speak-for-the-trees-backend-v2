@@ -5,25 +5,25 @@ import io.vertx.ext.web.RoutingContext;
 
 public class UserNotOnTeamException extends HandledException {
 
-    private int userId;
-    private int teamId;
+  private int userId;
+  private int teamId;
 
-    public UserNotOnTeamException(int userId, int teamId) {
-        super();
-        this.userId = userId;
-        this.teamId = teamId;
-    }
+  public UserNotOnTeamException(int userId, int teamId) {
+    super();
+    this.userId = userId;
+    this.teamId = teamId;
+  }
 
-    public int getUserId() {
-        return userId;
-    }
+  public int getUserId() {
+    return userId;
+  }
 
-    public int getTeamId() {
-        return teamId;
-    }
+  public int getTeamId() {
+    return teamId;
+  }
 
-    @Override
-    public void callHandler(FailureHandler handler, RoutingContext ctx) {
-        handler.handleUserNotOnTeam(ctx, this);
-    }
+  @Override
+  public void callHandler(FailureHandler handler, RoutingContext ctx) {
+    handler.handleUserNotOnTeam(ctx, this);
+  }
 }

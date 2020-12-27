@@ -70,8 +70,7 @@ public class FailureHandler {
   }
 
   public void handleTeamDoesNotExist(RoutingContext ctx, TeamDoesNotExistException exception) {
-    String message =
-            String.format("No team with id <%d> exists", exception.getTeamId());
+    String message = String.format("No team with id <%d> exists", exception.getTeamId());
     end(ctx, message, 400);
   }
 
@@ -81,7 +80,8 @@ public class FailureHandler {
   }
 
   public void handleBlockNotComplete(RoutingContext ctx, BlockNotCompleteException exception) {
-    String message = String.format("Status of block id <%d> is not complete", exception.getBlockId());
+    String message =
+        String.format("Status of block id <%d> is not complete", exception.getBlockId());
     end(ctx, message, 400);
   }
 
@@ -89,14 +89,16 @@ public class FailureHandler {
     String message = String.format("Status of block id <%d> is not open", exception.getBlockId());
     end(ctx, message, 400);
   }
+
   public void handleBlockNotReserved(RoutingContext ctx, BlockNotReservedException exception) {
-    String message = String.format("Block <%d> is not reserved by this user", exception.getBlockId());
+    String message =
+        String.format("Block <%d> is not reserved by this user", exception.getBlockId());
     end(ctx, message, 400);
   }
 
   public void handleUserNotOnTeam(RoutingContext ctx, UserNotOnTeamException e) {
     String message =
-            String.format("The user <%d> is not on a team with id <%d>", e.getUserId(), e.getTeamId());
+        String.format("The user <%d> is not on a team with id <%d>", e.getUserId(), e.getTeamId());
     end(ctx, message, 400);
   }
 
