@@ -104,7 +104,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
 
         Optional<ReservationsRecord> maybeReservation = lastAction(reservationsRecord.getBlockId());
 
-        // check if block is reserved by the user
+        // check if block is reserved by the user (already checked if user is on team)
         if (maybeReservation.isPresent()) {
             if (!(maybeReservation.get().getUserId().equals(userData.getUserId()))) {
                 throw new BlockNotReservedException(reservationsRecord.getBlockId());
@@ -128,7 +128,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
 
         Optional<ReservationsRecord> maybeReservation = lastAction(reservationsRecord.getBlockId());
 
-        // check if block is reserved by user
+        // check if block is reserved by the user (already checked if user is on team)
         if (maybeReservation.isPresent()) {
             if (!(maybeReservation.get().getUserId().equals(userData.getUserId()))) {
                 throw new BlockNotReservedException(reservationsRecord.getBlockId());
