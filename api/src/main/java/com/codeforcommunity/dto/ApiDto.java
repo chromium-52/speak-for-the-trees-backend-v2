@@ -1,5 +1,6 @@
 package com.codeforcommunity.dto;
 
+import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.HandledException;
 import com.codeforcommunity.exceptions.MalformedParameterException;
 import java.util.List;
@@ -101,5 +102,20 @@ public abstract class ApiDto {
    */
   protected boolean passwordInvalid(String pass) {
     return pass == null || pass.trim().length() < 8;
+  }
+
+  /**
+   *  Checks to see if the a privilege level is in the enum.
+   *
+   * @param level the privilege level to check
+   * @return a boolean representing whether the given privilege level is invalid or not.
+   */
+  protected boolean privilegeLevelInvalid(String level) {
+    for (PrivilegeLevel val : PrivilegeLevel.values()) {
+      if (val.name().equals(level)) {
+        return false;
+      }
+    }
+    return true;
   }
 }

@@ -5,7 +5,7 @@ public enum PrivilegeLevel {
   ADMIN("admin"),
   SUPER_ADMIN("superAdmin");
 
-  private String name;
+  private final String name;
 
   PrivilegeLevel(String name) {
     this.name = name;

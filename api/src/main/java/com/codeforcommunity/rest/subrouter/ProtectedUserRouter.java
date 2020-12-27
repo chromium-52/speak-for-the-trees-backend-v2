@@ -6,6 +6,7 @@ import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
+import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
 import com.codeforcommunity.dto.user.UserDataResponse;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
@@ -55,6 +56,11 @@ public class ProtectedUserRouter implements IRouter {
     changePasswordRoute.handler(this::handleChangeEmailRoute);
   }
 
+  private void registerChangePrivilegeLevel(Router router) {
+    Route changePrivilegeLevelRoute = router.post("/change_privilege");
+    changePrivilegeLevelRoute.handler(this::handleChangePrivilegeLevelRoute);
+  }
+
   private void handleDeleteUserRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
 
@@ -87,6 +93,16 @@ public class ProtectedUserRouter implements IRouter {
         RestFunctions.getJsonBodyAsClass(ctx, ChangeEmailRequest.class);
 
     processor.changeEmail(userData, changeEmailRequest);
+
+    end(ctx.response(), 200);
+  }
+
+  private void handleChangePrivilegeLevelRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    ChangePrivilegeLevelRequest changePrivilegeLevelRequest =
+            RestFunctions.getJsonBodyAsClass(ctx, ChangePrivilegeLevelRequest.class);
+
+    processor.changePrivilegeLevel(userData, changePrivilegeLevelRequest);
 
     end(ctx.response(), 200);
   }
