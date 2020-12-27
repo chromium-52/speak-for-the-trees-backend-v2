@@ -105,7 +105,7 @@ public abstract class ApiDto {
   }
 
   /**
-   *  Checks to see if the a privilege level is in the enum.
+   * Checks to see if the a privilege level is in the enum.
    *
    * @param level the privilege level to check
    * @return a boolean representing whether the given privilege level is invalid or not.

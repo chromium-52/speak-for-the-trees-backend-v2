@@ -100,7 +100,7 @@ public class ProtectedUserRouter implements IRouter {
   private void handleChangePrivilegeLevelRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
     ChangePrivilegeLevelRequest changePrivilegeLevelRequest =
-            RestFunctions.getJsonBodyAsClass(ctx, ChangePrivilegeLevelRequest.class);
+        RestFunctions.getJsonBodyAsClass(ctx, ChangePrivilegeLevelRequest.class);
 
     processor.changePrivilegeLevel(userData, changePrivilegeLevelRequest);
 

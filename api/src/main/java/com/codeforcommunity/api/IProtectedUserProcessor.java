@@ -24,5 +24,6 @@ public interface IProtectedUserProcessor {
   void changeEmail(JWTData userData, ChangeEmailRequest changeEmailRequest);
 
   /** Change the given user's privilege level to the provided one */
-  void changePrivilegeLevel(JWTData userData, ChangePrivilegeLevelRequest changePrivilegeLevelRequest);
+  void changePrivilegeLevel(
+      JWTData userData, ChangePrivilegeLevelRequest changePrivilegeLevelRequest);
 }

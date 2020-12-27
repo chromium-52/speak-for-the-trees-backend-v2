@@ -97,8 +97,10 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   }
 
   @Override
-  public void changePrivilegeLevel(JWTData userData, ChangePrivilegeLevelRequest changePrivilegeLevelRequest) {
-    UsersRecord user = db.selectFrom(USERS)
+  public void changePrivilegeLevel(
+      JWTData userData, ChangePrivilegeLevelRequest changePrivilegeLevelRequest) {
+    UsersRecord user =
+        db.selectFrom(USERS)
             .where(USERS.EMAIL.eq(changePrivilegeLevelRequest.getTargetUserEmail()))
             .fetchOne();
     if (user == null) {
@@ -106,20 +108,22 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
     }
 
     // check if user is admin
-    if (!(userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN ||
-            userData.getPrivilegeLevel() == PrivilegeLevel.SUPER_ADMIN)) {
+    if (!(userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN
+        || userData.getPrivilegeLevel() == PrivilegeLevel.SUPER_ADMIN)) {
       throw new AuthException("User does not have the required privilege level");
     }
 
     // normal admins can't create super admins
-    if (userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN &&
-            changePrivilegeLevelRequest.getNewLevel() == PrivilegeLevel.SUPER_ADMIN) {
+    if (userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN
+        && changePrivilegeLevelRequest.getNewLevel() == PrivilegeLevel.SUPER_ADMIN) {
       throw new AuthException("User does not have the required privilege level");
     }
 
     // check password and if the privilege level is different
-    if (Passwords.isExpectedPassword(changePrivilegeLevelRequest.getPassword(), user.getPasswordHash())) {
-      if (db.fetchExists(USERS, USERS.PRIVILEGE_LEVEL.eq(changePrivilegeLevelRequest.getNewLevel()))) {
+    if (Passwords.isExpectedPassword(
+        changePrivilegeLevelRequest.getPassword(), user.getPasswordHash())) {
+      if (db.fetchExists(
+          USERS, USERS.PRIVILEGE_LEVEL.eq(changePrivilegeLevelRequest.getNewLevel()))) {
         throw new SamePrivilegeLevelException();
       }
       user.setPrivilegeLevel(changePrivilegeLevelRequest.getNewLevel());
