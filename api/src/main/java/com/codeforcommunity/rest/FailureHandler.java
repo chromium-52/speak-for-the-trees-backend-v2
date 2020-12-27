@@ -1,17 +1,6 @@
 package com.codeforcommunity.rest;
 
-import com.codeforcommunity.exceptions.CreateUserException;
-import com.codeforcommunity.exceptions.EmailAlreadyInUseException;
-import com.codeforcommunity.exceptions.ExpiredSecretKeyException;
-import com.codeforcommunity.exceptions.HandledException;
-import com.codeforcommunity.exceptions.InvalidSecretKeyException;
-import com.codeforcommunity.exceptions.MalformedParameterException;
-import com.codeforcommunity.exceptions.MissingHeaderException;
-import com.codeforcommunity.exceptions.MissingParameterException;
-import com.codeforcommunity.exceptions.TokenInvalidException;
-import com.codeforcommunity.exceptions.UsedSecretKeyException;
-import com.codeforcommunity.exceptions.UserDoesNotExistException;
-import com.codeforcommunity.exceptions.UsernameAlreadyInUseException;
+import com.codeforcommunity.exceptions.*;
 import com.codeforcommunity.logger.SLogger;
 import io.vertx.ext.web.RoutingContext;
 
@@ -77,6 +66,37 @@ public class FailureHandler {
   public void handleUserDoesNotExist(RoutingContext ctx, UserDoesNotExistException exception) {
     String message =
         String.format("No user with property <%s> exists", exception.getIdentifierMessage());
+    end(ctx, message, 400);
+  }
+
+  public void handleTeamDoesNotExist(RoutingContext ctx, TeamDoesNotExistException exception) {
+    String message =
+            String.format("No team with id <%d> exists", exception.getTeamId());
+    end(ctx, message, 400);
+  }
+
+  public void handleBlockDoesNotExist(RoutingContext ctx, BlockDoesNotExistException exception) {
+    String message = String.format("No block id <%d> exists", exception.getBlockId());
+    end(ctx, message, 400);
+  }
+
+  public void handleBlockNotComplete(RoutingContext ctx, BlockNotCompleteException exception) {
+    String message = String.format("Status of block id <%d> is not complete", exception.getBlockId());
+    end(ctx, message, 400);
+  }
+
+  public void handleBlockNotOpen(RoutingContext ctx, BlockNotOpenException exception) {
+    String message = String.format("Status of block id <%d> is not open", exception.getBlockId());
+    end(ctx, message, 400);
+  }
+  public void handleBlockNotReserved(RoutingContext ctx, BlockNotReservedException exception) {
+    String message = String.format("Block <%d> is not reserved by this user", exception.getBlockId());
+    end(ctx, message, 400);
+  }
+
+  public void handleUserNotOnTeam(RoutingContext ctx, UserNotOnTeamException e) {
+    String message =
+            String.format("The user <%d> is not on a team with id <%d>", e.getUserId(), e.getTeamId());
     end(ctx, message, 400);
   }
 
