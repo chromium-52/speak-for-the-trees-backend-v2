@@ -78,11 +78,8 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     Optional<ReservationsRecord> maybeReservation = lastAction(blockId);
 
     if (maybeReservation.isPresent()) {
-      if (!(maybeReservation.get().getActionType().equals(ReservationAction.RELEASE.getName())
-          || maybeReservation
-              .get()
-              .getActionType()
-              .equals(ReservationAction.UNCOMPLETE.getName()))) {
+      if (!(maybeReservation.get().getActionType().equals(ReservationAction.RELEASE)
+          || maybeReservation.get().getActionType().equals(ReservationAction.UNCOMPLETE))) {
         throw new IncorrectBlockStatusException(blockId, "open");
       }
     }
@@ -103,7 +100,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     }
 
     // check if the last entry was a reservation
-    if (!maybeReservation.get().getActionType().equals(ReservationAction.RESERVE.getName())) {
+    if (!maybeReservation.get().getActionType().equals(ReservationAction.RESERVE)) {
       throw new IncorrectBlockStatusException(blockId, "reserved");
     }
 
@@ -138,7 +135,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     Optional<ReservationsRecord> maybeReservation = lastAction(blockId);
 
     if (maybeReservation.isPresent()) {
-      if (!(maybeReservation.get().getActionType().equals(ReservationAction.COMPLETE.getName()))) {
+      if (!(maybeReservation.get().getActionType().equals(ReservationAction.COMPLETE))) {
         throw new IncorrectBlockStatusException(blockId, "complete");
       }
     } else {
@@ -157,7 +154,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     reservationsRecord.setBlockId(makeReservationRequest.getBlockID());
     reservationsRecord.setUserId(userData.getUserId());
     reservationsRecord.setTeamId(makeReservationRequest.getTeamID());
-    reservationsRecord.setActionType("reserve");
+    reservationsRecord.setActionType(ReservationAction.RESERVE);
     reservationsRecord.setPerformedAt(new Timestamp(System.currentTimeMillis()));
 
     blockOpenCheck(makeReservationRequest.getBlockID());
@@ -177,7 +174,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     reservationsRecord.setBlockId(completeReservationRequest.getBlockID());
     reservationsRecord.setUserId(userData.getUserId());
     reservationsRecord.setTeamId(completeReservationRequest.getTeamID());
-    reservationsRecord.setActionType("complete");
+    reservationsRecord.setActionType(ReservationAction.COMPLETE);
     reservationsRecord.setPerformedAt(new Timestamp(System.currentTimeMillis()));
 
     blockReservedCheck(completeReservationRequest.getBlockID(), userData.getUserId());
@@ -193,7 +190,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     ReservationsRecord reservationsRecord = db.newRecord(RESERVATIONS);
     reservationsRecord.setBlockId(releaseReservationRequest.getBlockID());
     reservationsRecord.setUserId(userData.getUserId());
-    reservationsRecord.setActionType("release");
+    reservationsRecord.setActionType(ReservationAction.RELEASE);
     reservationsRecord.setPerformedAt(new Timestamp(System.currentTimeMillis()));
 
     blockReservedCheck(userData.getUserId(), releaseReservationRequest.getBlockID());
@@ -210,7 +207,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     ReservationsRecord reservationsRecord = db.newRecord(RESERVATIONS);
     reservationsRecord.setBlockId(uncompleteReservationRequest.getBlockID());
     reservationsRecord.setUserId(userData.getUserId());
-    reservationsRecord.setActionType("uncomplete");
+    reservationsRecord.setActionType(ReservationAction.UNCOMPLETE);
     reservationsRecord.setPerformedAt(new Timestamp(System.currentTimeMillis()));
 
     blockCompleteCheck(uncompleteReservationRequest.getBlockID());
@@ -226,7 +223,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     ReservationsRecord reservationsRecord = db.newRecord(RESERVATIONS);
     reservationsRecord.setBlockId(markForQARequest.getBlockID());
     reservationsRecord.setUserId(userData.getUserId());
-    reservationsRecord.setActionType("qa");
+    reservationsRecord.setActionType(ReservationAction.QA);
     reservationsRecord.setPerformedAt(new Timestamp(System.currentTimeMillis()));
 
     blockCompleteCheck(markForQARequest.getBlockID());

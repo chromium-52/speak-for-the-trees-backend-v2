@@ -128,7 +128,7 @@
                   <userType>com.codeforcommunity.enums.ReservationAction</userType>
                   <enumConverter>true</enumConverter>
 
-                  <includeExpression>.*\.reservation_action</includeExpression>
+                  <includeExpression>.*\.action_type</includeExpression>
                   <includeTypes>.*</includeTypes>
                   <nullability>NOT_NULL</nullability>
                 </forcedType>
