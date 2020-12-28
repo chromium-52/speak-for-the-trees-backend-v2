@@ -119,13 +119,11 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
       throw new AuthException("User does not have the required privilege level");
     }
 
+    byte[] passwordHash =
+        db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne().getPasswordHash();
+
     // check password and if the privilege level is different
-    if (Passwords.isExpectedPassword(
-        changePrivilegeLevelRequest.getPassword(),
-        db.selectFrom(USERS)
-            .where(USERS.ID.eq(userData.getUserId()))
-            .fetchOne()
-            .getPasswordHash())) {
+    if (Passwords.isExpectedPassword(changePrivilegeLevelRequest.getPassword(), passwordHash)) {
       if (user.getPrivilegeLevel().equals(changePrivilegeLevelRequest.getNewLevel())) {
         throw new SamePrivilegeLevelException();
       }
