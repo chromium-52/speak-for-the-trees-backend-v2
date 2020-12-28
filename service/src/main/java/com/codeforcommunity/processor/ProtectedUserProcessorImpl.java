@@ -97,10 +97,11 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   }
 
   @Override
-  public void changePrivilegeLevel(JWTData userData, ChangePrivilegeLevelRequest changePrivilegeLevelRequest) {
+  public void changePrivilegeLevel(
+      JWTData userData, ChangePrivilegeLevelRequest changePrivilegeLevelRequest) {
     // check if user is admin
     if (!(userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN
-            || userData.getPrivilegeLevel() == PrivilegeLevel.SUPER_ADMIN)) {
+        || userData.getPrivilegeLevel() == PrivilegeLevel.SUPER_ADMIN)) {
       throw new AuthException("User does not have the required privilege level");
     }
 
