@@ -6,6 +6,7 @@ import com.codeforcommunity.api.IReservationProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.reservation.*;
 import com.codeforcommunity.enums.PrivilegeLevel;
+import com.codeforcommunity.enums.ReservationAction;
 import com.codeforcommunity.exceptions.*;
 import java.sql.Timestamp;
 import java.util.Optional;
@@ -29,39 +30,119 @@ public class ReservationProcessorImpl implements IReservationProcessor {
             .fetchOne());
   }
 
-  public void basicChecks(int blockId, Integer userId, Integer teamId) {
-    BlocksRecord block = db.selectFrom(BLOCKS).where(BLOCKS.ID.eq(blockId)).fetchOne();
-
-    if (block == null) {
+  private void basicChecks(int blockId, Integer userId, Integer teamId) {
+    if (!db.fetchExists(db.selectFrom(BLOCKS).where(BLOCKS.ID.eq(blockId)))) {
       throw new BlockDoesNotExistException(blockId);
     }
 
     if (userId != null) {
-      UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
-
-      if (user == null) {
+      if (!db.fetchExists(db.selectFrom(USERS).where(USERS.ID.eq(userId)))) {
         throw new UserDoesNotExistException(userId);
       }
     }
 
     if (teamId != null) {
-      TeamsRecord team = db.selectFrom(TEAMS).where(TEAMS.ID.eq(teamId)).fetchOne();
-
-      if (team == null) {
+      if (!db.fetchExists(db.selectFrom(TEAMS).where(TEAMS.ID.eq(teamId)))) {
         throw new TeamDoesNotExistException(teamId);
       }
     }
 
     if (userId != null && teamId != null) {
-      UsersTeamsRecord user_teams =
+      if (!db.fetchExists(
           db.selectFrom(USERS_TEAMS)
               .where(USERS_TEAMS.USER_ID.eq(userId))
-              .and(USERS_TEAMS.TEAM_ID.eq(teamId))
-              .fetchOne();
-
-      if (user_teams == null) {
+              .and(USERS_TEAMS.TEAM_ID.eq(teamId)))) {
         throw new UserNotOnTeamException(userId, teamId);
       }
+    }
+  }
+
+  /**
+   * Throws an exception if the user is not an admin or super admin.
+   *
+   * @param level the privilege level of the user calling the route
+   */
+  private void isAdminCheck(PrivilegeLevel level) {
+    if (!(level.equals(PrivilegeLevel.ADMIN) || level.equals(PrivilegeLevel.SUPER_ADMIN))) {
+      throw new AuthException("User does not have the required privilege level.");
+    }
+  }
+
+  /**
+   * Checks if the block is open, meaning users can reserve it. Blocks are open if there is no
+   * record or if they've been released or uncompleted as the last action.
+   *
+   * @param blockId the id of the block to check
+   */
+  private void blockOpenCheck(int blockId) {
+    Optional<ReservationsRecord> maybeReservation = lastAction(blockId);
+
+    if (maybeReservation.isPresent()) {
+      if (!(maybeReservation.get().getActionType().equals(ReservationAction.RELEASE.getName())
+          || maybeReservation
+              .get()
+              .getActionType()
+              .equals(ReservationAction.UNCOMPLETE.getName()))) {
+        throw new BlockNotOpenException(blockId);
+      }
+    }
+  }
+
+  /**
+   * Checks if the block is reserved by the user calling the route or a team they're on.
+   *
+   * @param blockId the id the block to check
+   * @param userId the id of the user calling the route
+   */
+  private void blockReservedCheck(int blockId, int userId) {
+    Optional<ReservationsRecord> maybeReservation = lastAction(blockId);
+
+    // check if there are any entries
+    if (!maybeReservation.isPresent()) {
+      throw new BlockNotReservedException(blockId);
+    }
+
+    // check if the last entry was a reservation
+    if (!maybeReservation.get().getActionType().equals(ReservationAction.RESERVE.getName())) {
+      throw new BlockNotReservedException(blockId);
+    }
+
+    // check if the user reserved the block, if they did, return
+    if (maybeReservation.get().getUserId() != null) {
+      if (maybeReservation.get().getUserId().equals(userId)) {
+        return;
+      }
+    }
+
+    // check if a team the user is on reserved the block, if they did, return
+    if (maybeReservation.get().getTeamId() != null) {
+      int teamId = maybeReservation.get().getTeamId();
+      if (db.fetchExists(
+          db.selectFrom(USERS_TEAMS)
+              .where(USERS_TEAMS.USER_ID.eq(userId))
+              .and(USERS_TEAMS.TEAM_ID.eq(teamId)))) {
+        return;
+      }
+    }
+
+    // neither the user nor a team they are on reserved the block, so they did not reserve it
+    throw new BlockNotReservedException(blockId);
+  }
+
+  /**
+   * Checks if the block has been completed as its last action.
+   *
+   * @param blockId the id of the block to check
+   */
+  private void blockCompleteCheck(int blockId) {
+    Optional<ReservationsRecord> maybeReservation = lastAction(blockId);
+
+    if (maybeReservation.isPresent()) {
+      if (!(maybeReservation.get().getActionType().equals(ReservationAction.COMPLETE.getName()))) {
+        throw new BlockNotCompleteException(blockId);
+      }
+    } else {
+      throw new BlockNotCompleteException(blockId);
     }
   }
 
@@ -79,16 +160,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     reservationsRecord.setActionType("reserve");
     reservationsRecord.setPerformedAt(new Timestamp(System.currentTimeMillis()));
 
-    Optional<ReservationsRecord> maybeReservation = lastAction(reservationsRecord.getBlockId());
-
-    // check if block is open (released, uncomplete or no record)
-    if (maybeReservation.isPresent()) {
-      if (maybeReservation.get().getActionType().equals("reserve")
-          || maybeReservation.get().getActionType().equals("complete")
-          || maybeReservation.get().getActionType().equals("qa")) {
-        throw new BlockNotOpenException(reservationsRecord.getBlockId());
-      }
-    }
+    blockOpenCheck(makeReservationRequest.getBlockID());
 
     reservationsRecord.store();
   }
@@ -108,16 +180,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     reservationsRecord.setActionType("complete");
     reservationsRecord.setPerformedAt(new Timestamp(System.currentTimeMillis()));
 
-    Optional<ReservationsRecord> maybeReservation = lastAction(reservationsRecord.getBlockId());
-
-    // check if block is reserved by the user (already checked if user is on team)
-    if (maybeReservation.isPresent()) {
-      if (!(maybeReservation.get().getUserId().equals(userData.getUserId()))) {
-        throw new BlockNotReservedException(reservationsRecord.getBlockId());
-      }
-    } else {
-      throw new BlockNotReservedException(reservationsRecord.getBlockId());
-    }
+    blockReservedCheck(completeReservationRequest.getBlockID(), userData.getUserId());
 
     reservationsRecord.store();
   }
@@ -133,16 +196,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     reservationsRecord.setActionType("release");
     reservationsRecord.setPerformedAt(new Timestamp(System.currentTimeMillis()));
 
-    Optional<ReservationsRecord> maybeReservation = lastAction(reservationsRecord.getBlockId());
-
-    // check if block is reserved by the user (already checked if user is on team)
-    if (maybeReservation.isPresent()) {
-      if (!(maybeReservation.get().getUserId().equals(userData.getUserId()))) {
-        throw new BlockNotReservedException(reservationsRecord.getBlockId());
-      }
-    } else {
-      throw new BlockNotReservedException(reservationsRecord.getBlockId());
-    }
+    blockReservedCheck(userData.getUserId(), releaseReservationRequest.getBlockID());
 
     reservationsRecord.store();
   }
@@ -150,6 +204,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
   @Override
   public void uncompleteReservation(
       JWTData userData, UncompleteReservationRequest uncompleteReservationRequest) {
+    isAdminCheck(userData.getPrivilegeLevel());
     basicChecks(uncompleteReservationRequest.getBlockID(), userData.getUserId(), null);
 
     ReservationsRecord reservationsRecord = db.newRecord(RESERVATIONS);
@@ -158,26 +213,14 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     reservationsRecord.setActionType("uncomplete");
     reservationsRecord.setPerformedAt(new Timestamp(System.currentTimeMillis()));
 
-    Optional<ReservationsRecord> maybeReservation = lastAction(reservationsRecord.getBlockId());
-
-    // check if the user is an admin and if the block has been completed
-    if (userData.getPrivilegeLevel().equals(PrivilegeLevel.STANDARD)) {
-      throw new AuthException("User does not have the required privilege level.");
-    }
-
-    if (maybeReservation.isPresent()) {
-      if (!(maybeReservation.get().getActionType().equals("complete"))) {
-        throw new BlockNotCompleteException(reservationsRecord.getBlockId());
-      }
-    } else {
-      throw new BlockNotCompleteException(reservationsRecord.getBlockId());
-    }
+    blockCompleteCheck(uncompleteReservationRequest.getBlockID());
 
     reservationsRecord.store();
   }
 
   @Override
   public void markForQA(JWTData userData, MarkForQARequest markForQARequest) {
+    isAdminCheck(userData.getPrivilegeLevel());
     basicChecks(markForQARequest.getBlockID(), userData.getUserId(), null);
 
     ReservationsRecord reservationsRecord = db.newRecord(RESERVATIONS);
@@ -186,20 +229,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     reservationsRecord.setActionType("qa");
     reservationsRecord.setPerformedAt(new Timestamp(System.currentTimeMillis()));
 
-    Optional<ReservationsRecord> maybeReservation = lastAction(reservationsRecord.getBlockId());
-
-    // check if the user is an admin and if the block has been completed
-    if (userData.getPrivilegeLevel().equals(PrivilegeLevel.STANDARD)) {
-      throw new AuthException("User does not have the required privilege level.");
-    }
-
-    if (maybeReservation.isPresent()) {
-      if (!(maybeReservation.get().getActionType().equals("complete"))) {
-        throw new BlockNotCompleteException(reservationsRecord.getBlockId());
-      }
-    } else {
-      throw new BlockNotCompleteException(reservationsRecord.getBlockId());
-    }
+    blockCompleteCheck(markForQARequest.getBlockID());
 
     reservationsRecord.store();
   }
