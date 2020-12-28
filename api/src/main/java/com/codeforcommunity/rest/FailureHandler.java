@@ -70,12 +70,14 @@ public class FailureHandler {
   }
 
   public void handleResourceDoesNotExist(RoutingContext ctx, ResourceDoesNotExistException e) {
-    String message = String.format("No <%s> with id <%d> exists", e.getResourceType(), e.getResourceId());
+    String message =
+        String.format("No <%s> with id <%d> exists", e.getResourceType(), e.getResourceId());
     end(ctx, message, 400);
   }
 
   public void handleIncorrectBlockStatus(RoutingContext ctx, IncorrectBlockStatusException e) {
-    String message = String.format("Status of block id <%d> is not <%s>", e.getBlockId(), e.getExpectedStatus());
+    String message =
+        String.format("Status of block id <%d> is not <%s>", e.getBlockId(), e.getExpectedStatus());
     end(ctx, message, 400);
   }
 
