@@ -144,6 +144,11 @@ public class FailureHandler {
     end(ctx, message, 502);
   }
 
+  public void handleSamePrivilegeLevel(RoutingContext ctx) {
+    String message = "The user already has the given privilege level";
+    end(ctx, message, 400);
+  }
+
   private void handleUncaughtError(RoutingContext ctx, Throwable throwable) {
     String message = String.format("Internal server error caused by: %s", throwable.getMessage());
     logger.error(message);
