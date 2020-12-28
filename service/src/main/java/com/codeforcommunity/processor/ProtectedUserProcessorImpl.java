@@ -121,7 +121,11 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
 
     // check password and if the privilege level is different
     if (Passwords.isExpectedPassword(
-        changePrivilegeLevelRequest.getPassword(), user.getPasswordHash())) {
+        changePrivilegeLevelRequest.getPassword(),
+        db.selectFrom(USERS)
+            .where(USERS.ID.eq(userData.getUserId()))
+            .fetchOne()
+            .getPasswordHash())) {
       if (user.getPrivilegeLevel().equals(changePrivilegeLevelRequest.getNewLevel())) {
         throw new SamePrivilegeLevelException();
       }
