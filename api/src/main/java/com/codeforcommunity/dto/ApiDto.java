@@ -112,7 +112,7 @@ public abstract class ApiDto {
    */
   protected boolean privilegeLevelInvalid(String level) {
     for (PrivilegeLevel val : PrivilegeLevel.values()) {
-      if (val.name().equals(level)) {
+      if (val.name().toLowerCase().equals(level.toLowerCase())) {
         return false;
       }
     }
