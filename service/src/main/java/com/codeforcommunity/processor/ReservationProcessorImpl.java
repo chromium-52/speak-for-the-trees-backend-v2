@@ -32,7 +32,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
 
   private void basicChecks(int blockId, Integer userId, Integer teamId) {
     if (!db.fetchExists(db.selectFrom(BLOCKS).where(BLOCKS.ID.eq(blockId)))) {
-      throw new BlockDoesNotExistException(blockId);
+      throw new ResourceDoesNotExistException(blockId, "block");
     }
 
     if (userId != null) {
@@ -43,7 +43,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
 
     if (teamId != null) {
       if (!db.fetchExists(db.selectFrom(TEAMS).where(TEAMS.ID.eq(teamId)))) {
-        throw new TeamDoesNotExistException(teamId);
+        throw new ResourceDoesNotExistException(teamId, "team");
       }
     }
 
@@ -83,7 +83,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
               .get()
               .getActionType()
               .equals(ReservationAction.UNCOMPLETE.getName()))) {
-        throw new BlockNotOpenException(blockId);
+        throw new IncorrectBlockStatusException(blockId, "open");
       }
     }
   }
@@ -99,12 +99,12 @@ public class ReservationProcessorImpl implements IReservationProcessor {
 
     // check if there are any entries
     if (!maybeReservation.isPresent()) {
-      throw new BlockNotReservedException(blockId);
+      throw new IncorrectBlockStatusException(blockId, "reserved");
     }
 
     // check if the last entry was a reservation
     if (!maybeReservation.get().getActionType().equals(ReservationAction.RESERVE.getName())) {
-      throw new BlockNotReservedException(blockId);
+      throw new IncorrectBlockStatusException(blockId, "reserved");
     }
 
     // check if the user reserved the block, if they did, return
@@ -126,7 +126,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     }
 
     // neither the user nor a team they are on reserved the block, so they did not reserve it
-    throw new BlockNotReservedException(blockId);
+    throw new IncorrectBlockStatusException(blockId, "reserved");
   }
 
   /**
@@ -139,10 +139,10 @@ public class ReservationProcessorImpl implements IReservationProcessor {
 
     if (maybeReservation.isPresent()) {
       if (!(maybeReservation.get().getActionType().equals(ReservationAction.COMPLETE.getName()))) {
-        throw new BlockNotCompleteException(blockId);
+        throw new IncorrectBlockStatusException(blockId, "complete");
       }
     } else {
-      throw new BlockNotCompleteException(blockId);
+      throw new IncorrectBlockStatusException(blockId, "complete");
     }
   }
 

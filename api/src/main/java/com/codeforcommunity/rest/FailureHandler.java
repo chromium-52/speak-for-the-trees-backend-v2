@@ -69,30 +69,13 @@ public class FailureHandler {
     end(ctx, message, 400);
   }
 
-  public void handleTeamDoesNotExist(RoutingContext ctx, TeamDoesNotExistException exception) {
-    String message = String.format("No team with id <%d> exists", exception.getTeamId());
+  public void handleResourceDoesNotExist(RoutingContext ctx, ResourceDoesNotExistException e) {
+    String message = String.format("No <%s> with id <%d> exists", e.getResourceType(), e.getResourceId());
     end(ctx, message, 400);
   }
 
-  public void handleBlockDoesNotExist(RoutingContext ctx, BlockDoesNotExistException exception) {
-    String message = String.format("No block id <%d> exists", exception.getBlockId());
-    end(ctx, message, 400);
-  }
-
-  public void handleBlockNotComplete(RoutingContext ctx, BlockNotCompleteException exception) {
-    String message =
-        String.format("Status of block id <%d> is not complete", exception.getBlockId());
-    end(ctx, message, 400);
-  }
-
-  public void handleBlockNotOpen(RoutingContext ctx, BlockNotOpenException exception) {
-    String message = String.format("Status of block id <%d> is not open", exception.getBlockId());
-    end(ctx, message, 400);
-  }
-
-  public void handleBlockNotReserved(RoutingContext ctx, BlockNotReservedException exception) {
-    String message =
-        String.format("Block <%d> is not reserved by this user", exception.getBlockId());
+  public void handleIncorrectBlockStatus(RoutingContext ctx, IncorrectBlockStatusException e) {
+    String message = String.format("Status of block id <%d> is not <%s>", e.getBlockId(), e.getExpectedStatus());
     end(ctx, message, 400);
   }
 
