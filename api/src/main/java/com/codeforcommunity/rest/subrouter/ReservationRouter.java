@@ -29,6 +29,8 @@ public class ReservationRouter implements IRouter {
     registerReleaseReservation(router);
     registerUncompleteReservation(router);
     registerMarkForQA(router);
+    registerPassQA(router);
+    registerFailQA(router);
 
     return router;
   }
