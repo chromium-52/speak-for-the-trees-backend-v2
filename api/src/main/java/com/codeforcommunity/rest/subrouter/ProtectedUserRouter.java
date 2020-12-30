@@ -32,6 +32,7 @@ public class ProtectedUserRouter implements IRouter {
     registerChangePassword(router);
     registerGetUserData(router);
     registerChangeEmail(router);
+    registerChangePrivilegeLevel(router);
 
     return router;
   }
