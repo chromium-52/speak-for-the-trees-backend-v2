@@ -28,4 +28,10 @@ public interface IReservationProcessor {
 
   /** Marks the given block for QA, meaning SFTT wants to check the completion of the given block */
   void markForQA(JWTData userData, MarkForQARequest markForQARequest);
+
+  /** Marks the block as complete again, meaning SFTT approves of the block completion */
+  void passQA(JWTData userData, PassQARequest passQARequest);
+
+  /** Marks the block as open again, meaning SFTT does not approve of the block completion */
+  void failQA(JWTData userData, FailQARequest failQARequest);
 }

@@ -4,11 +4,7 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.IReservationProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.reservation.CompleteReservationRequest;
-import com.codeforcommunity.dto.reservation.MakeReservationRequest;
-import com.codeforcommunity.dto.reservation.MarkForQARequest;
-import com.codeforcommunity.dto.reservation.ReleaseReservationRequest;
-import com.codeforcommunity.dto.reservation.UncompleteReservationRequest;
+import com.codeforcommunity.dto.reservation.*;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
@@ -62,6 +58,16 @@ public class ReservationRouter implements IRouter {
     markForQARoute.handler(this::handleMarkForQARoute);
   }
 
+  private void registerPassQA(Router router) {
+    Route passQARoute = router.post("/pass_qa");
+    passQARoute.handler(this::handlePassQARoute);
+  }
+
+  private void registerFailQA(Router router) {
+    Route failQARoute = router.post("/fail_qa");
+    failQARoute.handler(this::handleFailQARoute);
+  }
+
   private void handleMakeReservationRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
     MakeReservationRequest makeReservationRequest =
@@ -108,6 +114,24 @@ public class ReservationRouter implements IRouter {
         RestFunctions.getJsonBodyAsClass(ctx, MarkForQARequest.class);
 
     processor.markForQA(userData, markForQARequest);
+
+    end(ctx.response(), 200);
+  }
+
+  private void handlePassQARoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    PassQARequest passQARequest = RestFunctions.getJsonBodyAsClass(ctx, PassQARequest.class);
+
+    processor.passQA(userData, passQARequest);
+
+    end(ctx.response(), 200);
+  }
+
+  private void handleFailQARoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    FailQARequest failQARequest = RestFunctions.getJsonBodyAsClass(ctx, FailQARequest.class);
+
+    processor.failQA(userData, failQARequest);
 
     end(ctx.response(), 200);
   }

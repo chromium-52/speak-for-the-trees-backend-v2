@@ -51,9 +51,13 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     if (userId != null && teamId != null) {
       if (!db.fetchExists(
           db.selectFrom(USERS_TEAMS)
-                  .where(USERS_TEAMS.USER_ID.eq(userId))
-                  .and(USERS_TEAMS.TEAM_ID.eq(teamId))
-                  .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.MEMBER).or(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))))) {
+              .where(USERS_TEAMS.USER_ID.eq(userId))
+              .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+              .and(
+                  USERS_TEAMS
+                      .TEAM_ROLE
+                      .eq(TeamRole.MEMBER)
+                      .or(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))))) {
         throw new UserNotOnTeamException(userId, teamId);
       }
     }
@@ -118,9 +122,13 @@ public class ReservationProcessorImpl implements IReservationProcessor {
       int teamId = maybeReservation.get().getTeamId();
       if (db.fetchExists(
           db.selectFrom(USERS_TEAMS)
-                  .where(USERS_TEAMS.USER_ID.eq(userId))
-                  .and(USERS_TEAMS.TEAM_ID.eq(teamId))
-                  .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.MEMBER).or(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))))) {
+              .where(USERS_TEAMS.USER_ID.eq(userId))
+              .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+              .and(
+                  USERS_TEAMS
+                      .TEAM_ROLE
+                      .eq(TeamRole.MEMBER)
+                      .or(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))))) {
         return;
       }
     }
@@ -143,6 +151,23 @@ public class ReservationProcessorImpl implements IReservationProcessor {
       }
     } else {
       throw new IncorrectBlockStatusException(blockId, "complete");
+    }
+  }
+
+  /**
+   * Checks if the block was marked for QA in its last action.
+   *
+   * @param blockId the id of the block to check
+   */
+  private void blockQACheck(int blockId) {
+    Optional<ReservationsRecord> maybeReservation = lastAction(blockId);
+
+    if (maybeReservation.isPresent()) {
+      if (!(maybeReservation.get().getActionType().equals(ReservationAction.QA))) {
+        throw new IncorrectBlockStatusException(blockId, "QA");
+      }
+    } else {
+      throw new IncorrectBlockStatusException(blockId, "QA");
     }
   }
 
@@ -230,6 +255,45 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     reservationsRecord.setPerformedAt(new Timestamp(System.currentTimeMillis()));
 
     blockCompleteCheck(markForQARequest.getBlockID());
+
+    reservationsRecord.store();
+  }
+
+  @Override
+  public void passQA(JWTData userData, PassQARequest passQARequest) {
+    isAdminCheck(userData.getPrivilegeLevel());
+    basicChecks(passQARequest.getBlockID(), userData.getUserId(), null);
+    blockQACheck(passQARequest.getBlockID());
+
+    ReservationsRecord lastCompletion =
+        db.selectFrom(RESERVATIONS)
+            .where(RESERVATIONS.BLOCK_ID.eq(passQARequest.getBlockID()))
+            .and(RESERVATIONS.ACTION_TYPE.eq(ReservationAction.COMPLETE))
+            .orderBy(RESERVATIONS.PERFORMED_AT.desc())
+            .limit(1)
+            .fetchOne();
+
+    ReservationsRecord reservationsRecord = db.newRecord(RESERVATIONS);
+    reservationsRecord.setBlockId(passQARequest.getBlockID());
+    reservationsRecord.setUserId(lastCompletion.getUserId());
+    reservationsRecord.setTeamId(lastCompletion.getTeamId());
+    reservationsRecord.setActionType(ReservationAction.COMPLETE);
+    reservationsRecord.setPerformedAt(lastCompletion.getPerformedAt());
+
+    reservationsRecord.store();
+  }
+
+  @Override
+  public void failQA(JWTData userData, FailQARequest failQARequest) {
+    isAdminCheck(userData.getPrivilegeLevel());
+    basicChecks(failQARequest.getBlockID(), userData.getUserId(), null);
+    blockQACheck(failQARequest.getBlockID());
+
+    ReservationsRecord reservationsRecord = db.newRecord(RESERVATIONS);
+    reservationsRecord.setBlockId(failQARequest.getBlockID());
+    reservationsRecord.setUserId(userData.getUserId());
+    reservationsRecord.setActionType(ReservationAction.UNCOMPLETE);
+    reservationsRecord.setPerformedAt(new Timestamp(System.currentTimeMillis()));
 
     reservationsRecord.store();
   }
