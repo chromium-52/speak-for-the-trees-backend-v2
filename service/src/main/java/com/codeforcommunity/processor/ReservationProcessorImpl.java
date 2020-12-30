@@ -7,6 +7,7 @@ import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.reservation.*;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.enums.ReservationAction;
+import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.*;
 import java.sql.Timestamp;
 import java.util.Optional;
@@ -50,8 +51,9 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     if (userId != null && teamId != null) {
       if (!db.fetchExists(
           db.selectFrom(USERS_TEAMS)
-              .where(USERS_TEAMS.USER_ID.eq(userId))
-              .and(USERS_TEAMS.TEAM_ID.eq(teamId)))) {
+                  .where(USERS_TEAMS.USER_ID.eq(userId))
+                  .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+                  .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.MEMBER).or(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))))) {
         throw new UserNotOnTeamException(userId, teamId);
       }
     }
@@ -116,8 +118,9 @@ public class ReservationProcessorImpl implements IReservationProcessor {
       int teamId = maybeReservation.get().getTeamId();
       if (db.fetchExists(
           db.selectFrom(USERS_TEAMS)
-              .where(USERS_TEAMS.USER_ID.eq(userId))
-              .and(USERS_TEAMS.TEAM_ID.eq(teamId)))) {
+                  .where(USERS_TEAMS.USER_ID.eq(userId))
+                  .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+                  .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.MEMBER).or(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))))) {
         return;
       }
     }
