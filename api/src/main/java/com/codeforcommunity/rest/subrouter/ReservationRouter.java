@@ -92,8 +92,8 @@ public class ReservationRouter implements IRouter {
 
   private void handleReleaseReservationRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
-    ReleaseReservationRequest releaseReservationRequest =
-        RestFunctions.getJsonBodyAsClass(ctx, ReleaseReservationRequest.class);
+    BlockIDRequest releaseReservationRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, BlockIDRequest.class);
 
     processor.releaseReservation(userData, releaseReservationRequest);
 
@@ -102,8 +102,8 @@ public class ReservationRouter implements IRouter {
 
   private void handleUncompleteReservationRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
-    UncompleteReservationRequest uncompleteReservationRequest =
-        RestFunctions.getJsonBodyAsClass(ctx, UncompleteReservationRequest.class);
+    BlockIDRequest uncompleteReservationRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, BlockIDRequest.class);
 
     processor.uncompleteReservation(userData, uncompleteReservationRequest);
 
@@ -112,8 +112,8 @@ public class ReservationRouter implements IRouter {
 
   private void handleMarkForQARoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
-    MarkForQARequest markForQARequest =
-        RestFunctions.getJsonBodyAsClass(ctx, MarkForQARequest.class);
+    BlockIDRequest markForQARequest =
+        RestFunctions.getJsonBodyAsClass(ctx, BlockIDRequest.class);
 
     processor.markForQA(userData, markForQARequest);
 
@@ -122,7 +122,7 @@ public class ReservationRouter implements IRouter {
 
   private void handlePassQARoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
-    PassQARequest passQARequest = RestFunctions.getJsonBodyAsClass(ctx, PassQARequest.class);
+    BlockIDRequest passQARequest = RestFunctions.getJsonBodyAsClass(ctx, BlockIDRequest.class);
 
     processor.passQA(userData, passQARequest);
 
@@ -131,7 +131,7 @@ public class ReservationRouter implements IRouter {
 
   private void handleFailQARoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
-    FailQARequest failQARequest = RestFunctions.getJsonBodyAsClass(ctx, FailQARequest.class);
+    BlockIDRequest failQARequest = RestFunctions.getJsonBodyAsClass(ctx, BlockIDRequest.class);
 
     processor.failQA(userData, failQARequest);
 
