@@ -1,17 +1,6 @@
 package com.codeforcommunity.rest;
 
-import com.codeforcommunity.exceptions.CreateUserException;
-import com.codeforcommunity.exceptions.EmailAlreadyInUseException;
-import com.codeforcommunity.exceptions.ExpiredSecretKeyException;
-import com.codeforcommunity.exceptions.HandledException;
-import com.codeforcommunity.exceptions.InvalidSecretKeyException;
-import com.codeforcommunity.exceptions.MalformedParameterException;
-import com.codeforcommunity.exceptions.MissingHeaderException;
-import com.codeforcommunity.exceptions.MissingParameterException;
-import com.codeforcommunity.exceptions.TokenInvalidException;
-import com.codeforcommunity.exceptions.UsedSecretKeyException;
-import com.codeforcommunity.exceptions.UserDoesNotExistException;
-import com.codeforcommunity.exceptions.UsernameAlreadyInUseException;
+import com.codeforcommunity.exceptions.*;
 import com.codeforcommunity.logger.SLogger;
 import io.vertx.ext.web.RoutingContext;
 
@@ -77,6 +66,24 @@ public class FailureHandler {
   public void handleUserDoesNotExist(RoutingContext ctx, UserDoesNotExistException exception) {
     String message =
         String.format("No user with property <%s> exists", exception.getIdentifierMessage());
+    end(ctx, message, 400);
+  }
+
+  public void handleResourceDoesNotExist(RoutingContext ctx, ResourceDoesNotExistException e) {
+    String message =
+        String.format("No <%s> with id <%d> exists", e.getResourceType(), e.getResourceId());
+    end(ctx, message, 400);
+  }
+
+  public void handleIncorrectBlockStatus(RoutingContext ctx, IncorrectBlockStatusException e) {
+    String message =
+        String.format("Status of block id <%d> is not <%s>", e.getBlockId(), e.getExpectedStatus());
+    end(ctx, message, 400);
+  }
+
+  public void handleUserNotOnTeam(RoutingContext ctx, UserNotOnTeamException e) {
+    String message =
+        String.format("The user <%d> is not on a team with id <%d>", e.getUserId(), e.getTeamId());
     end(ctx, message, 400);
   }
 
