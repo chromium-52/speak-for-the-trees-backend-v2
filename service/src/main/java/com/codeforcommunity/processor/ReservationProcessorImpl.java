@@ -39,15 +39,12 @@ public class ReservationProcessorImpl implements IReservationProcessor {
    * @return a boolean indicating if they're on the team
    */
   private boolean isOnTeam(int userId, int teamId) {
-    if (!db.fetchExists(
-            db.selectFrom(USERS_TEAMS)
-                    .where(USERS_TEAMS.USER_ID.eq(userId))
-                    .and(USERS_TEAMS.TEAM_ID.eq(teamId))
-                    .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.None))
-                    .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.PENDING)))) {
-      throw new UserNotOnTeamException(userId, teamId);
-    }
-    return true;
+    return db.fetchExists(
+        db.selectFrom(USERS_TEAMS)
+            .where(USERS_TEAMS.USER_ID.eq(userId))
+            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+            .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.None))
+            .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.PENDING)));
   }
 
   private void basicChecks(int blockId, Integer userId, Integer teamId) {
@@ -56,15 +53,17 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     }
 
     if (userId != null && !db.fetchExists(db.selectFrom(USERS).where(USERS.ID.eq(userId)))) {
-        throw new UserDoesNotExistException(userId);
+      throw new UserDoesNotExistException(userId);
     }
 
     if (teamId != null && !db.fetchExists(db.selectFrom(TEAMS).where(TEAMS.ID.eq(teamId)))) {
-        throw new ResourceDoesNotExistException(teamId, "team");
+      throw new ResourceDoesNotExistException(teamId, "team");
     }
 
     if (userId != null && teamId != null) {
-      isOnTeam(userId, teamId);
+      if (!isOnTeam(userId, teamId)) {
+        throw new UserNotOnTeamException(userId, teamId);
+      }
     }
   }
 
@@ -88,11 +87,10 @@ public class ReservationProcessorImpl implements IReservationProcessor {
   private void blockOpenCheck(int blockId) {
     Optional<ReservationsRecord> maybeReservation = lastAction(blockId);
 
-    if (maybeReservation.isPresent()) {
-      if (!(maybeReservation.get().getActionType().equals(ReservationAction.RELEASE)
-          || maybeReservation.get().getActionType().equals(ReservationAction.UNCOMPLETE))) {
-        throw new IncorrectBlockStatusException(blockId, "open");
-      }
+    if (maybeReservation.isPresent()
+        && !(maybeReservation.get().getActionType().equals(ReservationAction.RELEASE)
+            || maybeReservation.get().getActionType().equals(ReservationAction.UNCOMPLETE))) {
+      throw new IncorrectBlockStatusException(blockId, "open");
     }
   }
 
@@ -116,13 +114,15 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     }
 
     // check if the user reserved the block, if they did, return
-    if (maybeReservation.get().getUserId() != null && maybeReservation.get().getUserId().equals(userId)) {
-        return;
+    if (maybeReservation.get().getUserId() != null
+        && maybeReservation.get().getUserId().equals(userId)) {
+      return;
     }
 
     // check if a team the user is on reserved the block, if they did, return
-    if (maybeReservation.get().getTeamId() != null && isOnTeam(userId, maybeReservation.get().getTeamId())) {
-        return;
+    if (maybeReservation.get().getTeamId() != null
+        && isOnTeam(userId, maybeReservation.get().getTeamId())) {
+      return;
     }
 
     // neither the user nor a team they are on reserved the block, so they did not reserve it
@@ -203,8 +203,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
   }
 
   @Override
-  public void releaseReservation(
-      JWTData userData, BlockIDRequest releaseReservationRequest) {
+  public void releaseReservation(JWTData userData, BlockIDRequest releaseReservationRequest) {
     basicChecks(releaseReservationRequest.getBlockID(), userData.getUserId(), null);
 
     ReservationsRecord reservationsRecord = db.newRecord(RESERVATIONS);
@@ -219,8 +218,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
   }
 
   @Override
-  public void uncompleteReservation(
-      JWTData userData, BlockIDRequest uncompleteReservationRequest) {
+  public void uncompleteReservation(JWTData userData, BlockIDRequest uncompleteReservationRequest) {
     isAdminCheck(userData.getPrivilegeLevel());
     basicChecks(uncompleteReservationRequest.getBlockID(), userData.getUserId(), null);
 

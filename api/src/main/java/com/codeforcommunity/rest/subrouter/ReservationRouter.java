@@ -112,8 +112,7 @@ public class ReservationRouter implements IRouter {
 
   private void handleMarkForQARoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
-    BlockIDRequest markForQARequest =
-        RestFunctions.getJsonBodyAsClass(ctx, BlockIDRequest.class);
+    BlockIDRequest markForQARequest = RestFunctions.getJsonBodyAsClass(ctx, BlockIDRequest.class);
 
     processor.markForQA(userData, markForQARequest);
 

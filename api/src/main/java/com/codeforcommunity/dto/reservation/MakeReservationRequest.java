@@ -40,9 +40,6 @@ public class MakeReservationRequest extends ApiDto {
     if (blockID == null) {
       fields.add(fieldName + "blockID");
     }
-    if (teamID == null) {
-      fields.add(fieldName + "teamID");
-    }
 
     return fields;
   }

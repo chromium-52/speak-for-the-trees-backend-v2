@@ -23,14 +23,13 @@ public interface IReservationProcessor {
   /**
    * Marks the given block as open and marking the previous completion invalid for the given block
    */
-  void uncompleteReservation(
-      JWTData userData, BlockIDRequest uncompleteReservationRequest);
+  void uncompleteReservation(JWTData userData, BlockIDRequest uncompleteReservationRequest);
 
   /** Marks the given block for QA, meaning SFTT wants to check the completion of the given block */
   void markForQA(JWTData userData, BlockIDRequest markForQARequest);
 
   /** Marks the block as complete again, meaning SFTT approves of the block completion */
-  void passQA(JWTData userData, BlockIDRequest passQARequest); //TODO
+  void passQA(JWTData userData, BlockIDRequest passQARequest); // TODO
 
   /** Marks the block as open again, meaning SFTT does not approve of the block completion */
   void failQA(JWTData userData, BlockIDRequest failQARequest);
