@@ -1,12 +1,14 @@
 package com.codeforcommunity;
 
 import com.codeforcommunity.api.IAuthProcessor;
+import com.codeforcommunity.api.IImportProcessor;
 import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.auth.JWTAuthorizer;
 import com.codeforcommunity.auth.JWTCreator;
 import com.codeforcommunity.auth.JWTHandler;
 import com.codeforcommunity.logger.SLogger;
 import com.codeforcommunity.processor.AuthProcessorImpl;
+import com.codeforcommunity.processor.ImportProcessorImpl;
 import com.codeforcommunity.processor.ProtectedUserProcessorImpl;
 import com.codeforcommunity.propertiesLoader.PropertiesLoader;
 import com.codeforcommunity.requester.Emailer;
@@ -82,9 +84,10 @@ public class ServiceMain {
     // Create the processor implementation instances
     IAuthProcessor authProc = new AuthProcessorImpl(this.db, emailer, jwtCreator);
     IProtectedUserProcessor protectedUserProc = new ProtectedUserProcessorImpl(this.db, emailer);
+    IImportProcessor importProc = new ImportProcessorImpl(this.db);
 
     // Create the API router and start the HTTP server
-    ApiRouter router = new ApiRouter(authProc, protectedUserProc, jwtAuthorizer);
+    ApiRouter router = new ApiRouter(authProc, protectedUserProc, importProc, jwtAuthorizer);
     startApiServer(router, vertx);
   }
 
