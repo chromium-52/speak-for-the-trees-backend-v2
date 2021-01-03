@@ -9,10 +9,10 @@ import com.codeforcommunity.auth.Passwords;
 import com.codeforcommunity.dataaccess.AuthDatabaseOperations;
 import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
+import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
 import com.codeforcommunity.dto.user.UserDataResponse;
-import com.codeforcommunity.exceptions.EmailAlreadyInUseException;
-import com.codeforcommunity.exceptions.UserDoesNotExistException;
-import com.codeforcommunity.exceptions.WrongPasswordException;
+import com.codeforcommunity.enums.PrivilegeLevel;
+import com.codeforcommunity.exceptions.*;
 import com.codeforcommunity.requester.Emailer;
 import org.jooq.DSLContext;
 import org.jooq.generated.tables.pojos.Users;
@@ -94,5 +94,43 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
         previousEmail,
         AuthDatabaseOperations.getFullName(user.into(Users.class)),
         changeEmailRequest.getNewEmail());
+  }
+
+  @Override
+  public void changePrivilegeLevel(
+      JWTData userData, ChangePrivilegeLevelRequest changePrivilegeLevelRequest) {
+    // check if user is admin
+    if (!(userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN
+        || userData.getPrivilegeLevel() == PrivilegeLevel.SUPER_ADMIN)) {
+      throw new AuthException("User does not have the required privilege level");
+    }
+
+    UsersRecord user =
+        db.selectFrom(USERS)
+            .where(USERS.EMAIL.eq(changePrivilegeLevelRequest.getTargetUserEmail()))
+            .fetchOne();
+    if (user == null) {
+      throw new UserDoesNotExistException(changePrivilegeLevelRequest.getTargetUserEmail());
+    }
+
+    // normal admins can't create super admins
+    if (userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN
+        && changePrivilegeLevelRequest.getNewLevel() == PrivilegeLevel.SUPER_ADMIN) {
+      throw new AuthException("User does not have the required privilege level");
+    }
+
+    byte[] passwordHash =
+        db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne().getPasswordHash();
+
+    // check password and if the privilege level is different
+    if (Passwords.isExpectedPassword(changePrivilegeLevelRequest.getPassword(), passwordHash)) {
+      if (user.getPrivilegeLevel().equals(changePrivilegeLevelRequest.getNewLevel())) {
+        throw new SamePrivilegeLevelException();
+      }
+      user.setPrivilegeLevel(changePrivilegeLevelRequest.getNewLevel());
+      user.store();
+    } else {
+      throw new WrongPasswordException();
+    }
   }
 }
