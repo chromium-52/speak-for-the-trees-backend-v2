@@ -1,17 +1,11 @@
 package com.codeforcommunity;
 
-import com.codeforcommunity.api.IAuthProcessor;
-import com.codeforcommunity.api.IImportProcessor;
-import com.codeforcommunity.api.IProtectedUserProcessor;
-import com.codeforcommunity.api.IReservationProcessor;
+import com.codeforcommunity.api.*;
 import com.codeforcommunity.auth.JWTAuthorizer;
 import com.codeforcommunity.auth.JWTCreator;
 import com.codeforcommunity.auth.JWTHandler;
 import com.codeforcommunity.logger.SLogger;
-import com.codeforcommunity.processor.AuthProcessorImpl;
-import com.codeforcommunity.processor.ImportProcessorImpl;
-import com.codeforcommunity.processor.ProtectedUserProcessorImpl;
-import com.codeforcommunity.processor.ReservationProcessorImpl;
+import com.codeforcommunity.processor.*;
 import com.codeforcommunity.propertiesLoader.PropertiesLoader;
 import com.codeforcommunity.requester.Emailer;
 import com.codeforcommunity.rest.ApiRouter;
@@ -88,10 +82,12 @@ public class ServiceMain {
     IProtectedUserProcessor protectedUserProc = new ProtectedUserProcessorImpl(this.db, emailer);
     IImportProcessor importProc = new ImportProcessorImpl(this.db);
     IReservationProcessor reservationProc = new ReservationProcessorImpl(this.db);
+    IMapProcessor mapProc = new MapProcessorImpl(this.db);
 
     // Create the API router and start the HTTP server
     ApiRouter router =
-        new ApiRouter(authProc, protectedUserProc, importProc, reservationProc, jwtAuthorizer);
+        new ApiRouter(
+            authProc, protectedUserProc, importProc, reservationProc, mapProc, jwtAuthorizer);
 
     startApiServer(router, vertx);
   }
