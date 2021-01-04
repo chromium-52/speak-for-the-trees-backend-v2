@@ -8,6 +8,7 @@ import com.codeforcommunity.dto.imports.ImportNeighborhoodsRequest;
 import com.codeforcommunity.dto.imports.NeighborhoodImport;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
+import com.codeforcommunity.exceptions.RouteInvalidException;
 import org.jooq.DSLContext;
 import org.jooq.generated.Tables;
 import org.jooq.generated.tables.records.BlocksRecord;
@@ -24,6 +25,10 @@ public class ImportProcessorImpl implements IImportProcessor {
   public void importBlocks(JWTData userData, ImportBlocksRequest importBlocksRequest) {
     if (userData.getPrivilegeLevel() != PrivilegeLevel.SUPER_ADMIN) {
       throw new AuthException("User does not have the required privilege level.");
+    }
+
+    if (!db.fetchExists(Tables.NEIGHBORHOODS)) {
+      throw new RouteInvalidException("Blocks cannot be seeded when no neighborhoods exist.");
     }
 
     for (BlockImport blockImport : importBlocksRequest.getBlocks()) {
