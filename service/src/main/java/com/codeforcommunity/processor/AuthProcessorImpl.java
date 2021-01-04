@@ -44,6 +44,7 @@ public class AuthProcessorImpl implements IAuthProcessor {
   public SessionResponse signUp(NewUserRequest request) {
     UsersRecord user =
         authDatabaseOperations.createNewUser(
+            request.getUsername(),
             request.getEmail(),
             request.getPassword(),
             request.getFirstName(),
