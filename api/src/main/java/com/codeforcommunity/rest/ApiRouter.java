@@ -1,11 +1,13 @@
 package com.codeforcommunity.rest;
 
 import com.codeforcommunity.api.IAuthProcessor;
+import com.codeforcommunity.api.IImportProcessor;
 import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.api.IReservationProcessor;
 import com.codeforcommunity.auth.JWTAuthorizer;
 import com.codeforcommunity.rest.subrouter.AuthRouter;
 import com.codeforcommunity.rest.subrouter.CommonRouter;
+import com.codeforcommunity.rest.subrouter.ImportRouter;
 import com.codeforcommunity.rest.subrouter.ProtectedUserRouter;
 import com.codeforcommunity.rest.subrouter.ReservationRouter;
 import io.vertx.core.Vertx;
@@ -16,16 +18,20 @@ public class ApiRouter implements IRouter {
   private final CommonRouter commonRouter;
   private final AuthRouter authRouter;
   private final ProtectedUserRouter protectedUserRouter;
+  private final ImportRouter importRouter;
   private final ReservationRouter reservationRouter;
+
 
   public ApiRouter(
       IAuthProcessor authProcessor,
       IProtectedUserProcessor protectedUserProcessor,
+      IImportProcessor importProcessor,
       IReservationProcessor reservationProcessor,
       JWTAuthorizer jwtAuthorizer) {
     this.commonRouter = new CommonRouter(jwtAuthorizer);
     this.authRouter = new AuthRouter(authProcessor);
     this.protectedUserRouter = new ProtectedUserRouter(protectedUserProcessor);
+    this.importRouter = new ImportRouter(importProcessor);
     this.reservationRouter = new ReservationRouter(reservationProcessor);
   }
 
@@ -47,6 +53,7 @@ public class ApiRouter implements IRouter {
     Router router = Router.router(vertx);
 
     router.mountSubRouter("/user", protectedUserRouter.initializeRouter(vertx));
+    router.mountSubRouter("/import", importRouter.initializeRouter(vertx));
     router.mountSubRouter("/reservations", reservationRouter.initializeRouter(vertx));
 
     return router;
