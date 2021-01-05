@@ -11,7 +11,7 @@ public class NewUserRequest extends ApiDto {
   private String email;
   private String password;
   private String firstName;
-  private String lastName;  
+  private String lastName;
 
   public String getUsername() {
     return username;

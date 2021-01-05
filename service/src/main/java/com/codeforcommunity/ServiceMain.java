@@ -11,9 +11,9 @@ import com.codeforcommunity.auth.JWTHandler;
 import com.codeforcommunity.logger.SLogger;
 import com.codeforcommunity.processor.AuthProcessorImpl;
 import com.codeforcommunity.processor.ImportProcessorImpl;
+import com.codeforcommunity.processor.LeaderboardProcessorImpl;
 import com.codeforcommunity.processor.ProtectedUserProcessorImpl;
 import com.codeforcommunity.processor.ReservationProcessorImpl;
-import com.codeforcommunity.processor.LeaderboardProcessorImpl;
 import com.codeforcommunity.propertiesLoader.PropertiesLoader;
 import com.codeforcommunity.requester.Emailer;
 import com.codeforcommunity.rest.ApiRouter;
@@ -93,7 +93,14 @@ public class ServiceMain {
     ILeaderboardProcessor leaderboardProc = new LeaderboardProcessorImpl(this.db);
 
     // Create the API router and start the HTTP server
-    ApiRouter router = new ApiRouter(authProc, protectedUserProc, importProc, reservationProc, leaderboardProc, jwtAuthorizer);
+    ApiRouter router =
+        new ApiRouter(
+            authProc,
+            protectedUserProc,
+            importProc,
+            reservationProc,
+            leaderboardProc,
+            jwtAuthorizer);
 
     startApiServer(router, vertx);
   }
