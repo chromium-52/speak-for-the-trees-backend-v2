@@ -34,7 +34,7 @@ public class MapProcessorImpl implements IMapProcessor {
         new BlockFeatureProperties(
             blocksRecord.getId(), blocksRecord.getLat(), blocksRecord.getLng());
     try {
-      JsonObject geometry = new JsonObject(blocksRecord.getGeometry().replaceAll("'", "\""));
+      JsonObject geometry = new JsonObject(blocksRecord.getGeometry());
       return new BlockFeature(properties, geometry);
     } catch (Exception e) {
       String errorMessage =
@@ -89,7 +89,7 @@ public class MapProcessorImpl implements IMapProcessor {
             neighborhoodsRecord.getLat(),
             neighborhoodsRecord.getLng());
     try {
-      JsonObject geometry = new JsonObject(neighborhoodsRecord.getGeometry().replaceAll("'", "\""));
+      JsonObject geometry = new JsonObject(neighborhoodsRecord.getGeometry());
       return new NeighborhoodFeature(properties, geometry);
     } catch (Exception e) {
       String errorMessage =
