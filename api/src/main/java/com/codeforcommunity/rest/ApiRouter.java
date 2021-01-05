@@ -15,7 +15,6 @@ public class ApiRouter implements IRouter {
   private final ReservationRouter reservationRouter;
   private final LeaderboardRouter leaderboardRouter;
 
-
   public ApiRouter(
       IAuthProcessor authProcessor,
       IProtectedUserProcessor protectedUserProcessor,
@@ -37,6 +36,7 @@ public class ApiRouter implements IRouter {
 
     router.mountSubRouter("/user", authRouter.initializeRouter(vertx));
     router.mountSubRouter("/protected", defineProtectedRoutes(vertx));
+    router.mountSubRouter("/leaderboard", leaderboardRouter.initializeRouter(vertx));
 
     return router;
   }
@@ -51,7 +51,6 @@ public class ApiRouter implements IRouter {
     router.mountSubRouter("/user", protectedUserRouter.initializeRouter(vertx));
     router.mountSubRouter("/import", importRouter.initializeRouter(vertx));
     router.mountSubRouter("/reservations", reservationRouter.initializeRouter(vertx));
-    router.mountSubRouter("/leaderboard", leaderboardRouter.initializeRouter(vertx));
 
     return router;
   }

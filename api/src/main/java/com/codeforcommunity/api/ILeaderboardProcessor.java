@@ -1,16 +1,13 @@
 package com.codeforcommunity.api;
 
-import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.leaderboard.GetLeaderboardRequest;
-import com.codeforcommunity.dto.leaderboard.GetTeamsLeaderboardResponse;
-import com.codeforcommunity.dto.leaderboard.GetUsersLeaderboardResponse;
+import com.codeforcommunity.dto.leaderboard.GetLeaderboardResponse;
 
 public interface ILeaderboardProcessor {
 
-    /** TODO: Explanation */
-    GetUsersLeaderboardResponse getUsersLeaderboard(JWTData userData, GetLeaderboardRequest getUsersLeaderboardRequest);
+  /** Returns a list of the top 100 users in order of blocks counted */
+  GetLeaderboardResponse getUsersLeaderboard(GetLeaderboardRequest getUsersLeaderboardRequest);
 
-    /** TODO: Explanation */
-    GetTeamsLeaderboardResponse getTeamsLeaderboard(JWTData userData, GetLeaderboardRequest getTeamsLeaderboardRequest);
-
+  /** Returns a list of the top 100 teams in order of blocks counted */
+  GetLeaderboardResponse getTeamsLeaderboard(GetLeaderboardRequest getTeamsLeaderboardRequest);
 }
