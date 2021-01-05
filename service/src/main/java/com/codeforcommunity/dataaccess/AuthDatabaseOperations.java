@@ -12,6 +12,7 @@ import com.codeforcommunity.exceptions.ExpiredSecretKeyException;
 import com.codeforcommunity.exceptions.InvalidSecretKeyException;
 import com.codeforcommunity.exceptions.UsedSecretKeyException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
+import com.codeforcommunity.exceptions.UsernameAlreadyInUseException;
 import com.codeforcommunity.processor.AuthProcessorImpl;
 import com.codeforcommunity.propertiesLoader.PropertiesLoader;
 import java.sql.Timestamp;
@@ -102,13 +103,19 @@ public class AuthDatabaseOperations {
    *     table.
    */
   public UsersRecord createNewUser(
-      String email, String password, String firstName, String lastName) {
-    boolean emailUsed = db.fetchExists(db.selectFrom(USERS).where(USERS.EMAIL.eq(email)));
+      String username, String email, String password, String firstName, String lastName) {
+    boolean usernameUsed = db.fetchExists(USERS, USERS.USERNAME.eq(username));
+    if (usernameUsed) {
+      throw new UsernameAlreadyInUseException(username);
+    }
+
+    boolean emailUsed = db.fetchExists(USERS, USERS.EMAIL.eq(email));
     if (emailUsed) {
       throw new EmailAlreadyInUseException(email);
     }
 
     UsersRecord newUser = db.newRecord(USERS);
+    newUser.setUsername(username);
     newUser.setEmail(email);
     newUser.setPasswordHash(Passwords.createHash(password));
     newUser.setFirstName(firstName);
