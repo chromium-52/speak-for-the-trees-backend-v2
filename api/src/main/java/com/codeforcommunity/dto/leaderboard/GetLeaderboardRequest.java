@@ -6,20 +6,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GetLeaderboardRequest extends ApiDto {
-  private Integer timePeriod;
+  private Integer previousDays;
 
-  public GetLeaderboardRequest(Integer timePeriod) {
-    this.timePeriod = timePeriod;
+  public GetLeaderboardRequest(Integer previousDays) {
+    this.previousDays = previousDays;
   }
 
   private GetLeaderboardRequest() {}
 
-  public Integer getTimePeriod() {
-    return timePeriod;
+  public Integer getPreviousDays() {
+    return previousDays;
   }
 
-  public void setTimePeriod(Integer timePeriod) {
-    this.timePeriod = timePeriod;
+  public void setPreviousDays(Integer previousDays) {
+    this.previousDays = previousDays;
   }
 
   @Override
@@ -27,8 +27,8 @@ public class GetLeaderboardRequest extends ApiDto {
     String fieldName = fieldPrefix + "leaderboard_request";
     List<String> fields = new ArrayList<>();
 
-    if (timePeriod == null) {
-      fields.add(fieldName + "timePeriod");
+    if (previousDays == null) {
+      fields.add(fieldName + "previousDays");
     }
 
     return fields;

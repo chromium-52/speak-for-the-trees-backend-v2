@@ -3,7 +3,7 @@ package com.codeforcommunity.dto.leaderboard;
 import java.util.List;
 
 public class GetLeaderboardResponse {
-  private List<LeaderboardEntry> entries;
+  private final List<LeaderboardEntry> entries;
 
   public GetLeaderboardResponse(List<LeaderboardEntry> entries) {
     this.entries = entries;

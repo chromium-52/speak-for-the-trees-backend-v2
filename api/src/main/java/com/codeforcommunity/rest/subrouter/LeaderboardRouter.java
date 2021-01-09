@@ -30,12 +30,12 @@ public class LeaderboardRouter implements IRouter {
   }
 
   private void registerGetUsersLeaderboard(Router router) {
-    Route getUsersLeaderboard = router.post("/users");
+    Route getUsersLeaderboard = router.get("/users");
     getUsersLeaderboard.handler(this::handleGetUsersLeaderboardRoute);
   }
 
   private void registerGetTeamsLeaderboard(Router router) {
-    Route getTeamsLeaderboard = router.post("/teams");
+    Route getTeamsLeaderboard = router.get("/teams");
     getTeamsLeaderboard.handler(this::handleGetTeamsLeaderboardRoute);
   }
 

@@ -1,8 +1,17 @@
 package com.codeforcommunity.rest;
 
-import com.codeforcommunity.api.*;
+import com.codeforcommunity.api.IAuthProcessor;
+import com.codeforcommunity.api.IImportProcessor;
+import com.codeforcommunity.api.ILeaderboardProcessor;
+import com.codeforcommunity.api.IProtectedUserProcessor;
+import com.codeforcommunity.api.IReservationProcessor;
 import com.codeforcommunity.auth.JWTAuthorizer;
-import com.codeforcommunity.rest.subrouter.*;
+import com.codeforcommunity.rest.subrouter.AuthRouter;
+import com.codeforcommunity.rest.subrouter.CommonRouter;
+import com.codeforcommunity.rest.subrouter.ImportRouter;
+import com.codeforcommunity.rest.subrouter.LeaderboardRouter;
+import com.codeforcommunity.rest.subrouter.ProtectedUserRouter;
+import com.codeforcommunity.rest.subrouter.ReservationRouter;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
