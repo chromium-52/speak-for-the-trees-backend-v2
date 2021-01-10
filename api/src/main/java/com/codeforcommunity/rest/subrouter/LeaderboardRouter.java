@@ -5,7 +5,6 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 import com.codeforcommunity.api.ILeaderboardProcessor;
 import com.codeforcommunity.dto.leaderboard.GetLeaderboardRequest;
 import com.codeforcommunity.dto.leaderboard.GetLeaderboardResponse;
-import com.codeforcommunity.dto.leaderboard.LeaderboardEntry;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
