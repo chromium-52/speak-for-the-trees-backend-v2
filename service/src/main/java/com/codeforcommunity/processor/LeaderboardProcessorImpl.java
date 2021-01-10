@@ -15,7 +15,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import org.jooq.DSLContext;
 import org.jooq.Record3;
-import org.jooq.SelectSeekStep2;
+import org.jooq.Select;
 
 public class LeaderboardProcessorImpl implements ILeaderboardProcessor {
   private final DSLContext db;
@@ -28,28 +28,27 @@ public class LeaderboardProcessorImpl implements ILeaderboardProcessor {
   public GetLeaderboardResponse getUsersLeaderboard(
       GetLeaderboardRequest getUsersLeaderboardRequest) {
 
+    // subquery needs to select block, last action, user_id and last performed at
     Select<Record3<Integer, Integer, ReservationAction>> subquery =
         db.select(BLOCKS.ID, RESERVATIONS.USER_ID, RESERVATIONS.ACTION_TYPE)
             .distinctOn(BLOCKS.ID)
             .from(BLOCKS)
             .join(RESERVATIONS)
             .onKey()
-            .orderBy(BLOCKS.ID, RESERVATIONS.PERFORMED_AT.desc());
-
-    // select user_id, username and number of blocks completed
-    List<LeaderboardEntry> users =
-        db.select(USERS.ID, USERS.USERNAME, count())
-            .from(USERS)
-            .innerJoin(RESERVATIONS)
-            .onKey()
-            .where(RESERVATIONS.ACTION_TYPE.in(ReservationAction.COMPLETE, ReservationAction.QA))
-            .and(
+            .where(
                 RESERVATIONS.PERFORMED_AT.greaterThan(
                     new Timestamp(
                         System.currentTimeMillis()
-                            - (getUsersLeaderboardRequest.getPreviousDays() * 86400))))
-            .groupBy(USERS.ID)
-            .having(count().greaterThan(0))
+                            - (getUsersLeaderboardRequest.getPreviousDays() * 86400000))))
+            .orderBy(BLOCKS.ID, RESERVATIONS.PERFORMED_AT.desc());
+
+    List<LeaderboardEntry> users =
+            db.select(subquery.field(1).as("user_id"), USERS.USERNAME, count())
+            .from(subquery)
+            .innerJoin(USERS)
+            .on(USERS.ID.eq(subquery.field(1).cast(Integer.class)))
+                    .where(subquery.field(2).cast(ReservationAction.class).in(ReservationAction.COMPLETE, ReservationAction.QA))
+                    .groupBy(USERS.ID)
             .orderBy(count().desc())
             .limit(100)
             .fetchInto(LeaderboardEntry.class);
