@@ -12,7 +12,6 @@ import com.codeforcommunity.logger.SLogger;
 import io.vertx.core.json.JsonObject;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.jooq.*;
 import org.jooq.generated.tables.records.BlocksRecord;
 import org.jooq.generated.tables.records.NeighborhoodsRecord;
@@ -26,9 +25,7 @@ public class MapProcessorImpl implements IMapProcessor {
     this.db = db;
   }
 
-  /**
-   * Create a corresponding BlockFeature from a BlocksRecord.
-   */
+  /** Create a corresponding BlockFeature from a BlocksRecord. */
   private BlockFeature blockFeatureFromRecord(BlocksRecord blocksRecord) {
     BlockFeatureProperties properties =
         new BlockFeatureProperties(
@@ -47,45 +44,52 @@ public class MapProcessorImpl implements IMapProcessor {
   }
 
   /**
-   * Given a neighborhoodId, return the percent of blocks that have been completed or are in QA in it
-   * as an integer between 0 and 100.
+   * Given a neighborhoodId, return the percent of blocks that have been completed or are in QA in
+   * it as an integer between 0 and 100.
    */
   private Integer getNeighborhoodCompletionPercentage(int neighborhoodId) {
     // This counts the number of blocks that are in the given neighborhood
-    int totalNeighborhoodBlocks = db.select(count())
+    int totalNeighborhoodBlocks =
+        db.select(count())
             .from(BLOCKS)
             .where(BLOCKS.NEIGHBORHOOD_ID.eq(neighborhoodId))
             .fetchOne(0, Integer.class);
 
     // This joins each block with their most recent reservations table entry
-    Select<Record2<Integer, ReservationAction>> subquery = db.select(BLOCKS.ID, RESERVATIONS.ACTION_TYPE)
+    Select<Record2<Integer, ReservationAction>> subquery =
+        db.select(BLOCKS.ID, RESERVATIONS.ACTION_TYPE)
             .distinctOn(BLOCKS.ID)
             .from(BLOCKS)
-            .join(RESERVATIONS).onKey()
+            .join(RESERVATIONS)
+            .onKey()
             .where(BLOCKS.NEIGHBORHOOD_ID.eq(neighborhoodId))
             .orderBy(BLOCKS.ID, RESERVATIONS.PERFORMED_AT.desc());
 
-    // This counts the number of rows in the above query that have their most recent reservation action as complete or qa
-    int completedNeighborhoodBlocks = db.select(count())
+    // This counts the number of rows in the above query that have their most recent reservation
+    // action as complete or qa
+    int completedNeighborhoodBlocks =
+        db.select(count())
             .from(subquery)
-            .where(subquery.field(1, ReservationAction.class).in(ReservationAction.COMPLETE, ReservationAction.QA))
+            .where(
+                subquery
+                    .field(1, ReservationAction.class)
+                    .in(ReservationAction.COMPLETE, ReservationAction.QA))
             .fetchOne(0, Integer.class);
 
     double completionPercent = (double) completedNeighborhoodBlocks / totalNeighborhoodBlocks;
     return (int) Math.floor(completionPercent * 100);
   }
 
-  /**
-   * Create a corresponding NeighborhoodFeature for a given neighborhoodsRecord
-   */
+  /** Create a corresponding NeighborhoodFeature for a given neighborhoodsRecord */
   private NeighborhoodFeature neighborhoodFeatureFromRecord(
       NeighborhoodsRecord neighborhoodsRecord) {
-    Integer neighborhoodCompletionPercentage = getNeighborhoodCompletionPercentage(neighborhoodsRecord.getId());
+    Integer neighborhoodCompletionPercentage =
+        getNeighborhoodCompletionPercentage(neighborhoodsRecord.getId());
     NeighborhoodFeatureProperties properties =
         new NeighborhoodFeatureProperties(
             neighborhoodsRecord.getId(),
             neighborhoodsRecord.getNeighborhoodName(),
-                neighborhoodCompletionPercentage,
+            neighborhoodCompletionPercentage,
             neighborhoodsRecord.getLat(),
             neighborhoodsRecord.getLng());
     try {

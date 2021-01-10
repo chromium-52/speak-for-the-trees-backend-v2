@@ -1,8 +1,19 @@
 package com.codeforcommunity.rest;
 
-import com.codeforcommunity.api.*;
+import com.codeforcommunity.api.IAuthProcessor;
+import com.codeforcommunity.api.IImportProcessor;
+import com.codeforcommunity.api.ILeaderboardProcessor;
+import com.codeforcommunity.api.IMapProcessor;
+import com.codeforcommunity.api.IProtectedUserProcessor;
+import com.codeforcommunity.api.IReservationProcessor;
 import com.codeforcommunity.auth.JWTAuthorizer;
-import com.codeforcommunity.rest.subrouter.*;
+import com.codeforcommunity.rest.subrouter.AuthRouter;
+import com.codeforcommunity.rest.subrouter.CommonRouter;
+import com.codeforcommunity.rest.subrouter.ImportRouter;
+import com.codeforcommunity.rest.subrouter.LeaderboardRouter;
+import com.codeforcommunity.rest.subrouter.MapRouter;
+import com.codeforcommunity.rest.subrouter.ProtectedUserRouter;
+import com.codeforcommunity.rest.subrouter.ReservationRouter;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -13,6 +24,7 @@ public class ApiRouter implements IRouter {
   private final ProtectedUserRouter protectedUserRouter;
   private final ImportRouter importRouter;
   private final ReservationRouter reservationRouter;
+  private final LeaderboardRouter leaderboardRouter;
   private final MapRouter mapRouter;
 
   public ApiRouter(
@@ -20,6 +32,7 @@ public class ApiRouter implements IRouter {
       IProtectedUserProcessor protectedUserProcessor,
       IImportProcessor importProcessor,
       IReservationProcessor reservationProcessor,
+      ILeaderboardProcessor leaderboardProcessor,
       IMapProcessor mapProcessor,
       JWTAuthorizer jwtAuthorizer) {
     this.commonRouter = new CommonRouter(jwtAuthorizer);
@@ -27,6 +40,7 @@ public class ApiRouter implements IRouter {
     this.protectedUserRouter = new ProtectedUserRouter(protectedUserProcessor);
     this.importRouter = new ImportRouter(importProcessor);
     this.reservationRouter = new ReservationRouter(reservationProcessor);
+    this.leaderboardRouter = new LeaderboardRouter(leaderboardProcessor);
     this.mapRouter = new MapRouter(mapProcessor);
   }
 
@@ -36,6 +50,7 @@ public class ApiRouter implements IRouter {
 
     router.mountSubRouter("/user", authRouter.initializeRouter(vertx));
     router.mountSubRouter("/protected", defineProtectedRoutes(vertx));
+    router.mountSubRouter("/leaderboard", leaderboardRouter.initializeRouter(vertx));
 
     return router;
   }
