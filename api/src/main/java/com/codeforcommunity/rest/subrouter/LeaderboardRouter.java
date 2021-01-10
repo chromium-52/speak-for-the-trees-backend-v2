@@ -4,9 +4,12 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.ILeaderboardProcessor;
 import com.codeforcommunity.dto.leaderboard.GetLeaderboardRequest;
+import com.codeforcommunity.dto.leaderboard.GetLeaderboardResponse;
+import com.codeforcommunity.dto.leaderboard.LeaderboardEntry;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
+import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
@@ -43,17 +46,17 @@ public class LeaderboardRouter implements IRouter {
     GetLeaderboardRequest getLeaderboardRequest =
         RestFunctions.getJsonBodyAsClass(ctx, GetLeaderboardRequest.class);
 
-    processor.getUsersLeaderboard(getLeaderboardRequest);
+    GetLeaderboardResponse response = processor.getUsersLeaderboard(getLeaderboardRequest);
 
-    end(ctx.response(), 200);
+    end(ctx.response(), 200, JsonObject.mapFrom(response).toString());
   }
 
   private void handleGetTeamsLeaderboardRoute(RoutingContext ctx) {
     GetLeaderboardRequest getLeaderboardRequest =
         RestFunctions.getJsonBodyAsClass(ctx, GetLeaderboardRequest.class);
 
-    processor.getTeamsLeaderboard(getLeaderboardRequest);
+    GetLeaderboardResponse response = processor.getTeamsLeaderboard(getLeaderboardRequest);
 
-    end(ctx.response(), 200);
+    end(ctx.response(), 200, JsonObject.mapFrom(response).toString());
   }
 }

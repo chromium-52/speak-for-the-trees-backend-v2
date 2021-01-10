@@ -43,12 +43,16 @@ public class LeaderboardProcessorImpl implements ILeaderboardProcessor {
             .orderBy(BLOCKS.ID, RESERVATIONS.PERFORMED_AT.desc());
 
     List<LeaderboardEntry> users =
-            db.select(subquery.field(1).as("user_id"), USERS.USERNAME, count())
+        db.select(subquery.field(1).as("user_id"), USERS.USERNAME, count())
             .from(subquery)
             .innerJoin(USERS)
             .on(USERS.ID.eq(subquery.field(1).cast(Integer.class)))
-                    .where(subquery.field(2).cast(ReservationAction.class).in(ReservationAction.COMPLETE, ReservationAction.QA))
-                    .groupBy(USERS.ID)
+            .where(
+                subquery
+                    .field(2)
+                    .cast(ReservationAction.class)
+                    .in(ReservationAction.COMPLETE, ReservationAction.QA))
+            .groupBy(subquery.field(1), USERS.USERNAME)
             .orderBy(count().desc())
             .limit(100)
             .fetchInto(LeaderboardEntry.class);
