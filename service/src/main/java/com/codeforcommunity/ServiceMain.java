@@ -1,7 +1,9 @@
 package com.codeforcommunity;
+
 import com.codeforcommunity.api.IAuthProcessor;
 import com.codeforcommunity.api.IImportProcessor;
 import com.codeforcommunity.api.ILeaderboardProcessor;
+import com.codeforcommunity.api.IMapProcessor;
 import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.api.IReservationProcessor;
 import com.codeforcommunity.auth.JWTAuthorizer;
@@ -11,6 +13,7 @@ import com.codeforcommunity.logger.SLogger;
 import com.codeforcommunity.processor.AuthProcessorImpl;
 import com.codeforcommunity.processor.ImportProcessorImpl;
 import com.codeforcommunity.processor.LeaderboardProcessorImpl;
+import com.codeforcommunity.processor.MapProcessorImpl;
 import com.codeforcommunity.processor.ProtectedUserProcessorImpl;
 import com.codeforcommunity.processor.ReservationProcessorImpl;
 import com.codeforcommunity.propertiesLoader.PropertiesLoader;
