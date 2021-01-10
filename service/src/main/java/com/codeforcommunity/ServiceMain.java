@@ -1,5 +1,4 @@
 package com.codeforcommunity;
-
 import com.codeforcommunity.api.IAuthProcessor;
 import com.codeforcommunity.api.IImportProcessor;
 import com.codeforcommunity.api.ILeaderboardProcessor;
@@ -91,6 +90,7 @@ public class ServiceMain {
     IImportProcessor importProc = new ImportProcessorImpl(this.db);
     IReservationProcessor reservationProc = new ReservationProcessorImpl(this.db);
     ILeaderboardProcessor leaderboardProc = new LeaderboardProcessorImpl(this.db);
+    IMapProcessor mapProc = new MapProcessorImpl(this.db);
 
     // Create the API router and start the HTTP server
     ApiRouter router =
@@ -100,6 +100,7 @@ public class ServiceMain {
             importProc,
             reservationProc,
             leaderboardProc,
+            mapProc,
             jwtAuthorizer);
 
     startApiServer(router, vertx);

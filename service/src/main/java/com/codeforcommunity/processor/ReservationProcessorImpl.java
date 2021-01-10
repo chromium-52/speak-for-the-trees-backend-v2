@@ -212,7 +212,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     reservationsRecord.setActionType(ReservationAction.RELEASE);
     reservationsRecord.setPerformedAt(new Timestamp(System.currentTimeMillis()));
 
-    blockReservedCheck(userData.getUserId(), releaseReservationRequest.getBlockID());
+    blockReservedCheck(releaseReservationRequest.getBlockID(), userData.getUserId());
 
     reservationsRecord.store();
   }

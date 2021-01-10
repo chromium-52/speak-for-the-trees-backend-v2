@@ -23,6 +23,7 @@ public class ApiRouter implements IRouter {
   private final ImportRouter importRouter;
   private final ReservationRouter reservationRouter;
   private final LeaderboardRouter leaderboardRouter;
+  private final MapRouter mapRouter;
 
   public ApiRouter(
       IAuthProcessor authProcessor,
@@ -30,6 +31,7 @@ public class ApiRouter implements IRouter {
       IImportProcessor importProcessor,
       IReservationProcessor reservationProcessor,
       ILeaderboardProcessor leaderboardProcessor,
+      IMapProcessor mapProcessor,
       JWTAuthorizer jwtAuthorizer) {
     this.commonRouter = new CommonRouter(jwtAuthorizer);
     this.authRouter = new AuthRouter(authProcessor);
@@ -37,6 +39,7 @@ public class ApiRouter implements IRouter {
     this.importRouter = new ImportRouter(importProcessor);
     this.reservationRouter = new ReservationRouter(reservationProcessor);
     this.leaderboardRouter = new LeaderboardRouter(leaderboardProcessor);
+    this.mapRouter = new MapRouter(mapProcessor);
   }
 
   /** Initialize a router and register all route handlers on it. */
@@ -60,6 +63,7 @@ public class ApiRouter implements IRouter {
     router.mountSubRouter("/user", protectedUserRouter.initializeRouter(vertx));
     router.mountSubRouter("/import", importRouter.initializeRouter(vertx));
     router.mountSubRouter("/reservations", reservationRouter.initializeRouter(vertx));
+    router.mountSubRouter("/map", mapRouter.initializeRouter(vertx));
 
     return router;
   }
