@@ -19,6 +19,8 @@ import org.jooq.Select;
 
 public class LeaderboardProcessorImpl implements ILeaderboardProcessor {
   private final DSLContext db;
+  private static final int dayInMs = 86400000;
+  private static final int leaderboardLimit = 100;
 
   public LeaderboardProcessorImpl(DSLContext db) {
     this.db = db;
@@ -38,7 +40,7 @@ public class LeaderboardProcessorImpl implements ILeaderboardProcessor {
                 RESERVATIONS.PERFORMED_AT.greaterThan(
                     new Timestamp(
                         System.currentTimeMillis()
-                            - (getUsersLeaderboardRequest.getPreviousDays() * 86400000))))
+                            - (getUsersLeaderboardRequest.getPreviousDays() * dayInMs))))
             .orderBy(BLOCKS.ID, RESERVATIONS.PERFORMED_AT.desc());
 
     List<LeaderboardEntry> users =
@@ -53,7 +55,7 @@ public class LeaderboardProcessorImpl implements ILeaderboardProcessor {
                     .in(ReservationAction.COMPLETE, ReservationAction.QA))
             .groupBy(subquery.field(1), USERS.USERNAME)
             .orderBy(count().desc())
-            .limit(100)
+            .limit(leaderboardLimit)
             .fetchInto(LeaderboardEntry.class);
 
     return new GetLeaderboardResponse(users);
@@ -73,7 +75,7 @@ public class LeaderboardProcessorImpl implements ILeaderboardProcessor {
                 RESERVATIONS.PERFORMED_AT.greaterThan(
                     new Timestamp(
                         System.currentTimeMillis()
-                            - (getTeamsLeaderboardRequest.getPreviousDays() * 86400000))))
+                            - (getTeamsLeaderboardRequest.getPreviousDays() * dayInMs))))
             .orderBy(BLOCKS.ID, RESERVATIONS.PERFORMED_AT.desc());
 
     List<LeaderboardEntry> teams =
@@ -88,7 +90,7 @@ public class LeaderboardProcessorImpl implements ILeaderboardProcessor {
                     .in(ReservationAction.COMPLETE, ReservationAction.QA))
             .groupBy(subquery.field(1), TEAMS.TEAM_NAME)
             .orderBy(count().desc())
-            .limit(100)
+            .limit(leaderboardLimit)
             .fetchInto(LeaderboardEntry.class);
 
     return new GetLeaderboardResponse(teams);
