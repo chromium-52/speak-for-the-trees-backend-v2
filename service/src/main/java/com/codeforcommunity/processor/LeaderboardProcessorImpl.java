@@ -28,7 +28,6 @@ public class LeaderboardProcessorImpl implements ILeaderboardProcessor {
   public GetLeaderboardResponse getUsersLeaderboard(
       GetLeaderboardRequest getUsersLeaderboardRequest) {
 
-    // subquery needs to select block, last action, user_id and last performed at
     Select<Record3<Integer, Integer, ReservationAction>> subquery =
         db.select(BLOCKS.ID, RESERVATIONS.USER_ID, RESERVATIONS.ACTION_TYPE)
             .distinctOn(BLOCKS.ID)
@@ -63,19 +62,31 @@ public class LeaderboardProcessorImpl implements ILeaderboardProcessor {
   @Override
   public GetLeaderboardResponse getTeamsLeaderboard(
       GetLeaderboardRequest getTeamsLeaderboardRequest) {
-    List<LeaderboardEntry> teams =
-        db.select(TEAMS.ID, TEAMS.TEAM_NAME, count())
-            .from(TEAMS)
-            .innerJoin(RESERVATIONS)
+
+    Select<Record3<Integer, Integer, ReservationAction>> subquery =
+        db.select(BLOCKS.ID, RESERVATIONS.TEAM_ID, RESERVATIONS.ACTION_TYPE)
+            .distinctOn(BLOCKS.ID)
+            .from(BLOCKS)
+            .join(RESERVATIONS)
             .onKey()
-            .where(RESERVATIONS.ACTION_TYPE.in(ReservationAction.COMPLETE, ReservationAction.QA))
-            .and(
+            .where(
                 RESERVATIONS.PERFORMED_AT.greaterThan(
                     new Timestamp(
                         System.currentTimeMillis()
-                            - (getTeamsLeaderboardRequest.getPreviousDays() * 86400))))
-            .groupBy(TEAMS.ID)
-            .having(count().greaterThan(0))
+                            - (getTeamsLeaderboardRequest.getPreviousDays() * 86400000))))
+            .orderBy(BLOCKS.ID, RESERVATIONS.PERFORMED_AT.desc());
+
+    List<LeaderboardEntry> teams =
+        db.select(subquery.field(1).as("team_id"), TEAMS.TEAM_NAME, count())
+            .from(subquery)
+            .innerJoin(TEAMS)
+            .on(TEAMS.ID.eq(subquery.field(1).cast(Integer.class)))
+            .where(
+                subquery
+                    .field(2)
+                    .cast(ReservationAction.class)
+                    .in(ReservationAction.COMPLETE, ReservationAction.QA))
+            .groupBy(subquery.field(1), TEAMS.TEAM_NAME)
             .orderBy(count().desc())
             .limit(100)
             .fetchInto(LeaderboardEntry.class);
