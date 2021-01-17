@@ -1,18 +1,27 @@
 package com.codeforcommunity.processor;
 
+import static org.jooq.generated.Tables.BLOCKS;
+import static org.jooq.generated.Tables.TEAMS;
+import static org.jooq.generated.Tables.USERS;
+
 import com.codeforcommunity.api.IImportProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.imports.BlockImport;
 import com.codeforcommunity.dto.imports.ImportBlocksRequest;
 import com.codeforcommunity.dto.imports.ImportNeighborhoodsRequest;
+import com.codeforcommunity.dto.imports.ImportReservationsRequest;
 import com.codeforcommunity.dto.imports.NeighborhoodImport;
+import com.codeforcommunity.dto.imports.ReservationImport;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
+import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.RouteInvalidException;
+import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import org.jooq.DSLContext;
 import org.jooq.generated.Tables;
 import org.jooq.generated.tables.records.BlocksRecord;
 import org.jooq.generated.tables.records.NeighborhoodsRecord;
+import org.jooq.generated.tables.records.ReservationsRecord;
 
 public class ImportProcessorImpl implements IImportProcessor {
   private final DSLContext db;
@@ -32,7 +41,7 @@ public class ImportProcessorImpl implements IImportProcessor {
     }
 
     for (BlockImport blockImport : importBlocksRequest.getBlocks()) {
-      BlocksRecord block = db.newRecord(Tables.BLOCKS);
+      BlocksRecord block = db.newRecord(BLOCKS);
       block.setId(blockImport.getBlockId());
       block.setNeighborhoodId(blockImport.getNeighborhoodId());
       block.setLat(blockImport.getLat());
@@ -59,6 +68,50 @@ public class ImportProcessorImpl implements IImportProcessor {
       neighborhood.setGeometry(neighborhoodImport.getGeometry());
 
       neighborhood.store();
+    }
+  }
+
+  @Override
+  public void importReservations(
+      JWTData userData, ImportReservationsRequest importReservationsRequest) {
+    if (userData.getPrivilegeLevel() != PrivilegeLevel.SUPER_ADMIN) {
+      throw new AuthException("User does not have the required privilege level.");
+    }
+
+    // Get superuser ID
+    Integer superAdminId = userData.getUserId();
+
+    for (ReservationImport reservationImport : importReservationsRequest.getReservations()) {
+      if (!db.fetchExists(
+          db.selectFrom(BLOCKS).where(BLOCKS.ID.eq(reservationImport.getBlockId())))) {
+        throw new ResourceDoesNotExistException(reservationImport.getBlockId(), "block");
+      }
+      if (reservationImport.getUserId() != null
+          && (!db.fetchExists(
+              db.selectFrom(USERS).where(USERS.ID.eq(reservationImport.getUserId()))))) {
+        throw new UserDoesNotExistException(reservationImport.getUserId());
+      }
+      if (reservationImport.getTeamId() != null
+          && (!db.fetchExists(
+              db.selectFrom(TEAMS).where(TEAMS.ID.eq(reservationImport.getTeamId()))))) {
+        throw new ResourceDoesNotExistException(reservationImport.getTeamId(), "block");
+      }
+
+      ReservationsRecord reservation = db.newRecord(Tables.RESERVATIONS);
+      reservation.setBlockId(reservationImport.getBlockId());
+      if (reservationImport.getUserId() != null) {
+        reservation.setUserId(reservationImport.getUserId());
+      }
+      if (reservationImport.getTeamId() != null) {
+        reservation.setTeamId(reservationImport.getTeamId());
+      }
+      if (reservationImport.getUserId() == null && reservationImport.getTeamId() == null) {
+        reservation.setUserId(superAdminId);
+      }
+      reservation.setActionType(reservationImport.getActionType());
+      //      reservation.setPerformedAt(new Timestamp(reservationImport.getPerformedAt()));
+
+      reservation.store();
     }
   }
 }
