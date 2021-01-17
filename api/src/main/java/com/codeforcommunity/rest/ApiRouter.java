@@ -6,6 +6,7 @@ import com.codeforcommunity.api.ILeaderboardProcessor;
 import com.codeforcommunity.api.IMapProcessor;
 import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.api.IReservationProcessor;
+import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTAuthorizer;
 import com.codeforcommunity.rest.subrouter.AuthRouter;
 import com.codeforcommunity.rest.subrouter.CommonRouter;
@@ -14,6 +15,7 @@ import com.codeforcommunity.rest.subrouter.LeaderboardRouter;
 import com.codeforcommunity.rest.subrouter.MapRouter;
 import com.codeforcommunity.rest.subrouter.ProtectedUserRouter;
 import com.codeforcommunity.rest.subrouter.ReservationRouter;
+import com.codeforcommunity.rest.subrouter.TeamsRouter;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.ext.web.Router;
@@ -26,6 +28,7 @@ public class ApiRouter implements IRouter {
   private final ReservationRouter reservationRouter;
   private final LeaderboardRouter leaderboardRouter;
   private final MapRouter mapRouter;
+  private final TeamsRouter teamsRouter;
 
   public ApiRouter(
       IAuthProcessor authProcessor,
@@ -34,6 +37,7 @@ public class ApiRouter implements IRouter {
       IReservationProcessor reservationProcessor,
       ILeaderboardProcessor leaderboardProcessor,
       IMapProcessor mapProcessor,
+      ITeamsProcessor teamsProcessor,
       JWTAuthorizer jwtAuthorizer) {
     this.commonRouter = new CommonRouter(jwtAuthorizer);
     this.authRouter = new AuthRouter(authProcessor);
@@ -42,6 +46,7 @@ public class ApiRouter implements IRouter {
     this.reservationRouter = new ReservationRouter(reservationProcessor);
     this.leaderboardRouter = new LeaderboardRouter(leaderboardProcessor);
     this.mapRouter = new MapRouter(mapProcessor);
+    this.teamsRouter = new TeamsRouter(teamsProcessor);
   }
 
   /** Initialize a router and register all route handlers on it. */
@@ -66,6 +71,7 @@ public class ApiRouter implements IRouter {
     router.mountSubRouter("/import", importRouter.initializeRouter(vertx));
     router.mountSubRouter("/reservations", reservationRouter.initializeRouter(vertx));
     router.mountSubRouter("/map", mapRouter.initializeRouter(vertx));
+    router.mountSubRouter("/teams", teamsRouter.initializeRouter(vertx));
 
     return router;
   }

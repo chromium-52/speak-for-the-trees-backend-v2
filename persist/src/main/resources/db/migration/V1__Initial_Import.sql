@@ -39,7 +39,8 @@ CREATE TABLE IF NOT EXISTS teams
     team_name   VARCHAR(100)    NOT NULL,
     bio         TEXT            NOT NULL,
     finished    BOOLEAN         NOT NULL DEFAULT FALSE,
-    created_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP
+    created_at  TIMESTAMP       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    deleted_at  TIMESTAMP
 );
 
 CREATE TABLE IF NOT EXISTS goals
