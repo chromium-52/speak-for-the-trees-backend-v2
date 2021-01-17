@@ -28,6 +28,7 @@ public class ImportRouter implements IRouter {
 
     registerImportBlocks(router);
     registerImportNeighborhoods(router);
+    registerImportReservations(router);
 
     return router;
   }

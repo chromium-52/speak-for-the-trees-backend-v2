@@ -4,7 +4,6 @@ import com.codeforcommunity.dto.ApiDto;
 import com.codeforcommunity.enums.ReservationAction;
 import com.codeforcommunity.exceptions.HandledException;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +13,7 @@ public class ReservationImport extends ApiDto {
   private Integer userId;
   private Integer teamId;
   private ReservationAction actionType;
+
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
   private Timestamp performedAt;
 

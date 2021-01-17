@@ -1,0 +1,5653 @@
+{
+  "reservations": [
+    {
+      "blockId": 439,
+      "userId": 47.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "11\/17\/2020"
+    },
+    {
+      "blockId": 1014,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1017,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1024,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1025,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1026,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1027,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1028,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1029,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1030,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1031,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1032,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1033,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1034,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1035,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1036,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1037,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1038,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 1040,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1042,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/12\/2020"
+    },
+    {
+      "blockId": 1043,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/12\/2020"
+    },
+    {
+      "blockId": 1044,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/1\/2020"
+    },
+    {
+      "blockId": 1045,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/1\/2020"
+    },
+    {
+      "blockId": 1046,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/12\/2020"
+    },
+    {
+      "blockId": 1047,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "4\/10\/2020"
+    },
+    {
+      "blockId": 1048,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "4\/10\/2020"
+    },
+    {
+      "blockId": 1051,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/12\/2020"
+    },
+    {
+      "blockId": 1052,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/12\/2020"
+    },
+    {
+      "blockId": 1053,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/12\/2020"
+    },
+    {
+      "blockId": 1054,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/12\/2020"
+    },
+    {
+      "blockId": 1055,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/12\/2020"
+    },
+    {
+      "blockId": 1056,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/12\/2020"
+    },
+    {
+      "blockId": 1058,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1059,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1060,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1061,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1062,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/3\/2020"
+    },
+    {
+      "blockId": 1063,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "6\/26\/2020"
+    },
+    {
+      "blockId": 1068,
+      "userId": 22.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 1070,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1071,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/12\/2020"
+    },
+    {
+      "blockId": 1072,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1075,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/20\/2020"
+    },
+    {
+      "blockId": 1077,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/20\/2020"
+    },
+    {
+      "blockId": 1078,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "1\/29\/2020"
+    },
+    {
+      "blockId": 1089,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "4\/12\/2020"
+    },
+    {
+      "blockId": 1104,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/23\/2020"
+    },
+    {
+      "blockId": 1107,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/23\/2020"
+    },
+    {
+      "blockId": 1116,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "3\/28\/2020"
+    },
+    {
+      "blockId": 1126,
+      "userId": 22.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/9\/2020"
+    },
+    {
+      "blockId": 1127,
+      "userId": 22.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/9\/2020"
+    },
+    {
+      "blockId": 1140,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1141,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "1\/30\/2020"
+    },
+    {
+      "blockId": 1166,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1208,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1209,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1210,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1211,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1212,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1213,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1214,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1215,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/4\/2020"
+    },
+    {
+      "blockId": 1218,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "4\/7\/2020"
+    },
+    {
+      "blockId": 1219,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1220,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1221,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1223,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1226,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 1255,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/4\/2020"
+    },
+    {
+      "blockId": 1256,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/4\/2020"
+    },
+    {
+      "blockId": 1259,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/4\/2020"
+    },
+    {
+      "blockId": 1265,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/4\/2020"
+    },
+    {
+      "blockId": 1266,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "2\/4\/2020"
+    },
+    {
+      "blockId": 1962,
+      "userId": 35.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/18\/2020"
+    },
+    {
+      "blockId": 1964,
+      "userId": 35.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/18\/2020"
+    },
+    {
+      "blockId": 2171,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/31\/2020"
+    },
+    {
+      "blockId": 2172,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/31\/2020"
+    },
+    {
+      "blockId": 2173,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/31\/2020"
+    },
+    {
+      "blockId": 2174,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/31\/2020"
+    },
+    {
+      "blockId": 2175,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/9\/2020"
+    },
+    {
+      "blockId": 2177,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/9\/2020"
+    },
+    {
+      "blockId": 2178,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/12\/2020"
+    },
+    {
+      "blockId": 2179,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/9\/2020"
+    },
+    {
+      "blockId": 2180,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/9\/2020"
+    },
+    {
+      "blockId": 2181,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/20\/2020"
+    },
+    {
+      "blockId": 2182,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/20\/2020"
+    },
+    {
+      "blockId": 2183,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/20\/2020"
+    },
+    {
+      "blockId": 2184,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/9\/2020"
+    },
+    {
+      "blockId": 2185,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/9\/2020"
+    },
+    {
+      "blockId": 2193,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/12\/2020"
+    },
+    {
+      "blockId": 2194,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/12\/2020"
+    },
+    {
+      "blockId": 2195,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/12\/2020"
+    },
+    {
+      "blockId": 2196,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/27\/2020"
+    },
+    {
+      "blockId": 2197,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/27\/2020"
+    },
+    {
+      "blockId": 2198,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/12\/2020"
+    },
+    {
+      "blockId": 2199,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/16\/2020"
+    },
+    {
+      "blockId": 2207,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/16\/2020"
+    },
+    {
+      "blockId": 2208,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/16\/2020"
+    },
+    {
+      "blockId": 2209,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/16\/2020"
+    },
+    {
+      "blockId": 2210,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/16\/2020"
+    },
+    {
+      "blockId": 2211,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/16\/2020"
+    },
+    {
+      "blockId": 2212,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/16\/2020"
+    },
+    {
+      "blockId": 2216,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2217,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/22\/2020"
+    },
+    {
+      "blockId": 2218,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/22\/2020"
+    },
+    {
+      "blockId": 2219,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/27\/2020"
+    },
+    {
+      "blockId": 2220,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/27\/2020"
+    },
+    {
+      "blockId": 2221,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/27\/2020"
+    },
+    {
+      "blockId": 2222,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/27\/2020"
+    },
+    {
+      "blockId": 2223,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/22\/2020"
+    },
+    {
+      "blockId": 2224,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2225,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2226,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2020"
+    },
+    {
+      "blockId": 2227,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2020"
+    },
+    {
+      "blockId": 2228,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2020"
+    },
+    {
+      "blockId": 2229,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/3\/2020"
+    },
+    {
+      "blockId": 2230,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/3\/2020"
+    },
+    {
+      "blockId": 2231,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2020"
+    },
+    {
+      "blockId": 2232,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2020"
+    },
+    {
+      "blockId": 2233,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2234,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2235,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/26\/2020"
+    },
+    {
+      "blockId": 2236,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/18\/2020"
+    },
+    {
+      "blockId": 2237,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/18\/2020"
+    },
+    {
+      "blockId": 2238,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/18\/2020"
+    },
+    {
+      "blockId": 2239,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/18\/2020"
+    },
+    {
+      "blockId": 2240,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2241,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2242,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2243,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/17\/2020"
+    },
+    {
+      "blockId": 2244,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/17\/2020"
+    },
+    {
+      "blockId": 2245,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/17\/2020"
+    },
+    {
+      "blockId": 2246,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2020"
+    },
+    {
+      "blockId": 2247,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2020"
+    },
+    {
+      "blockId": 2248,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2020"
+    },
+    {
+      "blockId": 2249,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2020"
+    },
+    {
+      "blockId": 2250,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2020"
+    },
+    {
+      "blockId": 2251,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2020"
+    },
+    {
+      "blockId": 2252,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2020"
+    },
+    {
+      "blockId": 2253,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/2\/2020"
+    },
+    {
+      "blockId": 2254,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/2\/2020"
+    },
+    {
+      "blockId": 2255,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/2\/2020"
+    },
+    {
+      "blockId": 2256,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/2\/2020"
+    },
+    {
+      "blockId": 2257,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/2\/2020"
+    },
+    {
+      "blockId": 2258,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/26\/2020"
+    },
+    {
+      "blockId": 2259,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/26\/2020"
+    },
+    {
+      "blockId": 2260,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/22\/2020"
+    },
+    {
+      "blockId": 2261,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/22\/2020"
+    },
+    {
+      "blockId": 2262,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/26\/2020"
+    },
+    {
+      "blockId": 2263,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/26\/2020"
+    },
+    {
+      "blockId": 2264,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/22\/2020"
+    },
+    {
+      "blockId": 2265,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/22\/2020"
+    },
+    {
+      "blockId": 2266,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/16\/2020"
+    },
+    {
+      "blockId": 2267,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2273,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/31\/2020"
+    },
+    {
+      "blockId": 2274,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/9\/2020"
+    },
+    {
+      "blockId": 2277,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/6\/2020"
+    },
+    {
+      "blockId": 2278,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/6\/2020"
+    },
+    {
+      "blockId": 2279,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/6\/2020"
+    },
+    {
+      "blockId": 2280,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/16\/2020"
+    },
+    {
+      "blockId": 2281,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/22\/2020"
+    },
+    {
+      "blockId": 2282,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/16\/2020"
+    },
+    {
+      "blockId": 2283,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2284,
+      "userId": 16.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2020"
+    },
+    {
+      "blockId": 2285,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2286,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2287,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/16\/2020"
+    },
+    {
+      "blockId": 2288,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2289,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2290,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2291,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2292,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2293,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2294,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2295,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2296,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2301,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2302,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2303,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2304,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2305,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2306,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2307,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2020"
+    },
+    {
+      "blockId": 2308,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2020"
+    },
+    {
+      "blockId": 2309,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2020"
+    },
+    {
+      "blockId": 2310,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2311,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2020"
+    },
+    {
+      "blockId": 2312,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2313,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/2\/2020"
+    },
+    {
+      "blockId": 2314,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/2\/2020"
+    },
+    {
+      "blockId": 2315,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/30\/2020"
+    },
+    {
+      "blockId": 2316,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2317,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/17\/2020"
+    },
+    {
+      "blockId": 2318,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2319,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/30\/2020"
+    },
+    {
+      "blockId": 2320,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/30\/2020"
+    },
+    {
+      "blockId": 2321,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/30\/2020"
+    },
+    {
+      "blockId": 2322,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/2\/2020"
+    },
+    {
+      "blockId": 2323,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 2324,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/5\/2020"
+    },
+    {
+      "blockId": 2326,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/5\/2020"
+    },
+    {
+      "blockId": 2327,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/5\/2020"
+    },
+    {
+      "blockId": 2328,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 2329,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "11\/10\/2020"
+    },
+    {
+      "blockId": 2330,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "11\/10\/2020"
+    },
+    {
+      "blockId": 2332,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2333,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2334,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/7\/2020"
+    },
+    {
+      "blockId": 2335,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/7\/2020"
+    },
+    {
+      "blockId": 2341,
+      "userId": 48.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "12\/10\/2020"
+    },
+    {
+      "blockId": 2345,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/7\/2020"
+    },
+    {
+      "blockId": 2346,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/7\/2020"
+    },
+    {
+      "blockId": 2347,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/5\/2020"
+    },
+    {
+      "blockId": 2348,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/5\/2020"
+    },
+    {
+      "blockId": 2349,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2350,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2351,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2352,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2353,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2354,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2355,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/22\/2020"
+    },
+    {
+      "blockId": 2356,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2357,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2358,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2359,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2360,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2361,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/27\/2020"
+    },
+    {
+      "blockId": 2362,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/27\/2020"
+    },
+    {
+      "blockId": 2363,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/27\/2020"
+    },
+    {
+      "blockId": 2364,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/27\/2020"
+    },
+    {
+      "blockId": 2365,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/27\/2020"
+    },
+    {
+      "blockId": 2366,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/27\/2020"
+    },
+    {
+      "blockId": 2367,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "11\/10\/2020"
+    },
+    {
+      "blockId": 2368,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/23\/2020"
+    },
+    {
+      "blockId": 2369,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2370,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2371,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/23\/2020"
+    },
+    {
+      "blockId": 2372,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/23\/2020"
+    },
+    {
+      "blockId": 2373,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2374,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/19\/2020"
+    },
+    {
+      "blockId": 2375,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/21\/2020"
+    },
+    {
+      "blockId": 2376,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/21\/2020"
+    },
+    {
+      "blockId": 2377,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/21\/2020"
+    },
+    {
+      "blockId": 2378,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/21\/2020"
+    },
+    {
+      "blockId": 2379,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/22\/2020"
+    },
+    {
+      "blockId": 2380,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/23\/2020"
+    },
+    {
+      "blockId": 2381,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/22\/2020"
+    },
+    {
+      "blockId": 2392,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2393,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2394,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2395,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2396,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2397,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2398,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2399,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2400,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2401,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2405,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2406,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2408,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2409,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2410,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2411,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2412,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2413,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2414,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2415,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2416,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2417,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2418,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2419,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2420,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2421,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2422,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2423,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2424,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2425,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2426,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2427,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2428,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2429,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2430,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2431,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2432,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2433,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2434,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2435,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2436,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2437,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2438,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2439,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2440,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2441,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2442,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2443,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2444,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2445,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2446,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2447,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2448,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2453,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2454,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2455,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2456,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2457,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2458,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2459,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2460,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2461,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2462,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2463,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2464,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/13\/2019"
+    },
+    {
+      "blockId": 2465,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2466,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2467,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2468,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2469,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2470,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2471,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2472,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2473,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2474,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2475,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2476,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2477,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2478,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2479,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2480,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2481,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2484,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2020"
+    },
+    {
+      "blockId": 2485,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2486,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2020"
+    },
+    {
+      "blockId": 2487,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2020"
+    },
+    {
+      "blockId": 2488,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2020"
+    },
+    {
+      "blockId": 2489,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2020"
+    },
+    {
+      "blockId": 2490,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2020"
+    },
+    {
+      "blockId": 2491,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/12\/2020"
+    },
+    {
+      "blockId": 2492,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2493,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2494,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2495,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2496,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2497,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2498,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2499,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2500,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2501,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2502,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2503,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2504,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2505,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/11\/2020"
+    },
+    {
+      "blockId": 2506,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/5\/2020"
+    },
+    {
+      "blockId": 2507,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/5\/2020"
+    },
+    {
+      "blockId": 2508,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/5\/2020"
+    },
+    {
+      "blockId": 2509,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/5\/2020"
+    },
+    {
+      "blockId": 2510,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/5\/2020"
+    },
+    {
+      "blockId": 2511,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/5\/2020"
+    },
+    {
+      "blockId": 2512,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/5\/2020"
+    },
+    {
+      "blockId": 2513,
+      "userId": 17.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/12\/2020"
+    },
+    {
+      "blockId": 2514,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2516,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/20\/2019"
+    },
+    {
+      "blockId": 2517,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2518,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/20\/2019"
+    },
+    {
+      "blockId": 2519,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/20\/2019"
+    },
+    {
+      "blockId": 2520,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/20\/2019"
+    },
+    {
+      "blockId": 2521,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/20\/2019"
+    },
+    {
+      "blockId": 2522,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "10\/20\/2019"
+    },
+    {
+      "blockId": 2527,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2528,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2529,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2530,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2531,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2532,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2533,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2534,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2535,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2536,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2537,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2538,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2539,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2654,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2655,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2656,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2657,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2658,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2659,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2660,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2661,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2662,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2663,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2664,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2676,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2677,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2678,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2679,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2685,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2686,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2687,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2688,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2689,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2690,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2691,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2692,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2693,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2694,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2695,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2696,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2697,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2698,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2699,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2700,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2701,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2702,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/2\/2019"
+    },
+    {
+      "blockId": 2703,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2704,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2705,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2706,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2716,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/1\/2019"
+    },
+    {
+      "blockId": 2717,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2718,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2722,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2723,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2724,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2725,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2726,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2727,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2728,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2729,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2730,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2731,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2732,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2733,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2734,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2735,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/8\/2019"
+    },
+    {
+      "blockId": 2736,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2737,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2738,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2739,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2740,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2742,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2743,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2744,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2745,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2746,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2747,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2748,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2749,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2750,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2751,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2752,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2753,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2754,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2755,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2756,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2757,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2758,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2759,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2760,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2761,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2762,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2763,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2764,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2765,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2766,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2767,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2768,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2769,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2770,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2771,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2772,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2773,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2774,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/7\/2019"
+    },
+    {
+      "blockId": 2775,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2776,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2777,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2778,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2779,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2780,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2781,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2782,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2783,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2784,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2785,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2786,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2787,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2788,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2789,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2790,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2791,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/8\/2019"
+    },
+    {
+      "blockId": 2792,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2793,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2794,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2795,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2796,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2797,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2798,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2799,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2800,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2801,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2802,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2803,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2804,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2805,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2806,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2807,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2808,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2809,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2810,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2811,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2812,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2813,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2814,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2815,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2816,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2817,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2818,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2819,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2820,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2821,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2822,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2823,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2824,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2825,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2826,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2827,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2828,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2829,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2830,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2831,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2832,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2833,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2834,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2835,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2836,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2837,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2838,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2839,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2840,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2841,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2842,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2843,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2844,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2845,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2846,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2847,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2848,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2849,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2850,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2851,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2852,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2853,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2854,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2855,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2856,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/25\/2019"
+    },
+    {
+      "blockId": 2857,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2858,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2859,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2860,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/31\/2019"
+    },
+    {
+      "blockId": 2882,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 2884,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 2885,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 2886,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 2887,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 2888,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 2889,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 2890,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 2891,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 2892,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 2893,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 2894,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 2933,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2934,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2935,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2936,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2937,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2938,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2939,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2940,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2941,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2942,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2943,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2944,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2945,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2946,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2947,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2948,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2949,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2950,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2951,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2952,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2953,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2954,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2955,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2956,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2957,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2958,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2959,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2960,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2961,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2962,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2963,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2964,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2965,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2966,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2967,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2968,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2969,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2970,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2971,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2972,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2973,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2974,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2975,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2976,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2977,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2978,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2979,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2980,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2981,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2982,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2983,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2984,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2985,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2986,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2987,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2988,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2989,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2990,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2991,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2992,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/15\/2019"
+    },
+    {
+      "blockId": 2995,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 2996,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 2998,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 2999,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3000,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3001,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3002,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3003,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3004,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3006,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3007,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3008,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3009,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3010,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3011,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3012,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3013,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3014,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3015,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3016,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3017,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3018,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3019,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3020,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3021,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3022,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3023,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3027,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3028,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3075,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3076,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3077,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3078,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3079,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3080,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3084,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3085,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3086,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3087,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3088,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3089,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3090,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3093,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3094,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3095,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3096,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3097,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3098,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3099,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3100,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3101,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3102,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3103,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3104,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3105,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3106,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3107,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3108,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3109,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3110,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3111,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3112,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3113,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3114,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3115,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3116,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3117,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3118,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3119,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3120,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3121,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3122,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3123,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3124,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3125,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3126,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3127,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3128,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3129,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3130,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3131,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3132,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3133,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3134,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3135,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3136,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3137,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3138,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3139,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3140,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3141,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3142,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3144,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3189,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3190,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3191,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3192,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3193,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3204,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3219,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/11\/2019"
+    },
+    {
+      "blockId": 3453,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3454,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3455,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3456,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3457,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3458,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3459,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3460,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3462,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3463,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3464,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3465,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3466,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3467,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3468,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3469,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3470,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3471,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3472,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3473,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3474,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3475,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3476,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3477,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3478,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3479,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3480,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3481,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3482,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3483,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3484,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3485,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3486,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3487,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3488,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3489,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3497,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 3498,
+      "userId": null,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "7\/18\/2019"
+    },
+    {
+      "blockId": 4071,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/21\/2020"
+    },
+    {
+      "blockId": 4072,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/2\/2020"
+    },
+    {
+      "blockId": 4073,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/21\/2020"
+    },
+    {
+      "blockId": 4074,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/31\/2020"
+    },
+    {
+      "blockId": 4075,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/2\/2020"
+    },
+    {
+      "blockId": 4084,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/2\/2020"
+    },
+    {
+      "blockId": 4085,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/21\/2020"
+    },
+    {
+      "blockId": 4086,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/2\/2020"
+    },
+    {
+      "blockId": 4087,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/2\/2020"
+    },
+    {
+      "blockId": 4089,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/21\/2020"
+    },
+    {
+      "blockId": 4466,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "9\/2\/2020"
+    },
+    {
+      "blockId": 4637,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/26\/2020"
+    },
+    {
+      "blockId": 4638,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/26\/2020"
+    },
+    {
+      "blockId": 4670,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/21\/2020"
+    },
+    {
+      "blockId": 4671,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/21\/2020"
+    },
+    {
+      "blockId": 4672,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/21\/2020"
+    },
+    {
+      "blockId": 4673,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/21\/2020"
+    },
+    {
+      "blockId": 4674,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "COMPLETE",
+      "performedAt": "8\/21\/2020"
+    },
+    {
+      "blockId": 398,
+      "userId": 38.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "10\/2\/2020"
+    },
+    {
+      "blockId": 403,
+      "userId": 38.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "10\/2\/2020"
+    },
+    {
+      "blockId": 533,
+      "userId": 44.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "10\/16\/2020"
+    },
+    {
+      "blockId": 1009,
+      "userId": 22.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "8\/10\/2020"
+    },
+    {
+      "blockId": 1125,
+      "userId": 22.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "8\/9\/2020"
+    },
+    {
+      "blockId": 1291,
+      "userId": 31.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "9\/5\/2020"
+    },
+    {
+      "blockId": 1295,
+      "userId": 31.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "9\/5\/2020"
+    },
+    {
+      "blockId": 1296,
+      "userId": 31.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "9\/5\/2020"
+    },
+    {
+      "blockId": 2331,
+      "userId": 48.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "11\/19\/2020"
+    },
+    {
+      "blockId": 2336,
+      "userId": 48.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "11\/19\/2020"
+    },
+    {
+      "blockId": 2337,
+      "userId": 48.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "11\/19\/2020"
+    },
+    {
+      "blockId": 2338,
+      "userId": 48.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "11\/19\/2020"
+    },
+    {
+      "blockId": 2339,
+      "userId": 48.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "11\/19\/2020"
+    },
+    {
+      "blockId": 2340,
+      "userId": 48.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "11\/19\/2020"
+    },
+    {
+      "blockId": 4091,
+      "userId": 35.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "9\/28\/2020"
+    },
+    {
+      "blockId": 4465,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "8\/27\/2020"
+    },
+    {
+      "blockId": 4535,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "8\/27\/2020"
+    },
+    {
+      "blockId": 4537,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "8\/27\/2020"
+    },
+    {
+      "blockId": 4541,
+      "userId": 25.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "8\/27\/2020"
+    },
+    {
+      "blockId": 4630,
+      "userId": 23.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "8\/4\/2020"
+    },
+    {
+      "blockId": 4632,
+      "userId": 23.0,
+      "teamId": null,
+      "actionType": "RESERVE",
+      "performedAt": "8\/8\/2020"
+    }
+  ]
+}
