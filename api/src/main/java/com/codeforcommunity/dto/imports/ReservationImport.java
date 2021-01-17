@@ -3,6 +3,9 @@ package com.codeforcommunity.dto.imports;
 import com.codeforcommunity.dto.ApiDto;
 import com.codeforcommunity.enums.ReservationAction;
 import com.codeforcommunity.exceptions.HandledException;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,14 +14,15 @@ public class ReservationImport extends ApiDto {
   private Integer userId;
   private Integer teamId;
   private ReservationAction actionType;
-  private String performedAt;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
+  private Timestamp performedAt;
 
   public ReservationImport(
       Integer blockId,
       Integer userId,
       Integer teamId,
       ReservationAction actionType,
-      String performedAt) {
+      Timestamp performedAt) {
     this.blockId = blockId;
     this.userId = userId;
     this.teamId = teamId;
@@ -60,11 +64,11 @@ public class ReservationImport extends ApiDto {
     this.actionType = actionType;
   }
 
-  public String getPerformedAt() {
+  public Timestamp getPerformedAt() {
     return performedAt;
   }
 
-  public void setPerformedAt(String performedAt) {
+  public void setPerformedAt(Timestamp performedAt) {
     this.performedAt = performedAt;
   }
 

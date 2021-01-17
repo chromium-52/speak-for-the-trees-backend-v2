@@ -109,7 +109,7 @@ public class ImportProcessorImpl implements IImportProcessor {
         reservation.setUserId(superAdminId);
       }
       reservation.setActionType(reservationImport.getActionType());
-      //      reservation.setPerformedAt(new Timestamp(reservationImport.getPerformedAt()));
+      reservation.setPerformedAt(reservationImport.getPerformedAt());
 
       reservation.store();
     }
