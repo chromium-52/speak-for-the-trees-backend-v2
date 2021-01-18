@@ -23,6 +23,9 @@ import org.jooq.generated.tables.records.BlocksRecord;
 import org.jooq.generated.tables.records.NeighborhoodsRecord;
 import org.jooq.generated.tables.records.ReservationsRecord;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class ImportProcessorImpl implements IImportProcessor {
   private final DSLContext db;
 
@@ -81,18 +84,19 @@ public class ImportProcessorImpl implements IImportProcessor {
     // Get superuser ID
     Integer superAdminId = userData.getUserId();
 
-    for (ReservationImport reservationImport : importReservationsRequest.getReservations()) {
+    // First check that none of the entries contain errors
+    List<ReservationsRecord> records = importReservationsRequest.getReservations().stream().map(reservationImport -> {
       if (!db.fetchExists(
-          db.selectFrom(BLOCKS).where(BLOCKS.ID.eq(reservationImport.getBlockId())))) {
+              db.selectFrom(BLOCKS).where(BLOCKS.ID.eq(reservationImport.getBlockId())))) {
         throw new ResourceDoesNotExistException(reservationImport.getBlockId(), "block");
       }
       if (reservationImport.getUserId() != null
-          && (!db.fetchExists(
+              && (!db.fetchExists(
               db.selectFrom(USERS).where(USERS.ID.eq(reservationImport.getUserId()))))) {
         throw new UserDoesNotExistException(reservationImport.getUserId());
       }
       if (reservationImport.getTeamId() != null
-          && (!db.fetchExists(
+              && (!db.fetchExists(
               db.selectFrom(TEAMS).where(TEAMS.ID.eq(reservationImport.getTeamId()))))) {
         throw new ResourceDoesNotExistException(reservationImport.getTeamId(), "block");
       }
@@ -111,7 +115,12 @@ public class ImportProcessorImpl implements IImportProcessor {
       reservation.setActionType(reservationImport.getActionType());
       reservation.setPerformedAt(reservationImport.getPerformedAt());
 
-      reservation.store();
+      return reservation;
+    }).collect(Collectors.toList());
+
+    // If none of the blocks contained errors it's safe to store the blocks
+    for (ReservationsRecord record : records) {
+      record.store();
     }
   }
 }
