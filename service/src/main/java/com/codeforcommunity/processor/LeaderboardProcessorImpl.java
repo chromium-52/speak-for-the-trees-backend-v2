@@ -10,6 +10,7 @@ import com.codeforcommunity.api.ILeaderboardProcessor;
 import com.codeforcommunity.dto.leaderboard.GetLeaderboardRequest;
 import com.codeforcommunity.dto.leaderboard.GetLeaderboardResponse;
 import com.codeforcommunity.dto.leaderboard.LeaderboardEntry;
+import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.enums.ReservationAction;
 import java.sql.Timestamp;
 import java.util.List;
@@ -53,6 +54,7 @@ public class LeaderboardProcessorImpl implements ILeaderboardProcessor {
                     .field(2)
                     .cast(ReservationAction.class)
                     .in(ReservationAction.COMPLETE, ReservationAction.QA))
+            .and(USERS.PRIVILEGE_LEVEL.notEqual(PrivilegeLevel.SUPER_ADMIN))
             .groupBy(subquery.field(1), USERS.USERNAME)
             .orderBy(count().desc())
             .limit(leaderboardLimit)

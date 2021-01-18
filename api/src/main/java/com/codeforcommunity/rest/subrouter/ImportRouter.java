@@ -6,6 +6,7 @@ import com.codeforcommunity.api.IImportProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.imports.ImportBlocksRequest;
 import com.codeforcommunity.dto.imports.ImportNeighborhoodsRequest;
+import com.codeforcommunity.dto.imports.ImportReservationsRequest;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
@@ -27,6 +28,7 @@ public class ImportRouter implements IRouter {
 
     registerImportBlocks(router);
     registerImportNeighborhoods(router);
+    registerImportReservations(router);
 
     return router;
   }
@@ -39,6 +41,11 @@ public class ImportRouter implements IRouter {
   private void registerImportNeighborhoods(Router router) {
     Route importNeighborhoodsRoute = router.post("/neighborhoods");
     importNeighborhoodsRoute.handler(this::handleImportNeighborhoodsRoute);
+  }
+
+  private void registerImportReservations(Router router) {
+    Route importReservationsRoute = router.post("/reservations");
+    importReservationsRoute.handler(this::handleImportReservationsRoute);
   }
 
   private void handleImportBlocksRoute(RoutingContext ctx) {
@@ -57,6 +64,16 @@ public class ImportRouter implements IRouter {
         RestFunctions.getJsonBodyAsClass(ctx, ImportNeighborhoodsRequest.class);
 
     processor.importNeighborhoods(userData, importNeighborhoodsRequest);
+
+    end(ctx.response(), 200);
+  }
+
+  private void handleImportReservationsRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    ImportReservationsRequest importReservationsRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, ImportReservationsRequest.class);
+
+    processor.importReservations(userData, importReservationsRequest);
 
     end(ctx.response(), 200);
   }
