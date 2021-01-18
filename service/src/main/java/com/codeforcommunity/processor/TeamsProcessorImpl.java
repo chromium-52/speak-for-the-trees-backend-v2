@@ -6,12 +6,11 @@ import static org.jooq.generated.Tables.USERS_TEAMS;
 import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.enums.TeamRole;
-import com.codeforcommunity.exceptions.TeamLeaderOnlyRouteException;
+import com.codeforcommunity.exceptions.WrongTeamRoleException;
+import java.sql.Timestamp;
 import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.TeamsRecord;
 import org.jooq.generated.tables.records.UsersTeamsRecord;
-
-import java.sql.Timestamp;
 
 public class TeamsProcessorImpl implements ITeamsProcessor {
   private final DSLContext db;
@@ -23,13 +22,13 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   @Override
   public void disbandTeam(JWTData userData, int teamId) {
     UsersTeamsRecord usersTeamsRecord =
-            db.selectFrom(USERS_TEAMS)
+        db.selectFrom(USERS_TEAMS)
             .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
             .and(USERS_TEAMS.TEAM_ID.eq(teamId))
             .fetchOne();
 
     if (usersTeamsRecord == null || usersTeamsRecord.getTeamRole() != TeamRole.LEADER) {
-      throw new TeamLeaderOnlyRouteException(teamId);
+      throw new WrongTeamRoleException(teamId, usersTeamsRecord.getTeamRole());
     }
 
     TeamsRecord team = db.selectFrom(TEAMS).where(TEAMS.ID.eq(teamId)).fetchOne();

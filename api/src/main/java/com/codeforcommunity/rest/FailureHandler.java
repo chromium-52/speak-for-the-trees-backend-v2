@@ -115,9 +115,11 @@ public class FailureHandler {
     end(ctx, message, 409);
   }
 
-  public void handleTeamLeaderOnlyRoute(RoutingContext ctx, TeamLeaderOnlyRouteException e) {
+  public void handleWrongTeamRoleException(RoutingContext ctx, WrongTeamRoleException e) {
     String message =
-            String.format("This route is only available to the leader of team %d", e.getTeamId());
+        String.format(
+            "This route is only available users with team role %s for team %d",
+            e.getTeamRole(), e.getTeamId());
     end(ctx, message, 401);
   }
 
