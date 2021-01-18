@@ -1,6 +1,10 @@
 package com.codeforcommunity.processor;
 
-import static org.jooq.generated.Tables.*;
+import static org.jooq.generated.Tables.BLOCKS;
+import static org.jooq.generated.Tables.RESERVATIONS;
+import static org.jooq.generated.Tables.TEAMS;
+import static org.jooq.generated.Tables.USERS;
+import static org.jooq.generated.Tables.USERS_TEAMS;
 
 import com.codeforcommunity.api.IReservationProcessor;
 import com.codeforcommunity.auth.JWTData;

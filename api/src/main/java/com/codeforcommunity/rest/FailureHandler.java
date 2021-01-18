@@ -115,6 +115,14 @@ public class FailureHandler {
     end(ctx, message, 409);
   }
 
+  public void handleWrongTeamRoleException(RoutingContext ctx, WrongTeamRoleException e) {
+    String message =
+        String.format(
+            "This route is only available users with team role %s for team %d",
+            e.getTeamRole(), e.getTeamId());
+    end(ctx, message, 401);
+  }
+
   public void handleTokenInvalid(RoutingContext ctx, TokenInvalidException e) {
     String message = String.format("Given %s token is expired or invalid", e.getTokenType());
     end(ctx, message, 401);
