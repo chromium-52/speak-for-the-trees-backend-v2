@@ -60,5 +60,5 @@ jwt_secret_key = placeholder_jwt_secret
 # SLACK PROPERTIES
 # =======================================================================================================
 slack_webhook_url = placeholder_slack_url
-slack_product_name = placeholder_slack_name
 slack_enabled = false
+slack_product_name = speak-for-the-trees-backend
