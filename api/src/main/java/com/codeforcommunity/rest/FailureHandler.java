@@ -176,7 +176,14 @@ public class FailureHandler {
     end(ctx, message, 500);
   }
 
+  public void handleInvalidTeamException(RoutingContext ctx, TeamDoesNotExistException e) {
+    String message = String.format("Team with id %d does not exist", e.getTeamId());
+    end(ctx, message, 400);
+  }
+
   private void end(RoutingContext ctx, String message, int statusCode) {
     ctx.response().setStatusCode(statusCode).end(message);
   }
+
+
 }
