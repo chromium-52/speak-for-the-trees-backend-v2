@@ -2,10 +2,8 @@ package com.codeforcommunity.rest.subrouter;
 
 import static com.codeforcommunity.rest.ApiRouter.end;
 
-import com.auth0.jwt.JWT;
 import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.reservation.MakeReservationRequest;
 import com.codeforcommunity.dto.team.AddGoalRequest;
 import com.codeforcommunity.dto.team.CreateTeamRequest;
 import com.codeforcommunity.dto.team.DeleteGoalRequest;
@@ -30,6 +28,7 @@ public class TeamsRouter implements IRouter {
     Router router = Router.router(vertx);
     registerCreateTeam(router);
     registerGetTeam(router);
+    registerAddGoal(router);
     registerDeleteGoal(router);
     registerDisbandTeam(router);
 
@@ -44,7 +43,8 @@ public class TeamsRouter implements IRouter {
 
   private void handleCreateTeamRoute(RoutingContext routingContext) {
     JWTData userData = routingContext.get("jwt_data");
-    CreateTeamRequest createTeamRequest = RestFunctions.getJsonBodyAsClass(routingContext, CreateTeamRequest.class);
+    CreateTeamRequest createTeamRequest =
+        RestFunctions.getJsonBodyAsClass(routingContext, CreateTeamRequest.class);
     processor.createTeam(userData, createTeamRequest);
     end(routingContext.response(), 200);
   }
@@ -57,7 +57,8 @@ public class TeamsRouter implements IRouter {
 
   private void handleGetTeamRoute(RoutingContext routingContext) {
     JWTData userData = routingContext.get("jwt_data");
-    GetTeamRequest getTeamRequest = RestFunctions.getJsonBodyAsClass(routingContext, GetTeamRequest.class);
+    GetTeamRequest getTeamRequest =
+        RestFunctions.getJsonBodyAsClass(routingContext, GetTeamRequest.class);
     processor.getTeam(userData, getTeamRequest);
     end(routingContext.response(), 200);
   }
@@ -66,12 +67,12 @@ public class TeamsRouter implements IRouter {
   private void registerAddGoal(Router router) {
     Route addGoalRoute = router.post("/:team_id/add_goal");
     addGoalRoute.handler(this::handleAddGoal);
-
   }
 
   private void handleAddGoal(RoutingContext routingContext) {
     JWTData userData = routingContext.get("jtw_data");
-    AddGoalRequest addGoalRequest = RestFunctions.getJsonBodyAsClass(routingContext, AddGoalRequest.class);
+    AddGoalRequest addGoalRequest =
+        RestFunctions.getJsonBodyAsClass(routingContext, AddGoalRequest.class);
     processor.addGoal(userData, addGoalRequest);
     end(routingContext.response(), 200);
   }
@@ -84,7 +85,8 @@ public class TeamsRouter implements IRouter {
 
   private void handleDeleteGoal(RoutingContext routingContext) {
     JWTData userData = routingContext.get("jwt_data");
-    DeleteGoalRequest deleteGoalRequest = RestFunctions.getJsonBodyAsClass(routingContext, DeleteGoalRequest.class);
+    DeleteGoalRequest deleteGoalRequest =
+        RestFunctions.getJsonBodyAsClass(routingContext, DeleteGoalRequest.class);
     processor.deleteGoal(userData, deleteGoalRequest);
     end(routingContext.response(), 200);
   }

@@ -3,39 +3,45 @@ package com.codeforcommunity.dto.team;
 import java.sql.Timestamp;
 
 public class TeamDataResponse {
-    private final Integer id;
-    private final String teamName;
-    private final String bio;
-    private final Boolean finished;
-    private final Timestamp createdAt;
-    private final Timestamp deletedAt;
-    public TeamDataResponse(Integer id, String teamName, String bio, Boolean finished, Timestamp createdAt,
-                            Timestamp deletedAt) {
-        this.id = id;
-        this.teamName = teamName;
-        this.bio = bio;
-        this.finished = finished;
-        this.createdAt = createdAt;
-        this.deletedAt = deletedAt;
-    }
+  private final Integer id;
+  private final String teamName;
+  private final String bio;
+  private final Boolean finished;
+  private final Timestamp createdAt;
+  private final Timestamp deletedAt;
 
-    public String getTeamName() {
-        return teamName;
-    }
+  public TeamDataResponse(
+      Integer id,
+      String teamName,
+      String bio,
+      Boolean finished,
+      Timestamp createdAt,
+      Timestamp deletedAt) {
+    this.id = id;
+    this.teamName = teamName;
+    this.bio = bio;
+    this.finished = finished;
+    this.createdAt = createdAt;
+    this.deletedAt = deletedAt;
+  }
 
-    public String getBio() {
-        return bio;
-    }
+  public String getTeamName() {
+    return teamName;
+  }
 
-    public boolean isFinished() {
-        return finished;
-    }
+  public String getBio() {
+    return bio;
+  }
 
-    public Timestamp getDeletedAt() {
-        return deletedAt;
-    }
+  public boolean isFinished() {
+    return finished;
+  }
 
-    public  Timestamp getCreatedAt() {
-        return createdAt;
-    }
+  public Timestamp getDeletedAt() {
+    return deletedAt;
+  }
+
+  public Timestamp getCreatedAt() {
+    return createdAt;
+  }
 }

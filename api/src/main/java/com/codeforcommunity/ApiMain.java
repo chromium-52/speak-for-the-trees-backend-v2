@@ -13,7 +13,7 @@ import io.vertx.ext.web.RoutingContext;
 import io.vertx.ext.web.handler.CorsHandler;
 
 /** The main point for the API. */
-public class  ApiMain {
+public class ApiMain {
   private final SLogger logger = new SLogger(ApiMain.class);
   private final ApiRouter apiRouter;
 

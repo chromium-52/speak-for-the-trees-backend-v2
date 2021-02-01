@@ -1,5 +1,7 @@
 package com.codeforcommunity.processor;
 
+import static org.jooq.generated.Tables.*;
+
 import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.team.*;
@@ -11,8 +13,6 @@ import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.GoalsRecord;
 import org.jooq.generated.tables.records.TeamsRecord;
 import org.jooq.generated.tables.records.UsersTeamsRecord;
-
-import static org.jooq.generated.Tables.*;
 
 public class TeamsProcessorImpl implements ITeamsProcessor {
   private final DSLContext db;
@@ -49,24 +49,28 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
     usersTeam.setTeamRole(TeamRole.LEADER);
     usersTeam.setUserId(userData.getUserId());
     usersTeam.store();
-
   }
 
   @Override
   public TeamDataResponse getTeam(JWTData userData, GetTeamRequest getTeamRequest) {
-    TeamsRecord team = db.selectFrom(TEAMS).where(TEAMS.ID.eq(getTeamRequest.getTeamId())).fetchOne();
+    TeamsRecord team =
+        db.selectFrom(TEAMS).where(TEAMS.ID.eq(getTeamRequest.getTeamId())).fetchOne();
     if (team == null) {
       throw new TeamDoesNotExistException(getTeamRequest.getTeamId());
     }
 
-    return new TeamDataResponse(team.getId(), team.getTeamName(), team.getBio(), team.getFinished(),
-            team.getCreatedAt(), team.getDeletedAt());
-
+    return new TeamDataResponse(
+        team.getId(),
+        team.getTeamName(),
+        team.getBio(),
+        team.getFinished(),
+        team.getCreatedAt(),
+        team.getDeletedAt());
   }
 
   @Override
   public void addGoal(JWTData userData, AddGoalRequest addGoalRequest) {
-    //TODO if user is not leader. thror error and send 401 unauthorized
+    // TODO if user is not leader. thror error and send 401 unauthorized
     GoalsRecord goal = db.newRecord(GOALS);
     goal.setGoal(addGoalRequest.getGoal());
     goal.getStartAt(addGoalRequest.getCompleteBy());
@@ -74,7 +78,5 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   }
 
   @Override
-  public void deleteGoal(JWTData userData, DeleteGoalRequest deleteGoalRequest) {
-
-  }
+  public void deleteGoal(JWTData userData, DeleteGoalRequest deleteGoalRequest) {}
 }

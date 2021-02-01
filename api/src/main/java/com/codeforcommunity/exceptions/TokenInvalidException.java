@@ -7,7 +7,6 @@ public class TokenInvalidException extends HandledException {
 
   private String tokenType;
 
-
   public TokenInvalidException(String tokenType) {
     super();
     this.tokenType = tokenType;

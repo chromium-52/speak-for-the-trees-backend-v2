@@ -184,6 +184,4 @@ public class FailureHandler {
   private void end(RoutingContext ctx, String message, int statusCode) {
     ctx.response().setStatusCode(statusCode).end(message);
   }
-
-
 }
