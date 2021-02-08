@@ -24,11 +24,11 @@ public class GetTeamRequest extends ApiDto {
 
   @Override
   public List<String> validateFields(String fieldPrefix) throws HandledException {
-    String fieldName = fieldPrefix + "create_team_request.";
+    String fieldName = fieldPrefix + "get_team_request.";
     List<String> fields = new ArrayList<>();
 
     if (teamId == null) {
-      fields.add(fieldName + "bio");
+      fields.add(fieldName + "teamId");
     }
     return fields;
   }

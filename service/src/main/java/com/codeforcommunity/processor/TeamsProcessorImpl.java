@@ -75,8 +75,37 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
     goal.setGoal(addGoalRequest.getGoal());
     goal.getStartAt(addGoalRequest.getCompleteBy());
     goal.getCompleteBy(addGoalRequest.getCompleteBy());
+    goal.store();
   }
 
   @Override
-  public void deleteGoal(JWTData userData, DeleteGoalRequest deleteGoalRequest) {}
+  public void deleteGoal(JWTData userData, DeleteGoalRequest deleteGoalRequest) {
+    // TODO if user is not leader. thror error and send 401 unauthorized
+    db.delete(GOALS).where(GOALS.ID.eq(deleteGoalRequest.getGoalId()));
+  }
+
+  @Override
+  public void inviteUser(JWTData userData, InviteUserRequest inviteUserRequest) {
+    // TODO send email link to the users in the map;
+  }
+
+  @Override
+  public void getApplicants(JWTData userData, GetApplicantsRequest getApplicantsRequest) {
+    // TODO where are applicants stored? I think there should be another applicants table many to many users-teams
+  }
+
+  @Override
+  public void applyToTeam(JWTData userData, ApplyToTeamRequest applyToTeamRequest) {
+    // TODO add an entry to the applicants table
+
+  }
+
+  @Override
+  public void approveUser(JWTData userData, ApproveUserRequest applyToTeamRequest) {
+    // TODO user must be in the applicants table
+    UsersTeamsRecord usersTeams = db.newRecord(USERS_TEAMS);
+    usersTeams.setTeamId(applyToTeamRequest.getTeamId());
+    usersTeams.setUserId(applyToTeamRequest.getUserId());
+    usersTeams.store();
+  }
 }

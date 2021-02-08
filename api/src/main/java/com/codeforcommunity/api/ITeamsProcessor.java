@@ -13,4 +13,12 @@ public interface ITeamsProcessor {
   void addGoal(JWTData userData, AddGoalRequest addGoalRequest);
 
   void deleteGoal(JWTData userData, DeleteGoalRequest deleteGoalRequest);
+
+  void inviteUser(JWTData userData, InviteUserRequest inviteUserRequest);
+
+  void getApplicants(JWTData userData, GetApplicantsRequest getApplicantsRequest);
+
+  void applyToTeam(JWTData userData, ApplyToTeamRequest applyToTeamRequest);
+
+  void approveUser(JWTData userData, ApproveUserRequest approveUserRequest);
 }

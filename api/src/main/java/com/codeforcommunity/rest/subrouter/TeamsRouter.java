@@ -2,12 +2,10 @@ package com.codeforcommunity.rest.subrouter;
 
 import static com.codeforcommunity.rest.ApiRouter.end;
 
+import com.auth0.jwt.JWT;
 import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.team.AddGoalRequest;
-import com.codeforcommunity.dto.team.CreateTeamRequest;
-import com.codeforcommunity.dto.team.DeleteGoalRequest;
-import com.codeforcommunity.dto.team.GetTeamRequest;
+import com.codeforcommunity.dto.team.*;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
@@ -31,6 +29,7 @@ public class TeamsRouter implements IRouter {
     registerAddGoal(router);
     registerDeleteGoal(router);
     registerDisbandTeam(router);
+    registerApplyToTeam(router);
 
     return router;
   }
@@ -91,10 +90,62 @@ public class TeamsRouter implements IRouter {
     end(routingContext.response(), 200);
   }
 
+  private void registerInviteUser(Router router) {
+    Route inviteUserRoute = router.post("/:team_id/invite");
+    inviteUserRoute.handler(this::handleInviteUser);
+  }
+
+  private void handleInviteUser(RoutingContext routingContext) {
+    JWTData userData = routingContext.get("jwt_data");
+    InviteUserRequest inviteUserRequest =
+            RestFunctions.getJsonBodyAsClass(routingContext, InviteUserRequest.class);
+    processor.inviteUser(userData, inviteUserRequest);
+  }
+
+  private void registerGetApplicants(Router router) {
+    Route getApplicantsRoute = router.get("/:team_id/applicants");
+    getApplicantsRoute.handler(this::handleGetApplicantsRoute);
+  }
+
+  private void handleGetApplicantsRoute(RoutingContext routingContext) {
+    JWTData userData = routingContext.get("jwt_data");
+    GetApplicantsRequest getApplicantsRequest =
+            RestFunctions.getJsonBodyAsClass(routingContext, GetApplicantsRequest.class);
+    processor.getApplicants(userData, getApplicantsRequest);
+  }
+
+  private void registerApplyToTeam(Router router) {
+    Route applyToTeamRoute = router.post("/:team_id/apply");
+    applyToTeamRoute.handler(this::handleApplyToTeamRoute);
+  }
+
+  private void handleApplyToTeamRoute(RoutingContext routingContext) {
+    JWTData userData = routingContext.get("jwt_data");
+    ApplyToTeamRequest applyToTeamRequest =
+            RestFunctions.getJsonBodyAsClass(routingContext, ApplyToTeamRequest.class);
+    processor.applyToTeam(userData, applyToTeamRequest);
+  }
+
+  private void registerApproveUser(Router router) {
+    Route approveUserRoute = router.post("/team_id/applicants/:user_id/approve");
+    approveUserRoute.handler(this::handleApproveUserRoute);
+
+  }
+
+  private void handleApproveUserRoute(RoutingContext routingContext) {
+    JWTData userData = routingContext.get("jwt_data");
+    ApproveUserRequest approveUserRequest =
+            RestFunctions.getJsonBodyAsClass(routingContext, ApproveUserRequest.class);
+    processor.approveUser(userData, approveUserRequest);
+
+  }
+
   private void registerDisbandTeam(Router router) {
     Route disbandTeamRoute = router.post("/:team_id/disband");
     disbandTeamRoute.handler(this::handleDisbandTeamRoute);
   }
+
+
 
   private void handleDisbandTeamRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
