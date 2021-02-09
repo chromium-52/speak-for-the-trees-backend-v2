@@ -15,6 +15,25 @@ First follow all the steps for setting up the general development environment wh
 - Compiling and running the API
 
 Following these steps, all that is left is to import data into the database. This has been made easy through import routes. You can find these import routes in the Postman collection posted below. Follow the steps below in order to import all the relevant data:
+- Call `POST api/v1/user/signup` to create a super admin user with a JSON body that follows the format of:
+  ```json 
+  {
+      "username": "someUsername",
+      "email": "some@email.com",
+      "password": "somePassword",
+      "firstName": "someFirstName",
+      "lastName": "someLastName"
+  }
+  ```
+  - Using your preferred method for postgres (Intellij, PgAdmin, postgres consol, etc.) edit the user row you just created so that their `privilege_level` column is equal to `SUPER_ADMIN`
+  - Call `POST /api/v1/user/login` to login to your admin user account with a JSON body that follows the format of:
+  ```json
+  {
+      "email": "your@email.com",
+      "password": "yourPassword"
+  }
+  ```
+  - Copy the "accessToken" returned by that call and add it as the _value_ of a header called 'X-Access-Token' for all seeding API calls
 - Call `POST api/v1/protected/import/neighborhoods` with `persist/src/main/resources/db/seed/neighborhoods.json` as the body
 - Call `POST api/v1/protected/import/blocks` with `persist/src/main/resources/db/seed/blocks.json` as the body. At this point your database has been populated with neighborhood and block data. The following steps are only necessary if you need to test something related to reservations.
 - Request a SQL script that imports users in the SFTT Slack channel. This is not public due to the sensitivity of the information.
