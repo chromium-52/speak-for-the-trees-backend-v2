@@ -26,7 +26,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     this.db = db;
   }
 
-  Optional<ReservationsRecord> lastAction(int blockId) {
+  private Optional<ReservationsRecord> lastAction(int blockId) {
     return Optional.ofNullable(
         db.selectFrom(RESERVATIONS)
             .where(RESERVATIONS.BLOCK_ID.eq(blockId))
@@ -42,7 +42,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
    * @param teamId the id of the team
    * @return a boolean indicating if they're on the team
    */
-  boolean isOnTeam(int userId, int teamId) {
+  private boolean isOnTeam(int userId, int teamId) {
     return db.fetchExists(
         db.selectFrom(USERS_TEAMS)
             .where(USERS_TEAMS.USER_ID.eq(userId))
@@ -51,7 +51,6 @@ public class ReservationProcessorImpl implements IReservationProcessor {
             .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.PENDING)));
   }
 
-  // TODO: This method needs to be tested
   void basicChecks(int blockId, Integer userId, Integer teamId) {
     if (!db.fetchExists(db.selectFrom(BLOCKS).where(BLOCKS.ID.eq(blockId)))) {
       throw new ResourceDoesNotExistException(blockId, "block");

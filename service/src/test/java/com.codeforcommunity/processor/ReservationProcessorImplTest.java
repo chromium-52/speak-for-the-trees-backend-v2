@@ -2,20 +2,24 @@ package com.codeforcommunity.processor;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import com.codeforcommunity.JooqMock;
+import com.codeforcommunity.JooqMock.OperationType;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.enums.ReservationAction;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.IncorrectBlockStatusException;
-import java.util.Optional;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
+import com.codeforcommunity.exceptions.UserDoesNotExistException;
+import com.codeforcommunity.exceptions.UserNotOnTeamException;
+import org.jooq.generated.Tables;
 import org.jooq.generated.tables.records.ReservationsRecord;
 import org.junit.jupiter.api.Test;
 
@@ -34,14 +38,134 @@ public class ReservationProcessorImplTest {
    */
   void setup() {
     mockDb = new JooqMock();
-    proc = spy(new ReservationProcessorImpl(mockDb.getContext()));
+    proc = new ReservationProcessorImpl(mockDb.getContext());
+  }
+
+  @Test
+  public void testBasicChecksNonExistingBlock() {
+    setup();
+    int blockId = 1;
+    int userId = 2;
+    int teamId = 3;
+
+    mockDb.addExistsReturn(false);
+
+    try {
+      this.proc.basicChecks(blockId, userId, teamId);
+      fail("Method should've thrown a ResourceDoesNotExist Exception");
+    } catch (ResourceDoesNotExistException e) {
+      assertEquals(blockId, e.getResourceId());
+      assertEquals("block", e.getResourceType());
+    }
+    assertEquals(1, mockDb.timesCalled(OperationType.EXISTS));
+  }
+
+  @Test
+  public void testBasicChecksNonExistingUser() {
+    setup();
+    int blockId = 1;
+    int userId = 2;
+    int teamId = 3;
+
+    mockDb.addExistsReturn(true);
+    mockDb.addExistsReturn(false);
+
+    try {
+      this.proc.basicChecks(blockId, userId, teamId);
+      fail("Method should've thrown a UserDoesNotExist Exception");
+    } catch (UserDoesNotExistException e) {
+      assertEquals("id = " + userId, e.getIdentifierMessage());
+    }
+    assertEquals(2, mockDb.timesCalled(OperationType.EXISTS));
+  }
+
+  @Test
+  public void testBasicChecksNonExistingTeam() {
+    setup();
+    int blockId = 1;
+    int userId = 2;
+    int teamId = 3;
+
+    mockDb.addExistsReturn(true);
+    mockDb.addExistsReturn(true);
+    mockDb.addExistsReturn(false);
+
+    try {
+      this.proc.basicChecks(blockId, userId, teamId);
+      fail("Method should've thrown a ResourceDoesNotExist Exception");
+    } catch (ResourceDoesNotExistException e) {
+      assertEquals(teamId, e.getResourceId());
+      assertEquals("team", e.getResourceType());
+    }
+    assertEquals(3, mockDb.timesCalled(OperationType.EXISTS));
+  }
+
+  @Test
+  public void testBasicChecksNotOnTeam() {
+    setup();
+    int blockId = 1;
+    int userId = 2;
+    int teamId = 3;
+
+    mockDb.addExistsReturn(true);
+    mockDb.addExistsReturn(true);
+    mockDb.addExistsReturn(true);
+    mockDb.addExistsReturn(false);
+
+    try {
+      this.proc.basicChecks(blockId, userId, teamId);
+      fail("Method should've thrown a UserNotOnTeam Exception");
+    } catch (UserNotOnTeamException e) {
+      assertEquals(userId, e.getUserId());
+      assertEquals(teamId, e.getTeamId());
+    }
+    assertEquals(4, mockDb.timesCalled(OperationType.EXISTS));
+  }
+
+  @Test
+  public void testBasicChecksSuccess() {
+    setup();
+    int blockId = 1;
+    int userId = 2;
+    int teamId = 3;
+
+    mockDb.addExistsReturn(true);
+    mockDb.addExistsReturn(true);
+    mockDb.addExistsReturn(true);
+    mockDb.addExistsReturn(true);
+
+    try {
+      this.proc.basicChecks(blockId, userId, teamId);
+    } catch (UserNotOnTeamException | ResourceDoesNotExistException | UserDoesNotExistException e) {
+      fail("Method should've returned without exception");
+    }
+    assertEquals(4, mockDb.timesCalled(OperationType.EXISTS));
+  }
+
+  @Test
+  public void testBasicChecksSuccessNullCase() {
+    setup();
+    int blockId = 1;
+    Integer userId = null;
+    Integer teamId = null;
+
+    mockDb.addExistsReturn(true);
+
+    try {
+      this.proc.basicChecks(blockId, userId, teamId);
+    } catch (UserNotOnTeamException | ResourceDoesNotExistException | UserDoesNotExistException e) {
+      fail("Method should've returned without exception");
+    }
+    assertEquals(1, mockDb.timesCalled(OperationType.EXISTS));
   }
 
   @Test
   public void testIsAdmin() {
     setup();
+    Set<PrivilegeLevel> adminLevels = new HashSet<>(Arrays.asList(PrivilegeLevel.ADMIN, PrivilegeLevel.SUPER_ADMIN));
+
     for (PrivilegeLevel p : PrivilegeLevel.values()) {
-      boolean isAdmin = p.equals(PrivilegeLevel.ADMIN) || p.equals(PrivilegeLevel.SUPER_ADMIN);
+      boolean isAdmin = adminLevels.contains(p);
       try {
         this.proc.isAdminCheck(p);
         if (!isAdmin) {
@@ -55,23 +179,19 @@ public class ReservationProcessorImplTest {
       }
     }
 
-    try {
-      this.proc.isAdminCheck(PrivilegeLevel.ADMIN);
-    } catch (AuthException e) {
-      fail("Method should not have thrown an exception");
-    }
-
-    try {
-      this.proc.isAdminCheck(PrivilegeLevel.SUPER_ADMIN);
-    } catch (AuthException e) {
-      fail("Method should not have thrown an exception");
+    for (PrivilegeLevel p: adminLevels) {
+      try {
+        this.proc.isAdminCheck(p);
+      } catch (AuthException e) {
+        fail("Method should not have thrown an exception for privilege level " + p.getName());
+      }
     }
   }
 
   @Test
   public void testBlockOpenCheckNoAction() {
     setup();
-    doReturn(Optional.empty()).when(this.proc).lastAction(anyInt());
+    mockDb.addEmptyReturn(OperationType.SELECT);
 
     try {
       this.proc.blockOpenCheck(1);
@@ -84,7 +204,7 @@ public class ReservationProcessorImplTest {
   public void testBlockOpenCheckUncomplete() {
     setup();
     ReservationsRecord mockReservation = mock(ReservationsRecord.class);
-    doReturn(Optional.of(mockReservation)).when(this.proc).lastAction(anyInt());
+    mockDb.addReturn(OperationType.SELECT, mockReservation);
 
     when(mockReservation.getActionType())
         .thenReturn(ReservationAction.UNCOMPLETE, ReservationAction.UNCOMPLETE);
@@ -99,11 +219,10 @@ public class ReservationProcessorImplTest {
   @Test
   public void testBlockOpenCheckReserved() {
     setup();
-    ReservationsRecord mockReservation = mock(ReservationsRecord.class);
-    doReturn(Optional.of(mockReservation)).when(this.proc).lastAction(anyInt());
+    ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
+    mockReservation.setActionType(ReservationAction.RESERVE);
 
-    when(mockReservation.getActionType())
-        .thenReturn(ReservationAction.RESERVE, ReservationAction.RESERVE);
+    mockDb.addReturn(OperationType.SELECT, mockReservation);
 
     try {
       this.proc.blockOpenCheck(1);
@@ -117,7 +236,7 @@ public class ReservationProcessorImplTest {
   @Test
   public void testBlockReservedCheckNoLastActionFailure() {
     setup();
-    doReturn(Optional.empty()).when(this.proc).lastAction(anyInt());
+    mockDb.addEmptyReturn(OperationType.SELECT);
 
     try {
       this.proc.blockReservedCheck(1, 15);
@@ -131,13 +250,13 @@ public class ReservationProcessorImplTest {
   @Test
   public void testBlockReservedCheckWrongActionTypeFailure() {
     setup();
-    ReservationsRecord mockReservation = mock(ReservationsRecord.class);
-    doReturn(Optional.of(mockReservation)).when(this.proc).lastAction(anyInt());
-    doReturn(false).when(this.proc).isOnTeam(anyInt(), anyInt());
+    ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
+    mockReservation.setActionType(ReservationAction.COMPLETE);
+    mockReservation.setUserId(2);
+    mockReservation.setTeamId(3);
 
-    when(mockReservation.getActionType()).thenReturn(ReservationAction.COMPLETE);
-    when(mockReservation.getUserId()).thenReturn(2, 2);
-    when(mockReservation.getTeamId()).thenReturn(3, 3);
+    mockDb.addReturn(OperationType.SELECT, mockReservation);
+    mockDb.addExistsReturn(true);
 
     try {
       this.proc.blockReservedCheck(1, 15);
@@ -147,22 +266,19 @@ public class ReservationProcessorImplTest {
       assertEquals("reserved", e.getExpectedStatus());
     }
 
-    verify(mockReservation, times(1)).getActionType();
-    verify(mockReservation, times(0)).getUserId();
-    verify(mockReservation, times(0)).getTeamId();
-    verify(this.proc, times(0)).isOnTeam(anyInt(), anyInt());
+    assertEquals(0, mockDb.timesCalled(OperationType.EXISTS));
   }
 
   @Test
   public void testBlockReservedCheckLastCaseFailure() {
     setup();
-    ReservationsRecord mockReservation = mock(ReservationsRecord.class);
-    doReturn(Optional.of(mockReservation)).when(this.proc).lastAction(anyInt());
-    doReturn(false).when(this.proc).isOnTeam(anyInt(), anyInt());
+    ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
+    mockReservation.setActionType(ReservationAction.RESERVE);
+    mockReservation.setUserId(2);
+    mockReservation.setTeamId(3);
 
-    when(mockReservation.getActionType()).thenReturn(ReservationAction.RESERVE);
-    when(mockReservation.getUserId()).thenReturn(2, 2);
-    when(mockReservation.getTeamId()).thenReturn(3, 3);
+    mockDb.addReturn(OperationType.SELECT, mockReservation);
+    mockDb.addExistsReturn(false);
 
     try {
       this.proc.blockReservedCheck(1, 15);
@@ -172,23 +288,21 @@ public class ReservationProcessorImplTest {
       assertEquals("reserved", e.getExpectedStatus());
     }
 
-    verify(mockReservation, times(1)).getActionType();
-    verify(mockReservation, times(2)).getUserId();
-    verify(mockReservation, times(2)).getTeamId();
-    verify(this.proc, times(1)).isOnTeam(anyInt(), anyInt());
+    assertEquals(1, mockDb.timesCalled(OperationType.EXISTS));
   }
 
   @Test
   public void testBlockReservedCheckSameUserSuccess() {
     setup();
-    ReservationsRecord mockReservation = mock(ReservationsRecord.class);
-    doReturn(Optional.of(mockReservation)).when(this.proc).lastAction(anyInt());
-    doReturn(false).when(this.proc).isOnTeam(anyInt(), anyInt());
-
     int userId = 15;
-    when(mockReservation.getActionType()).thenReturn(ReservationAction.RESERVE);
-    when(mockReservation.getUserId()).thenReturn(userId, userId);
-    when(mockReservation.getTeamId()).thenReturn(3, 3);
+
+    ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
+    mockReservation.setActionType(ReservationAction.RESERVE);
+    mockReservation.setUserId(userId);
+    mockReservation.setTeamId(3);
+
+    mockDb.addReturn(OperationType.SELECT, mockReservation);
+    mockDb.addExistsReturn(false);
 
     try {
       this.proc.blockReservedCheck(1, userId);
@@ -196,25 +310,22 @@ public class ReservationProcessorImplTest {
       fail("Method should've returned with no exception");
     }
 
-    verify(mockReservation, times(1)).getActionType();
-    verify(mockReservation, times(2)).getUserId();
-    verify(mockReservation, times(0)).getTeamId();
-    verify(this.proc, times(0)).isOnTeam(anyInt(), anyInt());
+    assertEquals(0, mockDb.timesCalled(OperationType.EXISTS));
   }
 
   @Test
   public void testBlockReservedCheckSameTeamSuccess() {
     setup();
-    ReservationsRecord mockReservation = mock(ReservationsRecord.class);
-    doReturn(Optional.of(mockReservation)).when(this.proc).lastAction(anyInt());
-    doReturn(true).when(this.proc).isOnTeam(anyInt(), anyInt());
-
     int userId = 15;
     int teamId = 3;
 
-    when(mockReservation.getActionType()).thenReturn(ReservationAction.RESERVE);
-    when(mockReservation.getUserId()).thenReturn(4, 4); // Wrong user ID
-    when(mockReservation.getTeamId()).thenReturn(teamId, teamId);
+    ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
+    mockReservation.setActionType(ReservationAction.RESERVE);
+    mockReservation.setUserId(4); // Wrong user id
+    mockReservation.setTeamId(teamId);
+
+    mockDb.addReturn(OperationType.SELECT, mockReservation);
+    mockDb.addExistsReturn(true);
 
     try {
       this.proc.blockReservedCheck(1, userId);
@@ -222,16 +333,13 @@ public class ReservationProcessorImplTest {
       fail("Method should've returned with no exception");
     }
 
-    verify(mockReservation, times(1)).getActionType();
-    verify(mockReservation, times(2)).getUserId();
-    verify(mockReservation, times(2)).getTeamId();
-    verify(this.proc, times(1)).isOnTeam(userId, teamId);
+    assertEquals(1, mockDb.timesCalled(OperationType.EXISTS));
   }
 
   @Test
   public void testBlockCompletedCheckNoLastActionFailure() {
     setup();
-    doReturn(Optional.empty()).when(this.proc).lastAction(anyInt());
+    mockDb.addEmptyReturn(OperationType.SELECT);
 
     try {
       this.proc.blockCompleteCheck(1);
@@ -245,10 +353,10 @@ public class ReservationProcessorImplTest {
   @Test
   public void testBlockCompletedCheckWrongActionTypeFailure() {
     setup();
-    ReservationsRecord mockReservation = mock(ReservationsRecord.class);
-    doReturn(Optional.of(mockReservation)).when(this.proc).lastAction(anyInt());
+    ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
+    mockReservation.setActionType(ReservationAction.QA);
 
-    when(mockReservation.getActionType()).thenReturn(ReservationAction.QA);
+    mockDb.addReturn(OperationType.SELECT, mockReservation);
 
     try {
       this.proc.blockCompleteCheck(1);
@@ -257,31 +365,27 @@ public class ReservationProcessorImplTest {
       assertEquals(1, e.getBlockId());
       assertEquals("complete", e.getExpectedStatus());
     }
-
-    verify(mockReservation, times(1)).getActionType();
   }
 
   @Test
   public void testBlockCompletedCheckSuccess() {
     setup();
-    ReservationsRecord mockReservation = mock(ReservationsRecord.class);
-    doReturn(Optional.of(mockReservation)).when(this.proc).lastAction(anyInt());
+    ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
+    mockReservation.setActionType(ReservationAction.COMPLETE);
 
-    when(mockReservation.getActionType()).thenReturn(ReservationAction.COMPLETE);
+    mockDb.addReturn(OperationType.SELECT, mockReservation);
 
     try {
       this.proc.blockCompleteCheck(1);
     } catch (IncorrectBlockStatusException e) {
       fail("Method should return without throwing an exception");
     }
-
-    verify(mockReservation, times(1)).getActionType();
   }
 
   @Test
   public void testBlockQACheckNoLastActionFailure() {
     setup();
-    doReturn(Optional.empty()).when(this.proc).lastAction(anyInt());
+    mockDb.addEmptyReturn(OperationType.SELECT);
 
     try {
       this.proc.blockQACheck(1);
@@ -295,10 +399,10 @@ public class ReservationProcessorImplTest {
   @Test
   public void testBlockQACheckWrongActionTypeFailure() {
     setup();
-    ReservationsRecord mockReservation = mock(ReservationsRecord.class);
-    doReturn(Optional.of(mockReservation)).when(this.proc).lastAction(anyInt());
+    ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
+    mockReservation.setActionType(ReservationAction.COMPLETE);
 
-    when(mockReservation.getActionType()).thenReturn(ReservationAction.COMPLETE);
+    mockDb.addReturn(OperationType.SELECT, mockReservation);
 
     try {
       this.proc.blockQACheck(1);
@@ -307,24 +411,20 @@ public class ReservationProcessorImplTest {
       assertEquals(1, e.getBlockId());
       assertEquals("QA", e.getExpectedStatus());
     }
-
-    verify(mockReservation, times(1)).getActionType();
   }
 
   @Test
   public void testBlockQACheckSuccess() {
     setup();
-    ReservationsRecord mockReservation = mock(ReservationsRecord.class);
-    doReturn(Optional.of(mockReservation)).when(this.proc).lastAction(anyInt());
+    ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
+    mockReservation.setActionType(ReservationAction.QA);
 
-    when(mockReservation.getActionType()).thenReturn(ReservationAction.QA);
+    mockDb.addReturn(OperationType.SELECT, mockReservation);
 
     try {
       this.proc.blockQACheck(1);
     } catch (IncorrectBlockStatusException e) {
       fail("Method should return without throwing an exception");
     }
-
-    verify(mockReservation, times(1)).getActionType();
   }
 }
