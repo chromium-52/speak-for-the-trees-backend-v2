@@ -26,7 +26,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
     this.db = db;
   }
 
-  public Optional<ReservationsRecord> lastAction(int blockId) {
+  private Optional<ReservationsRecord> lastAction(int blockId) {
     return Optional.ofNullable(
         db.selectFrom(RESERVATIONS)
             .where(RESERVATIONS.BLOCK_ID.eq(blockId))
@@ -51,7 +51,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
             .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.PENDING)));
   }
 
-  private void basicChecks(int blockId, Integer userId, Integer teamId) {
+  void basicChecks(int blockId, Integer userId, Integer teamId) {
     if (!db.fetchExists(db.selectFrom(BLOCKS).where(BLOCKS.ID.eq(blockId)))) {
       throw new ResourceDoesNotExistException(blockId, "block");
     }
@@ -76,7 +76,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
    *
    * @param level the privilege level of the user calling the route
    */
-  private void isAdminCheck(PrivilegeLevel level) {
+  void isAdminCheck(PrivilegeLevel level) {
     if (!(level.equals(PrivilegeLevel.ADMIN) || level.equals(PrivilegeLevel.SUPER_ADMIN))) {
       throw new AuthException("User does not have the required privilege level.");
     }
@@ -88,7 +88,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
    *
    * @param blockId the id of the block to check
    */
-  private void blockOpenCheck(int blockId) {
+  void blockOpenCheck(int blockId) {
     Optional<ReservationsRecord> maybeReservation = lastAction(blockId);
 
     if (maybeReservation.isPresent()
@@ -104,7 +104,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
    * @param blockId the id the block to check
    * @param userId the id of the user calling the route
    */
-  private void blockReservedCheck(int blockId, int userId) {
+  void blockReservedCheck(int blockId, int userId) {
     Optional<ReservationsRecord> maybeReservation = lastAction(blockId);
 
     // check if there are any entries
@@ -138,14 +138,11 @@ public class ReservationProcessorImpl implements IReservationProcessor {
    *
    * @param blockId the id of the block to check
    */
-  private void blockCompleteCheck(int blockId) {
+  void blockCompleteCheck(int blockId) {
     Optional<ReservationsRecord> maybeReservation = lastAction(blockId);
 
-    if (maybeReservation.isPresent()) {
-      if (!(maybeReservation.get().getActionType().equals(ReservationAction.COMPLETE))) {
-        throw new IncorrectBlockStatusException(blockId, "complete");
-      }
-    } else {
+    if (!maybeReservation.isPresent()
+        || !(maybeReservation.get().getActionType().equals(ReservationAction.COMPLETE))) {
       throw new IncorrectBlockStatusException(blockId, "complete");
     }
   }
@@ -155,14 +152,11 @@ public class ReservationProcessorImpl implements IReservationProcessor {
    *
    * @param blockId the id of the block to check
    */
-  private void blockQACheck(int blockId) {
+  void blockQACheck(int blockId) {
     Optional<ReservationsRecord> maybeReservation = lastAction(blockId);
 
-    if (maybeReservation.isPresent()) {
-      if (!(maybeReservation.get().getActionType().equals(ReservationAction.QA))) {
-        throw new IncorrectBlockStatusException(blockId, "QA");
-      }
-    } else {
+    if (!maybeReservation.isPresent()
+        || !(maybeReservation.get().getActionType().equals(ReservationAction.QA))) {
       throw new IncorrectBlockStatusException(blockId, "QA");
     }
   }
