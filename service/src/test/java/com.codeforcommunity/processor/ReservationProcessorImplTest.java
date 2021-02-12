@@ -11,14 +11,12 @@ import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.enums.ReservationAction;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.IncorrectBlockStatusException;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
-
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.UserNotOnTeamException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import org.jooq.generated.Tables;
 import org.jooq.generated.tables.records.ReservationsRecord;
 import org.junit.jupiter.api.Test;
@@ -162,7 +160,8 @@ public class ReservationProcessorImplTest {
   @Test
   public void testIsAdmin() {
     setup();
-    Set<PrivilegeLevel> adminLevels = new HashSet<>(Arrays.asList(PrivilegeLevel.ADMIN, PrivilegeLevel.SUPER_ADMIN));
+    Set<PrivilegeLevel> adminLevels =
+        new HashSet<>(Arrays.asList(PrivilegeLevel.ADMIN, PrivilegeLevel.SUPER_ADMIN));
 
     for (PrivilegeLevel p : PrivilegeLevel.values()) {
       boolean isAdmin = adminLevels.contains(p);
@@ -179,7 +178,7 @@ public class ReservationProcessorImplTest {
       }
     }
 
-    for (PrivilegeLevel p: adminLevels) {
+    for (PrivilegeLevel p : adminLevels) {
       try {
         this.proc.isAdminCheck(p);
       } catch (AuthException e) {
