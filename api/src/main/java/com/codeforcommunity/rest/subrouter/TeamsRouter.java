@@ -1,8 +1,5 @@
 package com.codeforcommunity.rest.subrouter;
 
-import static com.codeforcommunity.rest.ApiRouter.end;
-
-import com.auth0.jwt.JWT;
 import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.team.*;
@@ -12,6 +9,8 @@ import io.vertx.core.Vertx;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+
+import static com.codeforcommunity.rest.ApiRouter.end;
 
 public class TeamsRouter implements IRouter {
 
@@ -30,6 +29,10 @@ public class TeamsRouter implements IRouter {
     registerDeleteGoal(router);
     registerDisbandTeam(router);
     registerApplyToTeam(router);
+    registerInviteUser(router);
+    registerApproveUser(router);
+    registerRejectUserRoute(router);
+    registerGetApplicants(router);
 
     return router;
   }
@@ -140,12 +143,23 @@ public class TeamsRouter implements IRouter {
 
   }
 
+  private void registerRejectUserRoute(Router router) {
+    Route rejectUserRoute = router.post("/team_id/applicants/:user_id/reject");
+    rejectUserRoute.handler(this::handleRejectUserRoute);
+  }
+
+  private void handleRejectUserRoute(RoutingContext routingContext) {
+    JWTData userData = routingContext.get("jwt_data");
+    RejectUserRequest rejectUserRequest =
+            RestFunctions.getJsonBodyAsClass(routingContext, RejectUserRequest.class);
+    processor.rejectUser(userData, rejectUserRequest);
+  }
+
+
   private void registerDisbandTeam(Router router) {
     Route disbandTeamRoute = router.post("/:team_id/disband");
     disbandTeamRoute.handler(this::handleDisbandTeamRoute);
   }
-
-
 
   private void handleDisbandTeamRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");

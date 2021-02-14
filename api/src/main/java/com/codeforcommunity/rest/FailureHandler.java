@@ -169,6 +169,16 @@ public class FailureHandler {
     end(ctx, message, 400);
   }
 
+  public void handleUserAlreadyAppliedForTeam(RoutingContext ctx, MemberApplicationException e) {
+    String message = "User " + e.getUserId() + " has already applied for Team " + e.getTeamId();
+    end(ctx, message, 400);
+  }
+
+  public void handleCannotApproveTeamMember(RoutingContext ctx, MemberStatusException e) {
+    String message = "User " + e.getUserId() + " must be a pending member of Team " + e.getMessage();
+    end(ctx, message, 400);
+  }
+
   private void handleUncaughtError(RoutingContext ctx, Throwable throwable) {
     String message = String.format("Internal server error caused by: %s", throwable.getMessage());
     logger.error(message);
@@ -184,4 +194,7 @@ public class FailureHandler {
   private void end(RoutingContext ctx, String message, int statusCode) {
     ctx.response().setStatusCode(statusCode).end(message);
   }
+
+
+
 }
