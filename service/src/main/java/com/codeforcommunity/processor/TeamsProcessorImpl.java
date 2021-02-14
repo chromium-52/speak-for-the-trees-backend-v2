@@ -106,8 +106,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   @Override
   public void inviteUser(JWTData userData, InviteUserRequest inviteUserRequest) {
-    //TODO What if the user does not exist
-    // MAYBE this should just send a link that allows a user to request to join a team?
+    //TODO what to do here. A link with an invite to join.
     UsersTeamsRecord inviterUserTeamsRecord =
             db.selectFrom(USERS_TEAMS)
                     .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
@@ -198,12 +197,74 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
       UsersTeamsRecord approvedUserRecord = db.selectFrom(USERS_TEAMS
               .where(USERS_TEAMS.USER_ID.eq(rejectUserRequest.getUserId()))).fetchOne();
       if (approvedUserRecord.getTeamRole() == TeamRole.PENDING) {
-        approvedUserRecord.delete();
+        approvedUserRecord.setTeamRole(TeamRole.None);
+        approvedUserRecord.update();
       } else {
         throw new MemberStatusException(rejectUserRequest.getUserId(), rejectUserRequest.getTeamId());
       }
     } else {
       throw new WrongTeamRoleException(leaderTeamsRecord.getTeamId(), leaderTeamsRecord.getTeamRole());
+    }
+  }
+
+  @Override
+  public void kickUser(JWTData userData, KickUserRequest kickUserRequest) {
+    UsersTeamsRecord leaderTeamsRecord =
+            db.selectFrom(USERS_TEAMS)
+                    .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
+                    .and(USERS_TEAMS.TEAM_ID.eq(kickUserRequest.getTeamId()))
+                    .fetchOne();
+    if(leaderTeamsRecord != null && leaderTeamsRecord.getTeamRole() == TeamRole.LEADER) {
+      UsersTeamsRecord approvedUserRecord = db.selectFrom(USERS_TEAMS
+              .where(USERS_TEAMS.USER_ID.eq(kickUserRequest.getUserId()))).fetchOne();
+      if (approvedUserRecord.getTeamRole() == TeamRole.MEMBER) {
+        approvedUserRecord.setTeamRole(TeamRole.None);
+        approvedUserRecord.update();
+      } else {
+        throw new MemberStatusException(kickUserRequest.getUserId(), kickUserRequest.getTeamId());
+      }
+    } else {
+      throw new WrongTeamRoleException(leaderTeamsRecord.getTeamId(), leaderTeamsRecord.getTeamRole());
+    }
+  }
+
+  @Override
+  public void leaveTeam(JWTData userData, LeaveTeamRequest leaveTeamRequest) {
+    UsersTeamsRecord usersTeamsRecord =
+            db.selectFrom(USERS_TEAMS)
+                    .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
+                    .and(USERS_TEAMS.TEAM_ID.eq(leaveTeamRequest.getTeamId()))
+                    .fetchOne();
+    if(usersTeamsRecord != null && usersTeamsRecord.getTeamRole() != TeamRole.LEADER) {
+      usersTeamsRecord.setTeamRole(TeamRole.None);
+      usersTeamsRecord.update();
+    } else {
+      throw new MemberStatusException(leaveTeamRequest.getTeamId(), userData.getUserId());
+    }
+  }
+
+  @Override
+  public void transferOwnership(JWTData userData, TransferOwnershipRequest transferOwnershipRequest) {
+    UsersTeamsRecord oldLeaderTeamsRecord =
+            db.selectFrom(USERS_TEAMS)
+                    .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
+                    .and(USERS_TEAMS.TEAM_ID.eq(transferOwnershipRequest.getTeamId()))
+                    .fetchOne();
+    UsersTeamsRecord newLeaderTeamsRecord =
+            db.selectFrom(USERS_TEAMS)
+                    .where(USERS_TEAMS.USER_ID.eq(transferOwnershipRequest.getNewLeaderId())
+                    .and(USERS_TEAMS.TEAM_ID.eq(transferOwnershipRequest.getTeamId())))
+                    .fetchOne();
+    if(oldLeaderTeamsRecord != null && newLeaderTeamsRecord != null
+            && oldLeaderTeamsRecord.getTeamRole() == TeamRole.LEADER
+            && oldLeaderTeamsRecord.getTeamRole() == TeamRole.MEMBER) {
+      newLeaderTeamsRecord.setTeamRole(TeamRole.LEADER);
+      oldLeaderTeamsRecord.setTeamRole(TeamRole.MEMBER);
+      newLeaderTeamsRecord.update();
+      oldLeaderTeamsRecord.update();
+    } else {
+      //TODO improve error handling for this method to be more specific.
+      throw new WrongTeamRoleException(transferOwnershipRequest.getTeamId(), TeamRole.LEADER);
     }
   }
 }

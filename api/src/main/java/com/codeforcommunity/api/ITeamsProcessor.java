@@ -25,4 +25,10 @@ public interface ITeamsProcessor {
   void approveUser(JWTData userData, ApproveUserRequest approveUserRequest);
 
   void rejectUser(JWTData userData, RejectUserRequest rejectUserRequest);
+
+  void kickUser(JWTData userData, KickUserRequest teamId);
+
+  void leaveTeam(JWTData userData, LeaveTeamRequest leaveTeamRequest);
+
+  void transferOwnership(JWTData userData, TransferOwnershipRequest transferOwnershipRequest);
 }

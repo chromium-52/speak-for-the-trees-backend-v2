@@ -33,6 +33,8 @@ public class TeamsRouter implements IRouter {
     registerApproveUser(router);
     registerRejectUserRoute(router);
     registerGetApplicants(router);
+    registerKickUserRoute(router);
+    registerLeaveTeamRoute(router);
 
     return router;
   }
@@ -155,7 +157,6 @@ public class TeamsRouter implements IRouter {
     processor.rejectUser(userData, rejectUserRequest);
   }
 
-
   private void registerDisbandTeam(Router router) {
     Route disbandTeamRoute = router.post("/:team_id/disband");
     disbandTeamRoute.handler(this::handleDisbandTeamRoute);
@@ -164,9 +165,49 @@ public class TeamsRouter implements IRouter {
   private void handleDisbandTeamRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
     int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
-
     processor.disbandTeam(userData, teamId);
-
     end(ctx.response(), 200);
   }
+
+  private void registerKickUserRoute(Router router) {
+    Route kickUserRoute = router.post("/:team_id/members/:member_id/kick");
+    kickUserRoute.handler(this::handleKickUserRoute);
+  }
+
+  private void handleKickUserRoute(RoutingContext routingContext) {
+    JWTData userData = routingContext.get("jwt_data");
+    KickUserRequest kickUserRequest =
+            RestFunctions.getJsonBodyAsClass(routingContext, KickUserRequest.class);
+    processor.kickUser(userData, kickUserRequest);
+    end(routingContext.response(), 200);
+  }
+
+  private void registerLeaveTeamRoute(Router router) {
+    Route leaveTeamRoute = router.post("/:team_id/leave");
+    leaveTeamRoute.handler(this::handleLeaveTeamRoute);
+  }
+
+  private void handleLeaveTeamRoute(RoutingContext routingContext) {
+    JWTData userData = routingContext.get("jwt_data");
+    LeaveTeamRequest leaveTeamRequest =
+            RestFunctions.getJsonBodyAsClass(routingContext, LeaveTeamRequest.class);
+    processor.leaveTeam(userData, leaveTeamRequest);
+    end(routingContext.response(), 200);
+  }
+
+  private void registerTransferTeamOwnership(Router router) {
+    Route transferOwnershipRoute = router.post("/:team_id");
+    transferOwnershipRoute.handler(this::handleTransferOwnershipRoute);
+  }
+
+  private void handleTransferOwnershipRoute(RoutingContext routingContext) {
+    JWTData userData = routingContext.get("jwt_data");
+    TransferOwnershipRequest transferOwnershipRequest =
+            RestFunctions.getJsonBodyAsClass(routingContext, TransferOwnershipRequest.class);
+    processor.transferOwnership(userData, transferOwnershipRequest);
+    end(routingContext.response(), 200);
+
+  }
+
+
 }

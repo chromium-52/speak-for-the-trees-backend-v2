@@ -6,36 +6,24 @@ import com.codeforcommunity.exceptions.HandledException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RejectUserRequest extends ApiDto {
-    private Integer userId;
-    private Integer teamId;
+public class LeaveTeamRequest extends ApiDto {
+    Integer teamId;
 
-    public RejectUserRequest(Integer userId, Integer teamId) {
-        this.userId = userId;
+    public LeaveTeamRequest(Integer userId, Integer teamId) {
         this.teamId = teamId;
     }
 
-    private RejectUserRequest(){};
+    public LeaveTeamRequest() {
+    }
 
     @Override
     public List<String> validateFields(String fieldPrefix) throws HandledException {
-        String fieldName = fieldPrefix + "reject_user_request.";
+        String fieldName = fieldPrefix + "leave_team_request.";
         List<String> fields = new ArrayList<>();
         if (teamId == null) {
             fields.add(fieldName + "team_id");
         }
-        if (userId == null) {
-            fields.add(fieldName + "users");
-        }
         return fields;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public Integer getTeamId() {

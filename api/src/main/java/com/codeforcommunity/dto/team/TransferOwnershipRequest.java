@@ -6,36 +6,26 @@ import com.codeforcommunity.exceptions.HandledException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RejectUserRequest extends ApiDto {
-    private Integer userId;
+public class TransferOwnershipRequest extends ApiDto {
     private Integer teamId;
+    private Integer newLeaderId;
 
-    public RejectUserRequest(Integer userId, Integer teamId) {
-        this.userId = userId;
+    public TransferOwnershipRequest(Integer teamId, Integer newLeaderId) {
         this.teamId = teamId;
+        this.newLeaderId = newLeaderId;
     }
-
-    private RejectUserRequest(){};
 
     @Override
     public List<String> validateFields(String fieldPrefix) throws HandledException {
-        String fieldName = fieldPrefix + "reject_user_request.";
+        String fieldName = fieldPrefix + "transfer_ownership_request.";
         List<String> fields = new ArrayList<>();
         if (teamId == null) {
             fields.add(fieldName + "team_id");
         }
-        if (userId == null) {
-            fields.add(fieldName + "users");
+        if (newLeaderId == null) {
+            fields.add(fieldName + "newLeaderId");
         }
         return fields;
-    }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
     }
 
     public Integer getTeamId() {
@@ -44,5 +34,13 @@ public class RejectUserRequest extends ApiDto {
 
     public void setTeamId(Integer teamId) {
         this.teamId = teamId;
+    }
+
+    public Integer getNewLeaderId() {
+        return newLeaderId;
+    }
+
+    public void setNewLeaderId(Integer newLeaderId) {
+        this.newLeaderId = newLeaderId;
     }
 }
