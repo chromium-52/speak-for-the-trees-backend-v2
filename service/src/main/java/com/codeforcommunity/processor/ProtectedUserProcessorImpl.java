@@ -108,7 +108,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
       if (db.fetchExists(USERS, USERS.USERNAME.eq(changeUsernameRequest.getNewUsername()))) {
         throw new UsernameAlreadyInUseException(changeUsernameRequest.getNewUsername());
       }
-      user.setEmail(changeUsernameRequest.getNewUsername());
+      user.setUsername(changeUsernameRequest.getNewUsername());
       user.store();
     } else {
       throw new WrongPasswordException();
