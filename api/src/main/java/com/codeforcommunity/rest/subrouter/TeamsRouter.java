@@ -4,7 +4,11 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.team.*;
+import com.codeforcommunity.dto.team.AddGoalRequest;
+import com.codeforcommunity.dto.team.CreateTeamRequest;
+import com.codeforcommunity.dto.team.InviteUserRequest;
+import com.codeforcommunity.dto.team.TeamDataResponse;
+import com.codeforcommunity.dto.team.TransferOwnershipRequest;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
@@ -199,9 +203,10 @@ public class TeamsRouter implements IRouter {
 
   private void handleTransferOwnershipRoute(RoutingContext routingContext) {
     JWTData userData = routingContext.get("jwt_data");
+    int teamId = RestFunctions.getRequestParameterAsInt(routingContext.request(), "team_id");
     TransferOwnershipRequest transferOwnershipRequest =
         RestFunctions.getJsonBodyAsClass(routingContext, TransferOwnershipRequest.class);
-    processor.transferOwnership(userData, transferOwnershipRequest);
+    processor.transferOwnership(userData, transferOwnershipRequest, teamId);
     end(routingContext.response(), 200);
   }
 }

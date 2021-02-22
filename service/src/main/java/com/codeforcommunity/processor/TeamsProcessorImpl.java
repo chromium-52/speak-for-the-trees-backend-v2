@@ -57,7 +57,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   public TeamDataResponse getTeam(JWTData userData, Integer teamId) {
     TeamsRecord team = db.selectFrom(TEAMS).where(TEAMS.ID.eq(teamId)).fetchOne();
     if (team == null) {
-      throw new TeamDoesNotExistException(teamId);
+      throw new ResourceDoesNotExistException(teamId, "Team");
     }
 
     return new TeamDataResponse(
@@ -106,7 +106,6 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   @Override
   public void inviteUser(JWTData userData, InviteUserRequest inviteUserRequest) {
-    // TODO what to do here. A link with an invite to join.
     UsersTeamsRecord inviterUserTeamsRecord =
         db.selectFrom(USERS_TEAMS)
             .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
@@ -275,11 +274,11 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   @Override
   public void transferOwnership(
-      JWTData userData, TransferOwnershipRequest transferOwnershipRequest) {
+      JWTData userData, TransferOwnershipRequest transferOwnershipRequest, int teamId) {
     UsersTeamsRecord oldLeaderTeamsRecord =
         db.selectFrom(USERS_TEAMS)
             .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-            .and(USERS_TEAMS.TEAM_ID.eq(transferOwnershipRequest.getTeamId()))
+            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
             .fetchOne();
     UsersTeamsRecord newLeaderTeamsRecord =
         db.selectFrom(USERS_TEAMS)
@@ -287,7 +286,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
                 USERS_TEAMS
                     .USER_ID
                     .eq(transferOwnershipRequest.getNewLeaderId())
-                    .and(USERS_TEAMS.TEAM_ID.eq(transferOwnershipRequest.getTeamId())))
+                    .and(USERS_TEAMS.TEAM_ID.eq(teamId)))
             .fetchOne();
     if (oldLeaderTeamsRecord != null
         && newLeaderTeamsRecord != null
@@ -299,7 +298,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
       oldLeaderTeamsRecord.update();
     } else {
       // TODO improve error handling for this method to be more specific.
-      throw new WrongTeamRoleException(transferOwnershipRequest.getTeamId(), TeamRole.LEADER);
+      throw new WrongTeamRoleException(teamId, TeamRole.LEADER);
     }
   }
 }

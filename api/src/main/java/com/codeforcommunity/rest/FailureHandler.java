@@ -1,6 +1,24 @@
 package com.codeforcommunity.rest;
 
-import com.codeforcommunity.exceptions.*;
+
+import com.codeforcommunity.exceptions.CreateUserException;
+import com.codeforcommunity.exceptions.EmailAlreadyInUseException;
+import com.codeforcommunity.exceptions.ExpiredSecretKeyException;
+import com.codeforcommunity.exceptions.HandledException;
+import com.codeforcommunity.exceptions.IncorrectBlockStatusException;
+import com.codeforcommunity.exceptions.InvalidSecretKeyException;
+import com.codeforcommunity.exceptions.MalformedParameterException;
+import com.codeforcommunity.exceptions.MemberApplicationException;
+import com.codeforcommunity.exceptions.MemberStatusException;
+import com.codeforcommunity.exceptions.MissingHeaderException;
+import com.codeforcommunity.exceptions.MissingParameterException;
+import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
+import com.codeforcommunity.exceptions.TokenInvalidException;
+import com.codeforcommunity.exceptions.UsedSecretKeyException;
+import com.codeforcommunity.exceptions.UserDoesNotExistException;
+import com.codeforcommunity.exceptions.UserNotOnTeamException;
+import com.codeforcommunity.exceptions.UsernameAlreadyInUseException;
+import com.codeforcommunity.exceptions.WrongTeamRoleException;
 import com.codeforcommunity.logger.SLogger;
 import io.vertx.ext.web.RoutingContext;
 
