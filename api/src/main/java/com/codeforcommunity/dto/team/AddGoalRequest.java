@@ -2,66 +2,37 @@ package com.codeforcommunity.dto.team;
 
 import com.codeforcommunity.dto.ApiDto;
 import com.codeforcommunity.exceptions.HandledException;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddGoalRequest extends ApiDto {
   private Integer goal;
-  private Integer teamId;
-  private Timestamp startAt;
-  private Timestamp completeBy;
+  private Timestamp complete_by;
+  private Timestamp start_at;
 
-  public AddGoalRequest(Integer goal, Integer teamId, Timestamp startAt, Timestamp completeBy) {
+  public AddGoalRequest(Integer goal, Timestamp completeBy, Timestamp startAt) {
     this.goal = goal;
-    this.teamId = teamId;
-    this.startAt = startAt;
-    this.completeBy = completeBy;
+    this.complete_by = completeBy;
+    this.start_at = startAt;
   }
 
   private AddGoalRequest() {}
 
-  @Override
-  public List<String> validateFields(String fieldPrefix) throws HandledException {
-    String fieldName = fieldPrefix + "add_goal_request.";
-    List<String> fields = new ArrayList<>();
-    if (goal == null) {
-      fields.add(fieldName + "goal");
-    }
-    if (teamId == null) {
-      fields.add(fieldName + "teamId");
-    }
-    if (startAt == null) {
-      fields.add(fieldName + "start_by");
-    }
-    if (completeBy == null) {
-      fields.add(fieldName + "complete_by");
-    }
-    return fields;
+  public java.sql.Timestamp getStart_at() {
+    return complete_by;
   }
 
-  public Integer getTeamId() {
-    return teamId;
+  public void setStart_at(Timestamp start_at) {
+    this.complete_by = start_at;
   }
 
-  public void setTeamId(Integer teamId) {
-    this.teamId = teamId;
+  public java.sql.Timestamp getComplete_by() {
+    return start_at;
   }
 
-  public Timestamp getStartAt() {
-    return startAt;
-  }
-
-  public void setStartAt(Timestamp startAt) {
-    this.startAt = startAt;
-  }
-
-  public Timestamp getCompleteBy() {
-    return completeBy;
-  }
-
-  public void setCompleteBy(Timestamp completeBy) {
-    this.completeBy = completeBy;
+  public void setComplete_by(Timestamp complete_by) {
+    this.start_at = complete_by;
   }
 
   public Integer getGoal() {
@@ -70,5 +41,21 @@ public class AddGoalRequest extends ApiDto {
 
   public void setGoal(Integer goal) {
     this.goal = goal;
+  }
+
+  @Override
+  public List<String> validateFields(String fieldPrefix) throws HandledException {
+    String fieldName = fieldPrefix + "add_goal_request.";
+    List<String> fields = new ArrayList<>();
+    if (goal == null) {
+      fields.add(fieldName + "goal");
+    }
+    if (complete_by == null) {
+      fields.add(fieldName + "start_at");
+    }
+    if (start_at == null) {
+      fields.add(fieldName + "complete_by");
+    }
+    return fields;
   }
 }

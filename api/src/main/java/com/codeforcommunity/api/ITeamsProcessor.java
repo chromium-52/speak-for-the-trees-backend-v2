@@ -2,7 +2,6 @@ package com.codeforcommunity.api;
 
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.team.*;
-
 import java.util.List;
 
 public interface ITeamsProcessor {
@@ -10,25 +9,26 @@ public interface ITeamsProcessor {
 
   void createTeam(JWTData userData, CreateTeamRequest request);
 
-  TeamDataResponse getTeam(JWTData userData, GetTeamRequest getTeamRequest);
+  TeamDataResponse getTeam(JWTData userData, Integer teamId);
 
-  void addGoal(JWTData userData, AddGoalRequest addGoalRequest);
+  void addGoal(JWTData userData, AddGoalRequest addGoalRequest, int teamId);
 
-  void deleteGoal(JWTData userData, DeleteGoalRequest deleteGoalRequest);
+  void deleteGoal(JWTData userData, int teamId, int goalId);
 
   void inviteUser(JWTData userData, InviteUserRequest inviteUserRequest);
 
-  List<UsersTeamDataResponse> getApplicants(JWTData userData, GetApplicantsRequest getApplicantsRequest);
+  List<UsersTeamDataResponse> getApplicants(
+      JWTData userData, int teamId);
 
-  void applyToTeam(JWTData userData, ApplyToTeamRequest applyToTeamRequest);
+  void applyToTeam(JWTData userData, int teamId);
 
-  void approveUser(JWTData userData, ApproveUserRequest approveUserRequest);
+  void approveUser(JWTData userData, int teamId, int memberId);
 
-  void rejectUser(JWTData userData, RejectUserRequest rejectUserRequest);
+  void rejectUser(JWTData userData, int teamId, int memberId);
 
-  void kickUser(JWTData userData, KickUserRequest teamId);
+  void kickUser(JWTData userData, int teamId, int memberId);
 
-  void leaveTeam(JWTData userData, LeaveTeamRequest leaveTeamRequest);
+  void leaveTeam(JWTData userData, int teamId);
 
   void transferOwnership(JWTData userData, TransferOwnershipRequest transferOwnershipRequest);
 }

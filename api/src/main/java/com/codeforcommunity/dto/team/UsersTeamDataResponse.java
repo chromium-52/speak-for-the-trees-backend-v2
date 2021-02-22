@@ -3,37 +3,37 @@ package com.codeforcommunity.dto.team;
 import com.codeforcommunity.enums.TeamRole;
 
 public class UsersTeamDataResponse {
-    private Integer userId;
-    private Integer teamId;
-    private TeamRole teamRole;
+  private Integer userId;
+  private Integer teamId;
+  private TeamRole teamRole;
 
-    public UsersTeamDataResponse(Integer userId, Integer teamId, TeamRole teamRole) {
-        this.userId = userId;
-        this.teamId = teamId;
-        this.teamRole = teamRole;
-    }
+  public UsersTeamDataResponse(Integer userId, Integer teamId, TeamRole teamRole) {
+    this.userId = userId;
+    this.teamId = teamId;
+    this.teamRole = teamRole;
+  }
 
-    public Integer getUserId() {
-        return userId;
-    }
+  public Integer getUserId() {
+    return userId;
+  }
 
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
+  public void setUserId(Integer userId) {
+    this.userId = userId;
+  }
 
-    public Integer getTeamId() {
-        return teamId;
-    }
+  public Integer getTeamId() {
+    return teamId;
+  }
 
-    public void setTeamId(Integer teamId) {
-        this.teamId = teamId;
-    }
+  public void setTeamId(Integer teamId) {
+    this.teamId = teamId;
+  }
 
-    public TeamRole getTeamRole() {
-        return teamRole;
-    }
+  public TeamRole getTeamRole() {
+    return teamRole;
+  }
 
-    public void setTeamRole(TeamRole teamRole) {
-        this.teamRole = teamRole;
-    }
+  public void setTeamRole(TeamRole teamRole) {
+    this.teamRole = teamRole;
+  }
 }

@@ -4,24 +4,24 @@ import com.codeforcommunity.rest.FailureHandler;
 import io.vertx.ext.web.RoutingContext;
 
 public class MemberStatusException extends HandledException {
-    private Integer teamId;
-    private Integer userId;
+  private Integer teamId;
+  private Integer userId;
 
-    public Integer getTeamId() {
-        return teamId;
-    }
+  public Integer getTeamId() {
+    return teamId;
+  }
 
-    public Integer getUserId() {
-        return userId;
-    }
+  public Integer getUserId() {
+    return userId;
+  }
 
-    public MemberStatusException(Integer teamId, Integer userId) {
-        this.teamId = teamId;
-        this.userId = userId;
-    }
+  public MemberStatusException(Integer teamId, Integer userId) {
+    this.teamId = teamId;
+    this.userId = userId;
+  }
 
-    @Override
-    public void callHandler(FailureHandler handler, RoutingContext ctx) {
-        handler.handleCannotApproveTeamMember(ctx, this);
-    }
+  @Override
+  public void callHandler(FailureHandler handler, RoutingContext ctx) {
+    handler.handleCannotApproveTeamMember(ctx, this);
+  }
 }

@@ -175,7 +175,8 @@ public class FailureHandler {
   }
 
   public void handleCannotApproveTeamMember(RoutingContext ctx, MemberStatusException e) {
-    String message = "User " + e.getUserId() + " must be a pending member of Team " + e.getMessage();
+    String message =
+        "User " + e.getUserId() + " must be a pending member of Team " + e.getMessage();
     end(ctx, message, 400);
   }
 
@@ -186,15 +187,7 @@ public class FailureHandler {
     end(ctx, message, 500);
   }
 
-  public void handleInvalidTeamException(RoutingContext ctx, TeamDoesNotExistException e) {
-    String message = String.format("Team with id %d does not exist", e.getTeamId());
-    end(ctx, message, 400);
-  }
-
   private void end(RoutingContext ctx, String message, int statusCode) {
     ctx.response().setStatusCode(statusCode).end(message);
   }
-
-
-
 }

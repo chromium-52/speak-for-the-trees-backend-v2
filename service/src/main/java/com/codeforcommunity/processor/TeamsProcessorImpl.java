@@ -7,11 +7,9 @@ import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.team.*;
 import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.*;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.GoalsRecord;
 import org.jooq.generated.tables.records.TeamsRecord;
@@ -56,11 +54,10 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   }
 
   @Override
-  public TeamDataResponse getTeam(JWTData userData, GetTeamRequest getTeamRequest) {
-    TeamsRecord team =
-        db.selectFrom(TEAMS).where(TEAMS.ID.eq(getTeamRequest.getTeamId())).fetchOne();
+  public TeamDataResponse getTeam(JWTData userData, Integer teamId) {
+    TeamsRecord team = db.selectFrom(TEAMS).where(TEAMS.ID.eq(teamId)).fetchOne();
     if (team == null) {
-      throw new TeamDoesNotExistException(getTeamRequest.getTeamId());
+      throw new TeamDoesNotExistException(teamId);
     }
 
     return new TeamDataResponse(
@@ -73,197 +70,235 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   }
 
   @Override
-  public void addGoal(JWTData userData, AddGoalRequest addGoalRequest) {
+  public void addGoal(JWTData userData, AddGoalRequest addGoalRequest, int teamId) {
     UsersTeamsRecord usersTeamsRecord =
-            db.selectFrom(USERS_TEAMS)
-                    .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-                    .and(USERS_TEAMS.TEAM_ID.eq(addGoalRequest.getTeamId()))
-                    .fetchOne();
+        db.selectFrom(USERS_TEAMS)
+            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
+            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+            .fetchOne();
 
     if (usersTeamsRecord != null && usersTeamsRecord.getTeamRole() == TeamRole.LEADER) {
       GoalsRecord goal = db.newRecord(GOALS);
+      goal.setTeamId(teamId);
       goal.setGoal(addGoalRequest.getGoal());
-      goal.getStartAt(addGoalRequest.getCompleteBy());
-      goal.getCompleteBy(addGoalRequest.getCompleteBy());
+      goal.setStartAt(addGoalRequest.getStart_at());
+      goal.setCompleteBy(addGoalRequest.getComplete_by());
       goal.store();
     } else {
-      throw new WrongTeamRoleException(addGoalRequest.getTeamId(), usersTeamsRecord.getTeamRole());
+      throw new WrongTeamRoleException(teamId, usersTeamsRecord.getTeamRole());
     }
   }
 
   @Override
-  public void deleteGoal(JWTData userData, DeleteGoalRequest deleteGoalRequest) {
+  public void deleteGoal(JWTData userData, int teamId, int goalId) {
     UsersTeamsRecord usersTeamsRecord =
-            db.selectFrom(USERS_TEAMS)
-                    .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-                    .and(USERS_TEAMS.TEAM_ID.eq(deleteGoalRequest.getTeamId()))
-                    .fetchOne();
+        db.selectFrom(USERS_TEAMS)
+            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
+            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+            .fetchOne();
 
     if (usersTeamsRecord != null && usersTeamsRecord.getTeamRole() == TeamRole.LEADER) {
-      db.delete(GOALS).where(GOALS.ID.eq(deleteGoalRequest.getGoalId()));
+      db.deleteFrom(GOALS).where(GOALS.ID.eq(goalId));
+    } else {
+      throw new WrongTeamRoleException(teamId, usersTeamsRecord.getTeamRole());
     }
   }
 
   @Override
   public void inviteUser(JWTData userData, InviteUserRequest inviteUserRequest) {
-    //TODO what to do here. A link with an invite to join.
+    // TODO what to do here. A link with an invite to join.
     UsersTeamsRecord inviterUserTeamsRecord =
-            db.selectFrom(USERS_TEAMS)
-                    .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-                    .and(USERS_TEAMS.TEAM_ID.eq(inviteUserRequest.getTeamId()))
-                    .fetchOne();
+        db.selectFrom(USERS_TEAMS)
+            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
+            .and(USERS_TEAMS.TEAM_ID.eq(inviteUserRequest.getTeamId()))
+            .fetchOne();
 
     if (inviterUserTeamsRecord != null && inviterUserTeamsRecord.getTeamRole() == TeamRole.LEADER) {
-      inviteUserRequest.getUsers().forEach((name, email) -> {
-        // Only invite a user if they are not a part of the team already
-        if (!db.fetchExists(USERS_TEAMS.USERS_TEAMS.join(USERS).on(USERS.ID.eq(USERS_TEAMS.USER_ID))
-                .where(USERS.EMAIL.eq(email).and(TEAMS.ID.eq(inviteUserRequest.getTeamId()))
-        ))) {
-          UsersRecord invitedUser = db.selectFrom(USERS).where(USERS.EMAIL.eq(email)).fetchOne();
-          if (invitedUser != null) {
-            UsersTeamsRecord usersTeams = db.newRecord(USERS_TEAMS);
-            usersTeams.setTeamId(inviteUserRequest.getTeamId());
-            usersTeams.setUserId(invitedUser.getId());
-            usersTeams.setTeamRole(TeamRole.PENDING);
-            usersTeams.store();
-            //TODO SEND EMAIL
-          }
-        }
-      });
+      inviteUserRequest
+          .getUsers()
+          .forEach(
+              (name, email) -> {
+                // Only invite a user if they are not a part of the team already
+                if (!db.fetchExists(
+                    USERS_TEAMS
+                        .USERS_TEAMS
+                        .join(USERS)
+                        .on(USERS.ID.eq(USERS_TEAMS.USER_ID))
+                        .where(
+                            USERS
+                                .EMAIL
+                                .eq(email)
+                                .and(TEAMS.ID.eq(inviteUserRequest.getTeamId()))))) {
+                  UsersRecord invitedUser =
+                      db.selectFrom(USERS).where(USERS.EMAIL.eq(email)).fetchOne();
+                  if (invitedUser != null) {
+                    UsersTeamsRecord usersTeams = db.newRecord(USERS_TEAMS);
+                    usersTeams.setTeamId(inviteUserRequest.getTeamId());
+                    usersTeams.setUserId(invitedUser.getId());
+                    usersTeams.setTeamRole(TeamRole.PENDING);
+                    usersTeams.store();
+                    // TODO SEND EMAIL
+                  }
+                }
+              });
     } else {
-      throw new WrongTeamRoleException(inviteUserRequest.getTeamId(), inviterUserTeamsRecord.getTeamRole());
+      throw new WrongTeamRoleException(
+          inviteUserRequest.getTeamId(), inviterUserTeamsRecord.getTeamRole());
     }
   }
 
   @Override
-  public List<UsersTeamDataResponse> getApplicants(JWTData userData, GetApplicantsRequest getApplicantsRequest) {
-    List<UsersTeamsRecord> applicants = db.selectFrom(USERS_TEAMS).where(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.PENDING)).fetch();
+  public List<UsersTeamDataResponse> getApplicants(
+      JWTData userData, int teamId) {
+    List<UsersTeamsRecord> applicants =
+        db.selectFrom(USERS_TEAMS).where(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.PENDING)).fetch();
     List<UsersTeamDataResponse> responses = new ArrayList<>();
-    applicants.forEach(app -> {
-      UsersTeamDataResponse response = new UsersTeamDataResponse(app.getUserId(), app.getTeamId(), app.getTeamRole());
-      responses.add(response);
-    });
+    applicants.forEach(
+        app -> {
+          UsersTeamDataResponse response =
+              new UsersTeamDataResponse(app.getUserId(), teamId, app.getTeamRole());
+          responses.add(response);
+        });
     return responses;
   }
 
   @Override
-  public void applyToTeam(JWTData userData, ApplyToTeamRequest applyToTeamRequest) {
-    if (db.fetchExists(USERS_TEAMS.where(USERS_TEAMS.TEAM_ID.eq(applyToTeamRequest.getTeamId())
-            .and(USERS_TEAMS.USER_ID.eq(applyToTeamRequest.getUserId()))))) {
-      throw new MemberApplicationException(applyToTeamRequest.getTeamId(), applyToTeamRequest.getUserId());
+  public void applyToTeam(JWTData userData, int teamId) {
+    if (db.fetchExists(
+        USERS_TEAMS.where(
+            USERS_TEAMS
+                .TEAM_ID
+                .eq(teamId)
+                .and(USERS_TEAMS.USER_ID.eq(userData.getUserId()))))) {
+      throw new MemberApplicationException(
+          teamId, userData.getUserId());
     } else {
-      UsersRecord invitedUser = db.selectFrom(USERS).where(USERS.ID.eq(applyToTeamRequest.getUserId())).fetchOne();
+      UsersRecord invitedUser =
+          db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
       if (invitedUser != null) {
         UsersTeamsRecord usersTeams = db.newRecord(USERS_TEAMS);
-        usersTeams.setTeamId(applyToTeamRequest.getTeamId());
+        usersTeams.setTeamId(teamId);
         usersTeams.setUserId(invitedUser.getId());
         usersTeams.setTeamRole(TeamRole.PENDING);
         usersTeams.store();
       } else {
-        throw new UserDoesNotExistException(applyToTeamRequest.getUserId());
+        throw new UserDoesNotExistException(userData.getUserId());
       }
     }
   }
 
   @Override
-  public void approveUser(JWTData userData, ApproveUserRequest applyToTeamRequest) {
+  public void approveUser(JWTData userData, int teamId, int memberId) {
     UsersTeamsRecord leaderTeamsRecord =
-            db.selectFrom(USERS_TEAMS)
-                    .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-                    .and(USERS_TEAMS.TEAM_ID.eq(applyToTeamRequest.getTeamId()))
-                    .fetchOne();
-    if(leaderTeamsRecord != null && leaderTeamsRecord.getTeamRole() == TeamRole.LEADER) {
-      UsersTeamsRecord approvedUserRecord = db.selectFrom(USERS_TEAMS
-              .where(USERS_TEAMS.USER_ID.eq(applyToTeamRequest.getUserId()))).fetchOne();
+        db.selectFrom(USERS_TEAMS)
+            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
+            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+            .fetchOne();
+    if (leaderTeamsRecord != null && leaderTeamsRecord.getTeamRole() == TeamRole.LEADER) {
+      UsersTeamsRecord approvedUserRecord =
+          db.selectFrom(USERS_TEAMS.where(USERS_TEAMS.USER_ID.eq(memberId)))
+              .fetchOne();
       if (approvedUserRecord.getTeamRole() == TeamRole.PENDING) {
         approvedUserRecord.setTeamRole(TeamRole.MEMBER);
         approvedUserRecord.update();
       } else {
-        throw new MemberStatusException(applyToTeamRequest.getUserId(), applyToTeamRequest.getTeamId());
+        throw new MemberStatusException(
+            memberId, teamId);
       }
     } else {
-      throw new WrongTeamRoleException(leaderTeamsRecord.getTeamId(), leaderTeamsRecord.getTeamRole());
+      throw new WrongTeamRoleException(
+          leaderTeamsRecord.getTeamId(), leaderTeamsRecord.getTeamRole());
     }
   }
 
   @Override
-  public void rejectUser(JWTData userData, RejectUserRequest rejectUserRequest) {
+  public void rejectUser(JWTData userData, int teamId, int memberId) {
     UsersTeamsRecord leaderTeamsRecord =
-            db.selectFrom(USERS_TEAMS)
-                    .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-                    .and(USERS_TEAMS.TEAM_ID.eq(rejectUserRequest.getTeamId()))
-                    .fetchOne();
-    if(leaderTeamsRecord != null && leaderTeamsRecord.getTeamRole() == TeamRole.LEADER) {
-      UsersTeamsRecord approvedUserRecord = db.selectFrom(USERS_TEAMS
-              .where(USERS_TEAMS.USER_ID.eq(rejectUserRequest.getUserId()))).fetchOne();
+        db.selectFrom(USERS_TEAMS)
+            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
+            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+            .fetchOne();
+    if (leaderTeamsRecord != null && leaderTeamsRecord.getTeamRole() == TeamRole.LEADER) {
+      UsersTeamsRecord approvedUserRecord =
+          db.selectFrom(USERS_TEAMS.where(USERS_TEAMS.TEAM_ID.eq(teamId).and(USERS_TEAMS.USER_ID.eq(memberId))))
+              .fetchOne();
       if (approvedUserRecord.getTeamRole() == TeamRole.PENDING) {
         approvedUserRecord.setTeamRole(TeamRole.None);
         approvedUserRecord.update();
       } else {
-        throw new MemberStatusException(rejectUserRequest.getUserId(), rejectUserRequest.getTeamId());
+        throw new MemberStatusException(
+            userData.getUserId(), teamId);
       }
     } else {
-      throw new WrongTeamRoleException(leaderTeamsRecord.getTeamId(), leaderTeamsRecord.getTeamRole());
+      throw new WrongTeamRoleException(
+          leaderTeamsRecord.getTeamId(), leaderTeamsRecord.getTeamRole());
     }
   }
 
   @Override
-  public void kickUser(JWTData userData, KickUserRequest kickUserRequest) {
+  public void kickUser(JWTData userData, int teamId, int memberId) {
     UsersTeamsRecord leaderTeamsRecord =
-            db.selectFrom(USERS_TEAMS)
-                    .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-                    .and(USERS_TEAMS.TEAM_ID.eq(kickUserRequest.getTeamId()))
-                    .fetchOne();
-    if(leaderTeamsRecord != null && leaderTeamsRecord.getTeamRole() == TeamRole.LEADER) {
-      UsersTeamsRecord approvedUserRecord = db.selectFrom(USERS_TEAMS
-              .where(USERS_TEAMS.USER_ID.eq(kickUserRequest.getUserId()))).fetchOne();
+        db.selectFrom(USERS_TEAMS)
+            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
+            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+            .fetchOne();
+    if (leaderTeamsRecord != null && leaderTeamsRecord.getTeamRole() == TeamRole.LEADER) {
+      UsersTeamsRecord approvedUserRecord =
+          db.selectFrom(USERS_TEAMS.where(USERS_TEAMS.USER_ID.eq(memberId)))
+              .fetchOne();
       if (approvedUserRecord.getTeamRole() == TeamRole.MEMBER) {
         approvedUserRecord.setTeamRole(TeamRole.None);
         approvedUserRecord.update();
       } else {
-        throw new MemberStatusException(kickUserRequest.getUserId(), kickUserRequest.getTeamId());
+        throw new MemberStatusException(memberId, teamId);
       }
     } else {
-      throw new WrongTeamRoleException(leaderTeamsRecord.getTeamId(), leaderTeamsRecord.getTeamRole());
+      throw new WrongTeamRoleException(
+          leaderTeamsRecord.getTeamId(), leaderTeamsRecord.getTeamRole());
     }
   }
 
   @Override
-  public void leaveTeam(JWTData userData, LeaveTeamRequest leaveTeamRequest) {
+  public void leaveTeam(JWTData userData, int teamId) {
     UsersTeamsRecord usersTeamsRecord =
-            db.selectFrom(USERS_TEAMS)
-                    .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-                    .and(USERS_TEAMS.TEAM_ID.eq(leaveTeamRequest.getTeamId()))
-                    .fetchOne();
-    if(usersTeamsRecord != null && usersTeamsRecord.getTeamRole() != TeamRole.LEADER) {
+        db.selectFrom(USERS_TEAMS)
+            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
+            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+            .fetchOne();
+    if (usersTeamsRecord != null && usersTeamsRecord.getTeamRole() != TeamRole.LEADER) {
       usersTeamsRecord.setTeamRole(TeamRole.None);
       usersTeamsRecord.update();
     } else {
-      throw new MemberStatusException(leaveTeamRequest.getTeamId(), userData.getUserId());
+      throw new MemberStatusException(teamId, userData.getUserId());
     }
   }
 
   @Override
-  public void transferOwnership(JWTData userData, TransferOwnershipRequest transferOwnershipRequest) {
+  public void transferOwnership(
+      JWTData userData, TransferOwnershipRequest transferOwnershipRequest) {
     UsersTeamsRecord oldLeaderTeamsRecord =
-            db.selectFrom(USERS_TEAMS)
-                    .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-                    .and(USERS_TEAMS.TEAM_ID.eq(transferOwnershipRequest.getTeamId()))
-                    .fetchOne();
+        db.selectFrom(USERS_TEAMS)
+            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
+            .and(USERS_TEAMS.TEAM_ID.eq(transferOwnershipRequest.getTeamId()))
+            .fetchOne();
     UsersTeamsRecord newLeaderTeamsRecord =
-            db.selectFrom(USERS_TEAMS)
-                    .where(USERS_TEAMS.USER_ID.eq(transferOwnershipRequest.getNewLeaderId())
+        db.selectFrom(USERS_TEAMS)
+            .where(
+                USERS_TEAMS
+                    .USER_ID
+                    .eq(transferOwnershipRequest.getNewLeaderId())
                     .and(USERS_TEAMS.TEAM_ID.eq(transferOwnershipRequest.getTeamId())))
-                    .fetchOne();
-    if(oldLeaderTeamsRecord != null && newLeaderTeamsRecord != null
-            && oldLeaderTeamsRecord.getTeamRole() == TeamRole.LEADER
-            && oldLeaderTeamsRecord.getTeamRole() == TeamRole.MEMBER) {
+            .fetchOne();
+    if (oldLeaderTeamsRecord != null
+        && newLeaderTeamsRecord != null
+        && oldLeaderTeamsRecord.getTeamRole() == TeamRole.LEADER
+        && oldLeaderTeamsRecord.getTeamRole() == TeamRole.MEMBER) {
       newLeaderTeamsRecord.setTeamRole(TeamRole.LEADER);
       oldLeaderTeamsRecord.setTeamRole(TeamRole.MEMBER);
       newLeaderTeamsRecord.update();
       oldLeaderTeamsRecord.update();
     } else {
-      //TODO improve error handling for this method to be more specific.
+      // TODO improve error handling for this method to be more specific.
       throw new WrongTeamRoleException(transferOwnershipRequest.getTeamId(), TeamRole.LEADER);
     }
   }
