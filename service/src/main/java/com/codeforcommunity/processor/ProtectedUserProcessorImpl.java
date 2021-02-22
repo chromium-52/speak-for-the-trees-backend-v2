@@ -10,6 +10,7 @@ import com.codeforcommunity.dataaccess.AuthDatabaseOperations;
 import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
+import com.codeforcommunity.dto.user.ChangeUsernameRequest;
 import com.codeforcommunity.dto.user.UserDataResponse;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.*;
@@ -94,6 +95,24 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
         previousEmail,
         AuthDatabaseOperations.getFullName(user.into(Users.class)),
         changeEmailRequest.getNewEmail());
+  }
+
+  @Override
+  public void changeUsername(JWTData userData, ChangeUsernameRequest changeUsernameRequest) {
+    UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
+    if (user == null) {
+      throw new UserDoesNotExistException(userData.getUserId());
+    }
+
+    if (Passwords.isExpectedPassword(changeUsernameRequest.getPassword(), user.getPasswordHash())) {
+      if (db.fetchExists(USERS, USERS.USERNAME.eq(changeUsernameRequest.getNewUsername()))) {
+        throw new UsernameAlreadyInUseException(changeUsernameRequest.getNewUsername());
+      }
+      user.setEmail(changeUsernameRequest.getNewUsername());
+      user.store();
+    } else {
+      throw new WrongPasswordException();
+    }
   }
 
   @Override
