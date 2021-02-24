@@ -19,29 +19,21 @@ import java.util.HashSet;
 import java.util.Set;
 import org.jooq.generated.Tables;
 import org.jooq.generated.tables.records.ReservationsRecord;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class ReservationProcessorImplTest {
   JooqMock mockDb;
   ReservationProcessorImpl proc;
 
-  /**
-   * Method to setup mockDb and processor
-   *
-   * <p>TODO: This can't be run with the @BeforeEach annotation by maven currently. The way to
-   * enable this is outlined in this Stack Overflow post:
-   * https://stackoverflow.com/questions/51382356/maven-does-not-run-beforeeach-methods-while-running
-   * This isn't currently being done because our version of maven surefire is auto imported and is
-   * only version 2.12.4
-   */
-  void setup() {
+  @BeforeEach
+  public void setup() {
     mockDb = new JooqMock();
     proc = new ReservationProcessorImpl(mockDb.getContext());
   }
 
   @Test
   public void testBasicChecksNonExistingBlock() {
-    setup();
     int blockId = 1;
     int userId = 2;
     int teamId = 3;
@@ -60,7 +52,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBasicChecksNonExistingUser() {
-    setup();
     int blockId = 1;
     int userId = 2;
     int teamId = 3;
@@ -79,7 +70,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBasicChecksNonExistingTeam() {
-    setup();
     int blockId = 1;
     int userId = 2;
     int teamId = 3;
@@ -100,7 +90,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBasicChecksNotOnTeam() {
-    setup();
     int blockId = 1;
     int userId = 2;
     int teamId = 3;
@@ -122,7 +111,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBasicChecksSuccess() {
-    setup();
     int blockId = 1;
     int userId = 2;
     int teamId = 3;
@@ -142,7 +130,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBasicChecksSuccessNullCase() {
-    setup();
     int blockId = 1;
     Integer userId = null;
     Integer teamId = null;
@@ -159,7 +146,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testIsAdmin() {
-    setup();
     Set<PrivilegeLevel> adminLevels =
         new HashSet<>(Arrays.asList(PrivilegeLevel.ADMIN, PrivilegeLevel.SUPER_ADMIN));
 
@@ -189,7 +175,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBlockOpenCheckNoAction() {
-    setup();
     mockDb.addEmptyReturn(OperationType.SELECT);
 
     try {
@@ -201,7 +186,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBlockOpenCheckUncomplete() {
-    setup();
     ReservationsRecord mockReservation = mock(ReservationsRecord.class);
     mockDb.addReturn(OperationType.SELECT, mockReservation);
 
@@ -217,7 +201,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBlockOpenCheckReserved() {
-    setup();
     ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
     mockReservation.setActionType(ReservationAction.RESERVE);
 
@@ -234,7 +217,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBlockReservedCheckNoLastActionFailure() {
-    setup();
     mockDb.addEmptyReturn(OperationType.SELECT);
 
     try {
@@ -248,7 +230,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBlockReservedCheckWrongActionTypeFailure() {
-    setup();
     ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
     mockReservation.setActionType(ReservationAction.COMPLETE);
     mockReservation.setUserId(2);
@@ -270,7 +251,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBlockReservedCheckLastCaseFailure() {
-    setup();
     ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
     mockReservation.setActionType(ReservationAction.RESERVE);
     mockReservation.setUserId(2);
@@ -292,7 +272,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBlockReservedCheckSameUserSuccess() {
-    setup();
     int userId = 15;
 
     ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
@@ -314,7 +293,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBlockReservedCheckSameTeamSuccess() {
-    setup();
     int userId = 15;
     int teamId = 3;
 
@@ -337,7 +315,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBlockCompletedCheckNoLastActionFailure() {
-    setup();
     mockDb.addEmptyReturn(OperationType.SELECT);
 
     try {
@@ -351,7 +328,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBlockCompletedCheckWrongActionTypeFailure() {
-    setup();
     ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
     mockReservation.setActionType(ReservationAction.QA);
 
@@ -368,7 +344,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBlockCompletedCheckSuccess() {
-    setup();
     ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
     mockReservation.setActionType(ReservationAction.COMPLETE);
 
@@ -383,7 +358,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBlockQACheckNoLastActionFailure() {
-    setup();
     mockDb.addEmptyReturn(OperationType.SELECT);
 
     try {
@@ -397,7 +371,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBlockQACheckWrongActionTypeFailure() {
-    setup();
     ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
     mockReservation.setActionType(ReservationAction.COMPLETE);
 
@@ -414,7 +387,6 @@ public class ReservationProcessorImplTest {
 
   @Test
   public void testBlockQACheckSuccess() {
-    setup();
     ReservationsRecord mockReservation = mockDb.getContext().newRecord(Tables.RESERVATIONS);
     mockReservation.setActionType(ReservationAction.QA);
 
