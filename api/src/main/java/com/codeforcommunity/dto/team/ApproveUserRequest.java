@@ -10,8 +10,7 @@ public class ApproveUserRequest extends ApiDto {
   private Integer teamId;
 
   public Integer getUserId() {
-    return userId;
-  }
+    return userId;  }
 
   public void setUserId(Integer userId) {
     this.userId = userId;

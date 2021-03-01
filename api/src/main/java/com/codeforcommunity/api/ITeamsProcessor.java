@@ -13,9 +13,9 @@ import java.util.List;
 public interface ITeamsProcessor {
   void disbandTeam(JWTData userData, int teamId);
 
-  void createTeam(JWTData userData, CreateTeamRequest request);
+  void createTeam(JWTData userData, CreateTeamRequest createTeamRequest);
 
-  TeamDataResponse getTeam(JWTData userData, Integer teamId);
+  TeamDataResponse getTeam(JWTData userData, int teamId);
 
   void addGoal(JWTData userData, AddGoalRequest addGoalRequest, int teamId);
 
@@ -23,8 +23,7 @@ public interface ITeamsProcessor {
 
   void inviteUser(JWTData userData, InviteUserRequest inviteUserRequest);
 
-  List<UsersTeamDataResponse> getApplicants(
-      JWTData userData, int teamId);
+  List<UsersTeamDataResponse> getApplicants(JWTData userData, int teamId);
 
   void applyToTeam(JWTData userData, int teamId);
 

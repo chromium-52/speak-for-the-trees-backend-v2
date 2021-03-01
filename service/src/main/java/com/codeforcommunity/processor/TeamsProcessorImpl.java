@@ -23,6 +23,28 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
     this.db = db;
   }
 
+  private void checkTeamExists(int teamId) {
+    TeamsRecord team = db.selectFrom(TEAMS).where(TEAMS.ID.eq(teamId)).fetchOne();
+    if (team == null) {
+      throw new ResourceDoesNotExistException(teamId, "Team");
+    }
+  }
+
+  private void checkUserExists(int userId)  {
+    UsersRecord team = db.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
+    if (team == null) {
+    throw new ResourceDoesNotExistException(userId, "User");
+    }
+  }
+
+  private void checkGoalExists(int goalId) {
+    GoalsRecord goal = db.selectFrom(GOALS).where(GOALS.ID.eq(goalId)).fetchOne();
+    if (goal == null) {
+      throw new ResourceDoesNotExistException(goalId, "User");
+    }
+  }
+
+
   @Override
   public void disbandTeam(JWTData userData, int teamId) {
     UsersTeamsRecord usersTeamsRecord =
@@ -54,7 +76,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   }
 
   @Override
-  public TeamDataResponse getTeam(JWTData userData, Integer teamId) {
+  public TeamDataResponse getTeam(JWTData userData, int teamId) {
     TeamsRecord team = db.selectFrom(TEAMS).where(TEAMS.ID.eq(teamId)).fetchOne();
     if (team == null) {
       throw new ResourceDoesNotExistException(teamId, "Team");
@@ -71,6 +93,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   @Override
   public void addGoal(JWTData userData, AddGoalRequest addGoalRequest, int teamId) {
+    checkTeamExists(teamId);
     UsersTeamsRecord usersTeamsRecord =
         db.selectFrom(USERS_TEAMS)
             .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
@@ -91,6 +114,9 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   @Override
   public void deleteGoal(JWTData userData, int teamId, int goalId) {
+    checkTeamExists(teamId);
+    checkGoalExists(goalId);
+
     UsersTeamsRecord usersTeamsRecord =
         db.selectFrom(USERS_TEAMS)
             .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
@@ -106,6 +132,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   @Override
   public void inviteUser(JWTData userData, InviteUserRequest inviteUserRequest) {
+    checkTeamExists(inviteUserRequest.getTeamId());
     UsersTeamsRecord inviterUserTeamsRecord =
         db.selectFrom(USERS_TEAMS)
             .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
@@ -117,10 +144,8 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
           .getUsers()
           .forEach(
               (name, email) -> {
-                // Only invite a user if they are not a part of the team already
                 if (!db.fetchExists(
                     USERS_TEAMS
-                        .USERS_TEAMS
                         .join(USERS)
                         .on(USERS.ID.eq(USERS_TEAMS.USER_ID))
                         .where(
@@ -136,7 +161,9 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
                     usersTeams.setUserId(invitedUser.getId());
                     usersTeams.setTeamRole(TeamRole.PENDING);
                     usersTeams.store();
-                    // TODO SEND EMAIL
+                    // TODO SEND EMAIL TO ACCEPT ROLE ON TEAM
+                  } else {
+                    // TODO SEND EMAIL WITH INVITE TO CREATE USER / REQUEST TO JOIN TEAM
                   }
                 }
               });
@@ -147,8 +174,8 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   }
 
   @Override
-  public List<UsersTeamDataResponse> getApplicants(
-      JWTData userData, int teamId) {
+  public List<UsersTeamDataResponse> getApplicants(JWTData userData, int teamId) {
+    checkTeamExists(teamId);
     List<UsersTeamsRecord> applicants =
         db.selectFrom(USERS_TEAMS).where(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.PENDING)).fetch();
     List<UsersTeamDataResponse> responses = new ArrayList<>();
@@ -163,6 +190,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   @Override
   public void applyToTeam(JWTData userData, int teamId) {
+    checkTeamExists(teamId);
     if (db.fetchExists(
         USERS_TEAMS.where(
             USERS_TEAMS
@@ -188,6 +216,8 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   @Override
   public void approveUser(JWTData userData, int teamId, int memberId) {
+    checkUserExists(memberId);
+    checkTeamExists(teamId);
     UsersTeamsRecord leaderTeamsRecord =
         db.selectFrom(USERS_TEAMS)
             .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
@@ -212,6 +242,8 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   @Override
   public void rejectUser(JWTData userData, int teamId, int memberId) {
+    checkUserExists(memberId);
+    checkTeamExists(teamId);
     UsersTeamsRecord leaderTeamsRecord =
         db.selectFrom(USERS_TEAMS)
             .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
@@ -236,6 +268,8 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   @Override
   public void kickUser(JWTData userData, int teamId, int memberId) {
+    checkUserExists(memberId);
+    checkTeamExists(teamId);
     UsersTeamsRecord leaderTeamsRecord =
         db.selectFrom(USERS_TEAMS)
             .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
@@ -259,6 +293,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   @Override
   public void leaveTeam(JWTData userData, int teamId) {
+    checkTeamExists(teamId);
     UsersTeamsRecord usersTeamsRecord =
         db.selectFrom(USERS_TEAMS)
             .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
@@ -273,8 +308,9 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   }
 
   @Override
-  public void transferOwnership(
-      JWTData userData, TransferOwnershipRequest transferOwnershipRequest, int teamId) {
+  public void transferOwnership(JWTData userData, TransferOwnershipRequest transferOwnershipRequest, int teamId) {
+    checkUserExists(transferOwnershipRequest.getNewLeaderId());
+    checkTeamExists(teamId);
     UsersTeamsRecord oldLeaderTeamsRecord =
         db.selectFrom(USERS_TEAMS)
             .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
@@ -297,7 +333,6 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
       newLeaderTeamsRecord.update();
       oldLeaderTeamsRecord.update();
     } else {
-      // TODO improve error handling for this method to be more specific.
       throw new WrongTeamRoleException(teamId, TeamRole.LEADER);
     }
   }

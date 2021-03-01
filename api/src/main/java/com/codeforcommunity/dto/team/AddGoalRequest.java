@@ -2,13 +2,17 @@ package com.codeforcommunity.dto.team;
 
 import com.codeforcommunity.dto.ApiDto;
 import com.codeforcommunity.exceptions.HandledException;
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddGoalRequest extends ApiDto {
   private Integer goal;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
   private Timestamp complete_by;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
   private Timestamp start_at;
 
   public AddGoalRequest(Integer goal, Timestamp completeBy, Timestamp startAt) {
