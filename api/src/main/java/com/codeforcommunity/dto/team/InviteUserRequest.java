@@ -18,26 +18,6 @@ public class InviteUserRequest extends ApiDto {
 
   public InviteUserRequest() {}
 
-  @Override
-  public List<String> validateFields(String fieldPrefix) throws HandledException {
-    String fieldName = fieldPrefix + "invite_user_request.";
-    List<String> fields = new ArrayList<>();
-
-    if (teamId == null) {
-      fields.add(fieldName + "team_id");
-    }
-    if (users == null) {
-      fields.add(fieldName + "users");
-    } else {
-      users.forEach(
-          (email, name) -> {
-            if (emailInvalid(email)) {
-              fields.add(fieldName + "inviteEmails." + email);
-            }
-          });
-    }
-    return fields;
-  }
 
   public Integer getTeamId() {
     return teamId;
@@ -53,5 +33,26 @@ public class InviteUserRequest extends ApiDto {
 
   public void setUsers(Map<String, String> users) {
     this.users = users;
+  }
+
+  @Override
+  public List<String> validateFields(String fieldPrefix) throws HandledException {
+    String fieldName = fieldPrefix + "invite_user_request.";
+    List<String> fields = new ArrayList<>();
+
+    if (teamId == null) {
+      fields.add(fieldName + "team_id");
+    }
+    if (users == null) {
+      fields.add(fieldName + "users");
+    } else {
+      users.forEach(
+              (email, name) -> {
+                if (emailInvalid(email)) {
+                  fields.add(fieldName + "inviteEmails." + email);
+                }
+              });
+    }
+    return fields;
   }
 }

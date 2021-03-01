@@ -1,5 +1,7 @@
 package com.codeforcommunity.dto.team;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.sql.Timestamp;
 
 public class TeamDataResponse {
@@ -7,7 +9,9 @@ public class TeamDataResponse {
   private final String teamName;
   private final String bio;
   private final Boolean finished;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
   private final Timestamp createdAt;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
   private final Timestamp deletedAt;
 
   public TeamDataResponse(
@@ -24,6 +28,7 @@ public class TeamDataResponse {
     this.createdAt = createdAt;
     this.deletedAt = deletedAt;
   }
+
 
   public String getTeamName() {
     return teamName;

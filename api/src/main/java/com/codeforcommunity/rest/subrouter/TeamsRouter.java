@@ -106,11 +106,12 @@ public class TeamsRouter implements IRouter {
     inviteUserRoute.handler(this::handleInviteUser);
   }
 
-  private void handleInviteUser(RoutingContext routingContext) {
-    JWTData userData = routingContext.get("jwt_data");
+  private void handleInviteUser(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
     InviteUserRequest inviteUserRequest =
-        RestFunctions.getJsonBodyAsClass(routingContext, InviteUserRequest.class);
+        RestFunctions.getJsonBodyAsClass(ctx, InviteUserRequest.class);
     processor.inviteUser(userData, inviteUserRequest);
+    end(ctx.response(), 200);
   }
 
   private void registerGetApplicants(Router router) {
@@ -118,10 +119,11 @@ public class TeamsRouter implements IRouter {
     getApplicantsRoute.handler(this::handleGetApplicantsRoute);
   }
 
-  private void handleGetApplicantsRoute(RoutingContext routingContext) {
-    JWTData userData = routingContext.get("jwt_data");
-    int teamId = RestFunctions.getRequestParameterAsInt(routingContext.request(), "team_id");
+  private void handleGetApplicantsRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
     processor.getApplicants(userData, teamId);
+    end(ctx.response(), 200);
   }
 
   private void registerApplyToTeam(Router router) {
@@ -129,10 +131,11 @@ public class TeamsRouter implements IRouter {
     applyToTeamRoute.handler(this::handleApplyToTeamRoute);
   }
 
-  private void handleApplyToTeamRoute(RoutingContext routingContext) {
-    JWTData userData = routingContext.get("jwt_data");
-    int teamId = RestFunctions.getRequestParameterAsInt(routingContext.request(), "team_id");
+  private void handleApplyToTeamRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
     processor.applyToTeam(userData, teamId);
+    end(ctx.response(), 200);
   }
 
   private void registerApproveUser(Router router) {
@@ -140,11 +143,12 @@ public class TeamsRouter implements IRouter {
     approveUserRoute.handler(this::handleApproveUserRoute);
   }
 
-  private void handleApproveUserRoute(RoutingContext routingContext) {
-    JWTData userData = routingContext.get("jwt_data");
-    int teamId = RestFunctions.getRequestParameterAsInt(routingContext.request(), "team_id");
-    int memberId = RestFunctions.getRequestParameterAsInt(routingContext.request(), "user_id");
+  private void handleApproveUserRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
+    int memberId = RestFunctions.getRequestParameterAsInt(ctx.request(), "user_id");
     processor.approveUser(userData, teamId, memberId);
+    end(ctx.response(), 200);
   }
 
   private void registerRejectUserRoute(Router router) {
@@ -152,11 +156,12 @@ public class TeamsRouter implements IRouter {
     rejectUserRoute.handler(this::handleRejectUserRoute);
   }
 
-  private void handleRejectUserRoute(RoutingContext routingContext) {
-    JWTData userData = routingContext.get("jwt_data");
-    int teamId = RestFunctions.getRequestParameterAsInt(routingContext.request(), "team_id");
-    int memberId = RestFunctions.getRequestParameterAsInt(routingContext.request(), "user_id");
+  private void handleRejectUserRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
+    int memberId = RestFunctions.getRequestParameterAsInt(ctx.request(), "user_id");
     processor.rejectUser(userData, teamId, memberId);
+    end(ctx.response(), 200);
   }
 
   private void registerDisbandTeam(Router router) {
@@ -176,12 +181,12 @@ public class TeamsRouter implements IRouter {
     kickUserRoute.handler(this::handleKickUserRoute);
   }
 
-  private void handleKickUserRoute(RoutingContext routingContext) {
-    JWTData userData = routingContext.get("jwt_data");
-    int teamId = RestFunctions.getRequestParameterAsInt(routingContext.request(), "team_id");
-    int memberId = RestFunctions.getRequestParameterAsInt(routingContext.request(), "member_id");
+  private void handleKickUserRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
+    int memberId = RestFunctions.getRequestParameterAsInt(ctx.request(), "member_id");
     processor.kickUser(userData, teamId, memberId);
-    end(routingContext.response(), 200);
+    end(ctx.response(), 200);
   }
 
   private void registerLeaveTeamRoute(Router router) {
@@ -189,24 +194,24 @@ public class TeamsRouter implements IRouter {
     leaveTeamRoute.handler(this::handleLeaveTeamRoute);
   }
 
-  private void handleLeaveTeamRoute(RoutingContext routingContext) {
-    JWTData userData = routingContext.get("jwt_data");
-    int teamId = RestFunctions.getRequestParameterAsInt(routingContext.request(), "team_id");
+  private void handleLeaveTeamRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
     processor.leaveTeam(userData, teamId);
-    end(routingContext.response(), 200);
+    end(ctx.response(), 200);
   }
 
   private void registerTransferTeamOwnership(Router router) {
-    Route transferOwnershipRoute = router.post("/:team_id");
+    Route transferOwnershipRoute = router.post("/:team_id/transfer_ownership");
     transferOwnershipRoute.handler(this::handleTransferOwnershipRoute);
   }
 
-  private void handleTransferOwnershipRoute(RoutingContext routingContext) {
-    JWTData userData = routingContext.get("jwt_data");
-    int teamId = RestFunctions.getRequestParameterAsInt(routingContext.request(), "team_id");
+  private void handleTransferOwnershipRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
     TransferOwnershipRequest transferOwnershipRequest =
-        RestFunctions.getJsonBodyAsClass(routingContext, TransferOwnershipRequest.class);
+        RestFunctions.getJsonBodyAsClass(ctx, TransferOwnershipRequest.class);
     processor.transferOwnership(userData, transferOwnershipRequest, teamId);
-    end(routingContext.response(), 200);
+    end(ctx.response(), 200);
   }
 }

@@ -11,14 +11,15 @@ import java.util.List;
 public class AddGoalRequest extends ApiDto {
   private Integer goal;
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
-  private Timestamp complete_by;
-  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
   private Timestamp start_at;
+  @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
+  private Timestamp complete_by;
 
-  public AddGoalRequest(Integer goal, Timestamp completeBy, Timestamp startAt) {
+  public AddGoalRequest(Integer goal, Timestamp startAt, Timestamp completeBy) {
     this.goal = goal;
-    this.complete_by = completeBy;
     this.start_at = startAt;
+    this.complete_by = completeBy;
+
   }
 
   private AddGoalRequest() {}

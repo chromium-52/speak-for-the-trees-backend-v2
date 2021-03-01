@@ -12,6 +12,16 @@ public class TransferOwnershipRequest extends ApiDto {
     this.newLeaderId = newLeaderId;
   }
 
+  private TransferOwnershipRequest() {}
+
+  public Integer getNewLeaderId() {
+    return newLeaderId;
+  }
+
+  public void setNewLeaderId(Integer newLeaderId) {
+    this.newLeaderId = newLeaderId;
+  }
+
   @Override
   public List<String> validateFields(String fieldPrefix) throws HandledException {
     String fieldName = fieldPrefix + "transfer_ownership_request.";
@@ -20,13 +30,5 @@ public class TransferOwnershipRequest extends ApiDto {
       fields.add(fieldName + "newLeaderId");
     }
     return fields;
-  }
-
-  public Integer getNewLeaderId() {
-    return newLeaderId;
-  }
-
-  public void setNewLeaderId(Integer newLeaderId) {
-    this.newLeaderId = newLeaderId;
   }
 }

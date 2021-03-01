@@ -13,6 +13,8 @@ public class UsersTeamDataResponse {
     this.teamRole = teamRole;
   }
 
+  private UsersTeamDataResponse() {}
+
   public Integer getUserId() {
     return userId;
   }

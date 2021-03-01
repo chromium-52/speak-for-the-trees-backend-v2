@@ -1,20 +1,33 @@
 package com.codeforcommunity.processor;
 
-import static org.jooq.generated.Tables.*;
-
 import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.team.*;
+import com.codeforcommunity.dto.team.AddGoalRequest;
+import com.codeforcommunity.dto.team.CreateTeamRequest;
+import com.codeforcommunity.dto.team.InviteUserRequest;
+import com.codeforcommunity.dto.team.TeamDataResponse;
+import com.codeforcommunity.dto.team.TransferOwnershipRequest;
+import com.codeforcommunity.dto.team.UsersTeamDataResponse;
 import com.codeforcommunity.enums.TeamRole;
-import com.codeforcommunity.exceptions.*;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+
+import com.codeforcommunity.exceptions.MemberApplicationException;
+import com.codeforcommunity.exceptions.MemberStatusException;
+import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
+import com.codeforcommunity.exceptions.UserDoesNotExistException;
+import com.codeforcommunity.exceptions.WrongTeamRoleException;
 import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.GoalsRecord;
 import org.jooq.generated.tables.records.TeamsRecord;
 import org.jooq.generated.tables.records.UsersRecord;
 import org.jooq.generated.tables.records.UsersTeamsRecord;
+
+import static org.jooq.generated.Tables.TEAMS;
+import static org.jooq.generated.Tables.USERS;
+import static org.jooq.generated.tables.Goals.GOALS;
+import static org.jooq.generated.tables.UsersTeams.USERS_TEAMS;
 
 public class TeamsProcessorImpl implements ITeamsProcessor {
   private final DSLContext db;

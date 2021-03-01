@@ -9,6 +9,13 @@ public class ApproveUserRequest extends ApiDto {
   private Integer userId;
   private Integer teamId;
 
+  public ApproveUserRequest(Integer userId, Integer teamId) {
+    this.userId = userId;
+    this.teamId = teamId;
+  }
+
+  public ApproveUserRequest() {}
+
   public Integer getUserId() {
     return userId;  }
 
@@ -21,13 +28,6 @@ public class ApproveUserRequest extends ApiDto {
   }
 
   public void setTeamId(Integer teamId) {
-    this.teamId = teamId;
-  }
-
-  public ApproveUserRequest() {}
-
-  public ApproveUserRequest(Integer userId, Integer teamId) {
-    this.userId = userId;
     this.teamId = teamId;
   }
 
