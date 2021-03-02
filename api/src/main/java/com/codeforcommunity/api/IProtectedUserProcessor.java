@@ -5,12 +5,13 @@ import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
 import com.codeforcommunity.dto.user.ChangeUsernameRequest;
+import com.codeforcommunity.dto.user.DeleteUserRequest;
 import com.codeforcommunity.dto.user.UserDataResponse;
 
 public interface IProtectedUserProcessor {
 
   /** Deletes the given user from the database. Does NOT invalidate the user's JWTs */
-  void deleteUser(JWTData userData);
+  void deleteUser(JWTData userData, DeleteUserRequest deleteUserRequest);
 
   /**
    * If the given current password matches the user's current password, update the user's password

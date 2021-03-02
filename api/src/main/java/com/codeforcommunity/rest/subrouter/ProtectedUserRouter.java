@@ -8,6 +8,7 @@ import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
 import com.codeforcommunity.dto.user.ChangeUsernameRequest;
+import com.codeforcommunity.dto.user.DeleteUserRequest;
 import com.codeforcommunity.dto.user.UserDataResponse;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
@@ -40,7 +41,7 @@ public class ProtectedUserRouter implements IRouter {
   }
 
   private void registerDeleteUser(Router router) {
-    Route deleteUserRoute = router.delete("/");
+    Route deleteUserRoute = router.post("/delete");
     deleteUserRoute.handler(this::handleDeleteUserRoute);
   }
 
@@ -72,7 +73,10 @@ public class ProtectedUserRouter implements IRouter {
   private void handleDeleteUserRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
 
-    processor.deleteUser(userData);
+    DeleteUserRequest deleteUserRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, DeleteUserRequest.class);
+
+    processor.deleteUser(userData, deleteUserRequest);
 
     end(ctx.response(), 200);
   }
