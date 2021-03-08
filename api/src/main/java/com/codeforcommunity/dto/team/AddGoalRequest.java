@@ -52,13 +52,13 @@ public class AddGoalRequest extends ApiDto {
   public List<String> validateFields(String fieldPrefix) throws HandledException {
     String fieldName = fieldPrefix + "add_goal_request.";
     List<String> fields = new ArrayList<>();
-    if (goal == null) {
+    if (goal == null && goal > 0) {
       fields.add(fieldName + "goal");
     }
     if (complete_by == null) {
       fields.add(fieldName + "start_at");
     }
-    if (start_at == null) {
+    if (start_at == null || complete_by.after(start_at)) {
       fields.add(fieldName + "complete_by");
     }
     return fields;

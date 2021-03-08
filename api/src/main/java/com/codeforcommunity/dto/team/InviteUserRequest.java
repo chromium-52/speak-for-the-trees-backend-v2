@@ -9,9 +9,9 @@ import java.util.Map;
 public class InviteUserRequest extends ApiDto {
 
   private Integer teamId;
-  private Map<String, String> users;
+  private List<InviteContact> users;
 
-  public InviteUserRequest(Integer teamId, Map<String, String> users) {
+  public InviteUserRequest(Integer teamId, List<InviteContact> users) {
     this.teamId = teamId;
     this.users = users;
   }
@@ -27,11 +27,11 @@ public class InviteUserRequest extends ApiDto {
     this.teamId = teamId;
   }
 
-  public Map<String, String> getUsers() {
+  public List<InviteContact> getUsers() {
     return users;
   }
 
-  public void setUsers(Map<String, String> users) {
+  public void setUsers(List<InviteContact> users) {
     this.users = users;
   }
 
@@ -45,14 +45,8 @@ public class InviteUserRequest extends ApiDto {
     }
     if (users == null) {
       fields.add(fieldName + "users");
-    } else {
-      users.forEach(
-              (email, name) -> {
-                if (emailInvalid(email)) {
-                  fields.add(fieldName + "inviteEmails." + email);
-                }
-              });
     }
+    // users.forEach(user -> user.validateFields(fieldPrefix));
     return fields;
   }
 }

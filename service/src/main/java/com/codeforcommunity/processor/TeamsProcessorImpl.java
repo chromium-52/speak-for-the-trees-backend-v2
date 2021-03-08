@@ -13,6 +13,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.codeforcommunity.exceptions.LeaderCannotLeaveTeamException;
 import com.codeforcommunity.exceptions.MemberApplicationException;
 import com.codeforcommunity.exceptions.MemberStatusException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
@@ -155,8 +156,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
     if (inviterUserTeamsRecord != null && inviterUserTeamsRecord.getTeamRole() == TeamRole.LEADER) {
       inviteUserRequest
           .getUsers()
-          .forEach(
-              (name, email) -> {
+          .forEach(inviteContact -> {
                 if (!db.fetchExists(
                     USERS_TEAMS
                         .join(USERS)
@@ -164,10 +164,10 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
                         .where(
                             USERS
                                 .EMAIL
-                                .eq(email)
+                                .eq(inviteContact.getEmail())
                                 .and(TEAMS.ID.eq(inviteUserRequest.getTeamId()))))) {
                   UsersRecord invitedUser =
-                      db.selectFrom(USERS).where(USERS.EMAIL.eq(email)).fetchOne();
+                      db.selectFrom(USERS).where(USERS.EMAIL.eq(inviteContact.getEmail())).fetchOne();
                   if (invitedUser != null) {
                     UsersTeamsRecord usersTeams = db.newRecord(USERS_TEAMS);
                     usersTeams.setTeamId(inviteUserRequest.getTeamId());
@@ -312,7 +312,10 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
             .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
             .and(USERS_TEAMS.TEAM_ID.eq(teamId))
             .fetchOne();
-    if (usersTeamsRecord != null && usersTeamsRecord.getTeamRole() != TeamRole.LEADER) {
+    if (usersTeamsRecord != null) {
+      if(usersTeamsRecord.getTeamRole() == TeamRole.LEADER) {
+        throw new LeaderCannotLeaveTeamException(teamId, userData.getUserId());
+      }
       usersTeamsRecord.setTeamRole(TeamRole.None);
       usersTeamsRecord.update();
     } else {
@@ -328,6 +331,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
         db.selectFrom(USERS_TEAMS)
             .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
             .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+                .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))
             .fetchOne();
     UsersTeamsRecord newLeaderTeamsRecord =
         db.selectFrom(USERS_TEAMS)
@@ -336,11 +340,10 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
                     .USER_ID
                     .eq(transferOwnershipRequest.getNewLeaderId())
                     .and(USERS_TEAMS.TEAM_ID.eq(teamId)))
+                    .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.MEMBER))
             .fetchOne();
     if (oldLeaderTeamsRecord != null
-        && newLeaderTeamsRecord != null
-        && oldLeaderTeamsRecord.getTeamRole() == TeamRole.LEADER
-        && oldLeaderTeamsRecord.getTeamRole() == TeamRole.MEMBER) {
+        && newLeaderTeamsRecord != null) {
       newLeaderTeamsRecord.setTeamRole(TeamRole.LEADER);
       oldLeaderTeamsRecord.setTeamRole(TeamRole.MEMBER);
       newLeaderTeamsRecord.update();

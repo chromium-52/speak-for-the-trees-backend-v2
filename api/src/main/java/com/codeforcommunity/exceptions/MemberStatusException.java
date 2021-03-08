@@ -22,6 +22,6 @@ public class MemberStatusException extends HandledException {
 
   @Override
   public void callHandler(FailureHandler handler, RoutingContext ctx) {
-    handler.handleCannotApproveTeamMember(ctx, this);
+    handler.handleMemberStatusException(ctx, this);
   }
 }

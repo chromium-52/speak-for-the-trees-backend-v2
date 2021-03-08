@@ -29,7 +29,6 @@ public class TeamDataResponse {
     this.deletedAt = deletedAt;
   }
 
-
   public String getTeamName() {
     return teamName;
   }
@@ -48,5 +47,13 @@ public class TeamDataResponse {
 
   public Timestamp getCreatedAt() {
     return createdAt;
+  }
+
+  public Integer getId() {
+    return id;
+  }
+
+  public Boolean getFinished() {
+    return finished;
   }
 }
