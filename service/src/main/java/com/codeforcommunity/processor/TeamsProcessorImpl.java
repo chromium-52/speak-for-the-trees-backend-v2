@@ -4,6 +4,7 @@ import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.team.AddGoalRequest;
 import com.codeforcommunity.dto.team.CreateTeamRequest;
+import com.codeforcommunity.dto.team.GoalResponse;
 import com.codeforcommunity.dto.team.InviteUserRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
@@ -12,6 +13,7 @@ import com.codeforcommunity.enums.TeamRole;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.codeforcommunity.exceptions.LeaderCannotLeaveTeamException;
 import com.codeforcommunity.exceptions.MemberApplicationException;
@@ -96,13 +98,19 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
       throw new ResourceDoesNotExistException(teamId, "Team");
     }
 
+    List<GoalsRecord> goalsRecords = db.selectFrom(GOALS).where(GOALS.TEAM_ID.eq(teamId)).fetch();
+    List<GoalResponse> goalsResponses = goalsRecords.stream().map(goalsRecord ->
+            new GoalResponse(goalsRecord.getId(), goalsRecord.getTeamId(), goalsRecord.getStartAt(),
+              goalsRecord.getCompleteBy(), goalsRecord.getCompletedAt())).collect(Collectors.toList());
+
     return new TeamDataResponse(
-        team.getId(),
-        team.getTeamName(),
-        team.getBio(),
-        team.getFinished(),
-        team.getCreatedAt(),
-        team.getDeletedAt());
+            team.getId(),
+            team.getTeamName(),
+            team.getBio(),
+            team.getFinished(),
+            goalsResponses,
+            team.getCreatedAt(),
+            team.getDeletedAt());
   }
 
   @Override
