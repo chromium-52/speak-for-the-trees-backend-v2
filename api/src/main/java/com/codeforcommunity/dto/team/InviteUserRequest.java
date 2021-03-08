@@ -8,24 +8,13 @@ import java.util.Map;
 
 public class InviteUserRequest extends ApiDto {
 
-  private Integer teamId;
   private List<InviteContact> users;
 
   public InviteUserRequest(Integer teamId, List<InviteContact> users) {
-    this.teamId = teamId;
     this.users = users;
   }
 
   public InviteUserRequest() {}
-
-
-  public Integer getTeamId() {
-    return teamId;
-  }
-
-  public void setTeamId(Integer teamId) {
-    this.teamId = teamId;
-  }
 
   public List<InviteContact> getUsers() {
     return users;
@@ -40,9 +29,6 @@ public class InviteUserRequest extends ApiDto {
     String fieldName = fieldPrefix + "invite_user_request.";
     List<String> fields = new ArrayList<>();
 
-    if (teamId == null) {
-      fields.add(fieldName + "team_id");
-    }
     if (users == null) {
       fields.add(fieldName + "users");
     }

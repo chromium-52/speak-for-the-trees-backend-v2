@@ -21,7 +21,7 @@ public interface ITeamsProcessor {
 
   void deleteGoal(JWTData userData, int teamId, int goalId);
 
-  void inviteUser(JWTData userData, InviteUserRequest inviteUserRequest);
+  void inviteUser(JWTData userData, InviteUserRequest inviteUserRequest, int teamId);
 
   List<UsersTeamDataResponse> getApplicants(JWTData userData, int teamId);
 

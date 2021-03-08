@@ -16,6 +16,7 @@ public class MemberStatusException extends HandledException {
   }
 
   public MemberStatusException(Integer teamId, Integer userId) {
+    super();
     this.teamId = teamId;
     this.userId = userId;
   }
