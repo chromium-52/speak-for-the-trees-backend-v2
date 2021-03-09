@@ -1,4 +1,4 @@
-# C4C Backend Scaffold
+# Speak for the Trees Backend
 
 [![Build Status](https://travis-ci.org/Code-4-Community/backend-scaffold.svg?branch=master)](https://travis-ci.org/Code-4-Community/backend-scaffold)
 [![Coverage Status](https://coveralls.io/repos/github/Code-4-Community/speak-for-the-trees-backend-v2/badge.svg?branch=master)](https://coveralls.io/github/Code-4-Community/speak-for-the-trees-backend-v2?branch=master)
