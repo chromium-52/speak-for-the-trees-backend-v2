@@ -10,6 +10,7 @@ import com.codeforcommunity.dto.imports.BlockImport;
 import com.codeforcommunity.dto.imports.ImportBlocksRequest;
 import com.codeforcommunity.dto.imports.ImportNeighborhoodsRequest;
 import com.codeforcommunity.dto.imports.ImportReservationsRequest;
+import com.codeforcommunity.dto.imports.ImportSitesRequest;
 import com.codeforcommunity.dto.imports.NeighborhoodImport;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
@@ -129,4 +130,19 @@ public class ImportProcessorImpl implements IImportProcessor {
       record.store();
     }
   }
+
+    @Override
+    public void importSites(JWTData userData, ImportSitesRequest importSitesRequest) {
+      if (userData.getPrivilegeLevel() != PrivilegeLevel.SUPER_ADMIN) {
+          throw new AuthException("User does not have the required privilege level.");
+      }
+
+      // First check that none of the entries contain errors
+//        List<SitesRecord> records = importSitesRequest.getSites().stream()
+//                .map(siteImport -> {
+//                    return siteImport;
+//                })
+//                .collect(Collectors.toList());
+
+    }
 }
