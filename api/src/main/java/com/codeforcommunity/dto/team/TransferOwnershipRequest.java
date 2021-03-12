@@ -6,27 +6,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class TransferOwnershipRequest extends ApiDto {
-  private Integer newLeaderId;
+  private Integer newLeaderUserId;
 
   public TransferOwnershipRequest(Integer newLeaderId) {
-    this.newLeaderId = newLeaderId;
+    this.newLeaderUserId = newLeaderId;
   }
 
   private TransferOwnershipRequest() {}
 
   public Integer getNewLeaderId() {
-    return newLeaderId;
+    return newLeaderUserId;
   }
 
   public void setNewLeaderId(Integer newLeaderId) {
-    this.newLeaderId = newLeaderId;
+    this.newLeaderUserId = newLeaderId;
   }
 
   @Override
   public List<String> validateFields(String fieldPrefix) throws HandledException {
     String fieldName = fieldPrefix + "transfer_ownership_request.";
     List<String> fields = new ArrayList<>();
-    if (newLeaderId == null) {
+    if (newLeaderUserId == null) {
       fields.add(fieldName + "newLeaderId");
     }
     return fields;

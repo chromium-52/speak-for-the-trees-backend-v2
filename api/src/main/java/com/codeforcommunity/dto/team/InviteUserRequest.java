@@ -4,13 +4,12 @@ import com.codeforcommunity.dto.ApiDto;
 import com.codeforcommunity.exceptions.HandledException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class InviteUserRequest extends ApiDto {
 
   private List<InviteContact> users;
 
-  public InviteUserRequest(Integer teamId, List<InviteContact> users) {
+  public InviteUserRequest(List<InviteContact> users) {
     this.users = users;
   }
 

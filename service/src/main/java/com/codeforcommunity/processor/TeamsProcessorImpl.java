@@ -35,10 +35,6 @@ import static org.jooq.generated.tables.UsersTeams.USERS_TEAMS;
 public class TeamsProcessorImpl implements ITeamsProcessor {
   private final DSLContext db;
 
-  public TeamsProcessorImpl(DSLContext db) {
-    this.db = db;
-  }
-
   private void checkTeamExists(int teamId) {
     if(!db.fetchExists(db.selectFrom(TEAMS).where(TEAMS.ID.eq(teamId)))) {
       throw new ResourceDoesNotExistException(teamId, "Team");
@@ -55,6 +51,10 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
     if(!db.fetchExists(db.selectFrom(GOALS).where(GOALS.ID.eq(goalId)))) {
       throw new ResourceDoesNotExistException(goalId, "Goal");
     }
+  }
+
+  public TeamsProcessorImpl(DSLContext db) {
+    this.db = db;
   }
 
 
