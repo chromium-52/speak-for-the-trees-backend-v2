@@ -9,6 +9,7 @@ import com.codeforcommunity.dto.team.CreateTeamRequest;
 import com.codeforcommunity.dto.team.InviteUserRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
+import com.codeforcommunity.dto.team.UsersTeamDataResponse;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
@@ -16,6 +17,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+
+import java.util.List;
 
 public class TeamsRouter implements IRouter {
 
@@ -123,8 +126,8 @@ public class TeamsRouter implements IRouter {
   private void handleGetApplicantsRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
     int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
-    processor.getApplicants(userData, teamId);
-    end(ctx.response(), 200);
+    List<UsersTeamDataResponse> response = processor.getApplicants(userData, teamId);
+    end(ctx.response(), 200, JsonObject.mapFrom(response).toString());
   }
 
   private void registerApplyToTeam(Router router) {
