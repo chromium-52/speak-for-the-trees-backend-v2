@@ -357,6 +357,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
       newLeaderTeamsRecord.update();
       oldLeaderTeamsRecord.update();
     } else {
+      //TODO Create a new exception for explaining that the newLeader Team has the wrong permissions.
       throw new WrongTeamRoleException(teamId, TeamRole.LEADER);
     }
   }

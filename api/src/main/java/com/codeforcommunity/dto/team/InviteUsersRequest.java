@@ -30,8 +30,9 @@ public class InviteUsersRequest extends ApiDto {
 
     if (users == null) {
       fields.add(fieldName + "users");
+    } else {
+      users.forEach(user -> user.validateFields(fieldPrefix));
     }
-    // If we want to validate fields here: users.forEach(user -> user.validateFields(fieldPrefix));
     return fields;
   }
 }

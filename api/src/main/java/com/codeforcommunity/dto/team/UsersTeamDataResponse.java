@@ -11,6 +11,7 @@ public class UsersTeamDataResponse {
     this.userId = userId;
     this.teamId = teamId;
     this.teamRole = teamRole;
+    //TODO fix to be the same as the APISpec or change the APISpec
   }
 
   private UsersTeamDataResponse() {}
