@@ -6,7 +6,7 @@ import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.team.AddGoalRequest;
 import com.codeforcommunity.dto.team.CreateTeamRequest;
-import com.codeforcommunity.dto.team.InviteUserRequest;
+import com.codeforcommunity.dto.team.InviteUsersRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
 import com.codeforcommunity.dto.team.UsersTeamDataResponse;
@@ -112,8 +112,8 @@ public class TeamsRouter implements IRouter {
   private void handleInviteUser(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
     int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
-    InviteUserRequest inviteUserRequest =
-        RestFunctions.getJsonBodyAsClass(ctx, InviteUserRequest.class);
+    InviteUsersRequest inviteUserRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, InviteUsersRequest.class);
     processor.inviteUser(userData, inviteUserRequest, teamId);
     end(ctx.response(), 200);
   }

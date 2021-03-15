@@ -3,7 +3,7 @@ package com.codeforcommunity.api;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.team.AddGoalRequest;
 import com.codeforcommunity.dto.team.CreateTeamRequest;
-import com.codeforcommunity.dto.team.InviteUserRequest;
+import com.codeforcommunity.dto.team.InviteUsersRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
 import com.codeforcommunity.dto.team.UsersTeamDataResponse;
@@ -21,7 +21,7 @@ public interface ITeamsProcessor {
 
   void deleteGoal(JWTData userData, int teamId, int goalId);
 
-  void inviteUser(JWTData userData, InviteUserRequest inviteUserRequest, int teamId);
+  void inviteUser(JWTData userData, InviteUsersRequest inviteUserRequest, int teamId);
 
   List<UsersTeamDataResponse> getApplicants(JWTData userData, int teamId);
 

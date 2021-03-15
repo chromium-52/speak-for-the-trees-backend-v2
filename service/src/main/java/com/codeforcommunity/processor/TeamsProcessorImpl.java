@@ -5,7 +5,7 @@ import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.team.AddGoalRequest;
 import com.codeforcommunity.dto.team.CreateTeamRequest;
 import com.codeforcommunity.dto.team.GoalResponse;
-import com.codeforcommunity.dto.team.InviteUserRequest;
+import com.codeforcommunity.dto.team.InviteUsersRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
 import com.codeforcommunity.dto.team.UsersTeamDataResponse;
@@ -150,7 +150,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   }
 
   @Override
-  public void inviteUser(JWTData userData, InviteUserRequest inviteUserRequest, int teamId) {
+  public void inviteUser(JWTData userData, InviteUsersRequest inviteUserRequest, int teamId) {
     checkTeamExists(teamId);
     UsersTeamsRecord inviterUserTeamsRecord =
         db.selectFrom(USERS_TEAMS)

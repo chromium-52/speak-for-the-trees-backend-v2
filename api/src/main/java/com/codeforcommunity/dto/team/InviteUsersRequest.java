@@ -5,15 +5,15 @@ import com.codeforcommunity.exceptions.HandledException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class InviteUserRequest extends ApiDto {
+public class InviteUsersRequest extends ApiDto {
 
   private List<InviteContact> users;
 
-  public InviteUserRequest(List<InviteContact> users) {
+  public InviteUsersRequest(List<InviteContact> users) {
     this.users = users;
   }
 
-  public InviteUserRequest() {}
+  public InviteUsersRequest() {}
 
   public List<InviteContact> getUsers() {
     return users;
@@ -31,7 +31,7 @@ public class InviteUserRequest extends ApiDto {
     if (users == null) {
       fields.add(fieldName + "users");
     }
-    // users.forEach(user -> user.validateFields(fieldPrefix));
+    // If we want to validate fields here: users.forEach(user -> user.validateFields(fieldPrefix));
     return fields;
   }
 }
