@@ -131,18 +131,20 @@ public class ImportProcessorImpl implements IImportProcessor {
     }
   }
 
-    @Override
-    public void importSites(JWTData userData, ImportSitesRequest importSitesRequest) {
-      if (userData.getPrivilegeLevel() != PrivilegeLevel.SUPER_ADMIN) {
-          throw new AuthException("User does not have the required privilege level.");
-      }
-
-      // First check that none of the entries contain errors
-//        List<SitesRecord> records = importSitesRequest.getSites().stream()
-//                .map(siteImport -> {
-//                    return siteImport;
-//                })
-//                .collect(Collectors.toList());
-
+  @Override
+  public void importSites(JWTData userData, ImportSitesRequest importSitesRequest) {
+    if (userData.getPrivilegeLevel() != PrivilegeLevel.SUPER_ADMIN) {
+      throw new AuthException("User does not have the required privilege level.");
     }
+
+    // First check that none of the entries contain invalid inputs
+    importSitesRequest
+        .getSites()
+        .forEach(
+            siteImport -> {
+              if (siteImport.getSiteId() == null) {
+                throw new IllegalArgumentException("Site ID cannot be null");
+              }
+            });
+  }
 }

@@ -88,7 +88,7 @@ public class ImportRouter implements IRouter {
   private void handleImportSitesRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
     ImportSitesRequest importSitesRequest =
-            RestFunctions.getJsonBodyAsClass(ctx, ImportSitesRequest.class);
+        RestFunctions.getJsonBodyAsClass(ctx, ImportSitesRequest.class);
 
     processor.importSites(userData, importSitesRequest);
 
