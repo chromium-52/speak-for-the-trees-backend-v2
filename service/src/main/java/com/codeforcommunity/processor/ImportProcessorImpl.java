@@ -1,6 +1,7 @@
 package com.codeforcommunity.processor;
 
 import static org.jooq.generated.Tables.BLOCKS;
+import static org.jooq.generated.Tables.SITES;
 import static org.jooq.generated.Tables.TEAMS;
 import static org.jooq.generated.Tables.USERS;
 
@@ -17,6 +18,7 @@ import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.RouteInvalidException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jooq.DSLContext;
@@ -24,6 +26,8 @@ import org.jooq.generated.Tables;
 import org.jooq.generated.tables.records.BlocksRecord;
 import org.jooq.generated.tables.records.NeighborhoodsRecord;
 import org.jooq.generated.tables.records.ReservationsRecord;
+import org.jooq.generated.tables.records.SiteEntriesRecord;
+import org.jooq.generated.tables.records.SitesRecord;
 
 public class ImportProcessorImpl implements IImportProcessor {
   private final DSLContext db;
@@ -136,15 +140,57 @@ public class ImportProcessorImpl implements IImportProcessor {
     if (userData.getPrivilegeLevel() != PrivilegeLevel.SUPER_ADMIN) {
       throw new AuthException("User does not have the required privilege level.");
     }
+    if ((!db.fetchExists(db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId()))))) {
+      throw new UserDoesNotExistException(userData.getUserId());
+    }
 
-    // First check that none of the entries contain invalid inputs
+    // Store user id since it will be used many times in the loop
+    Integer userId = userData.getUserId();
+
+    List<SitesRecord> sitesRecords = new ArrayList<>();
+    List<SiteEntriesRecord> siteEntriesRecords = new ArrayList<>();
+
     importSitesRequest
         .getSites()
         .forEach(
             siteImport -> {
-              if (siteImport.getSiteId() == null) {
-                throw new IllegalArgumentException("Site ID cannot be null");
+              SitesRecord site = db.newRecord(Tables.SITES);
+              SiteEntriesRecord siteEntry = db.newRecord(Tables.SITE_ENTRIES);
+
+              if (!db.fetchExists(
+                  db.selectFrom(BLOCKS).where(BLOCKS.ID.eq(siteImport.getBlockId())))) {
+                throw new ResourceDoesNotExistException(siteImport.getBlockId(), "block");
               }
+
+              if (!db.fetchExists(
+                  db.selectFrom(SITES).where(SITES.ID.eq(siteImport.getSiteId())))) {
+                // throw exception
+              }
+
+              // Set all values for the site record
+              site.setId(siteImport.getSiteId());
+              site.setBlockId(siteImport.getBlockId());
+              site.setLat(siteImport.getLat());
+              site.setLng(siteImport.getLng());
+              site.setCity(siteImport.getCity());
+              site.setZip(siteImport.getZip());
+              site.setAddress(siteImport.getAddress());
+              if (siteImport.getDeletedAt() != null) {
+                site.setDeletedAt(siteImport.getDeletedAt());
+              }
+
+              // Set all values for the site entry record
+
+              sitesRecords.add(site);
+              siteEntriesRecords.add(siteEntry);
             });
+
+    for (SitesRecord record : sitesRecords) {
+      record.store();
+    }
+
+    for (SiteEntriesRecord record : siteEntriesRecords) {
+      record.store();
+    }
   }
 }
