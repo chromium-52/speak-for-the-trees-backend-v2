@@ -1,6 +1,25 @@
 package com.codeforcommunity.rest;
 
-import com.codeforcommunity.exceptions.*;
+
+import com.codeforcommunity.exceptions.CreateUserException;
+import com.codeforcommunity.exceptions.EmailAlreadyInUseException;
+import com.codeforcommunity.exceptions.ExpiredSecretKeyException;
+import com.codeforcommunity.exceptions.HandledException;
+import com.codeforcommunity.exceptions.IncorrectBlockStatusException;
+import com.codeforcommunity.exceptions.InvalidSecretKeyException;
+import com.codeforcommunity.exceptions.LeaderCannotLeaveTeamException;
+import com.codeforcommunity.exceptions.MalformedParameterException;
+import com.codeforcommunity.exceptions.MemberApplicationException;
+import com.codeforcommunity.exceptions.MemberStatusException;
+import com.codeforcommunity.exceptions.MissingHeaderException;
+import com.codeforcommunity.exceptions.MissingParameterException;
+import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
+import com.codeforcommunity.exceptions.TokenInvalidException;
+import com.codeforcommunity.exceptions.UsedSecretKeyException;
+import com.codeforcommunity.exceptions.UserDoesNotExistException;
+import com.codeforcommunity.exceptions.UserNotOnTeamException;
+import com.codeforcommunity.exceptions.UsernameAlreadyInUseException;
+import com.codeforcommunity.exceptions.WrongTeamRoleException;
 import com.codeforcommunity.logger.SLogger;
 import io.vertx.ext.web.RoutingContext;
 
@@ -147,6 +166,7 @@ public class FailureHandler {
     String message =
         String.format("Given parameter(s) %s is (are) malformed", exception.getParameterName());
     end(ctx, message, 400);
+    end(ctx, message, 400);
   }
 
   public void handleBadImageRequest(RoutingContext ctx) {
@@ -166,6 +186,24 @@ public class FailureHandler {
 
   public void handleRouteInvalid(RoutingContext ctx, String reason) {
     String message = "This route is not callable because: " + reason;
+    end(ctx, message, 400);
+  }
+
+  public void handleMemberApplicationException(RoutingContext ctx, MemberApplicationException e) {
+    String message = "User" + e.getUserId() + "has already applied for team" + e.getTeamId();
+    end(ctx, message, 400);
+  }
+
+  public void handleLeaderCannotLeaveTeamException(RoutingContext ctx, LeaderCannotLeaveTeamException e) {
+    String message = "User" + e.getUserId() + "is the leader of team" + e.getTeamId() +
+            "and must transfer ownership before leaving";
+    end(ctx, message, 400);
+  }
+
+
+  public void handleMemberStatusException(RoutingContext ctx, MemberStatusException e) {
+    String message =
+        "User " + e.getUserId() + " must be a pending member of Team " + e.getMessage();
     end(ctx, message, 400);
   }
 

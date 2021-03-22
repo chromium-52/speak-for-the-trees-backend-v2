@@ -93,4 +93,16 @@ public class Emailer {
     emailBody.ifPresent(
         s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectAccountDeleted, s));
   }
+
+  public void sendInviteTeamEmail(String sendToEmail, String sendToName, String teamName) {
+    String filePath = "/emails/InviteEmail.html";
+
+    Map<String, String> templateValues = new HashMap<>();
+    templateValues.put("link", "");
+    templateValues.put("team_name", teamName);
+    Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
+    emailBody.ifPresent(
+            s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectAccountDeleted, s));
+    //TODO implement this
+  }
 }
