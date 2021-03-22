@@ -18,6 +18,9 @@ import org.jooq.DSLContext;
 import org.jooq.generated.tables.pojos.Users;
 import org.jooq.generated.tables.records.UsersRecord;
 
+import java.sql.Timestamp;
+import java.time.Instant;
+
 public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
 
   private final DSLContext db;
@@ -35,7 +38,8 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
     db.deleteFrom(VERIFICATION_KEYS).where(VERIFICATION_KEYS.USER_ID.eq(userId)).executeAsync();
 
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
-    user.delete();
+    Timestamp now = Timestamp.from(Instant.now());
+    user.setDeletedAt(now);
 
     emailer.sendAccountDeactivatedEmail(
         user.getEmail(), AuthDatabaseOperations.getFullName(user.into(Users.class)));
