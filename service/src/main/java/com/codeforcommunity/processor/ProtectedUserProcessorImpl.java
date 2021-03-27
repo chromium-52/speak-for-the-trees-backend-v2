@@ -20,15 +20,13 @@ import com.codeforcommunity.dto.user.UserTeamsResponse;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.*;
 import com.codeforcommunity.requester.Emailer;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.jooq.DSLContext;
-import org.jooq.Record;
+import org.jooq.Record2;
 import org.jooq.Result;
 import org.jooq.generated.tables.pojos.Users;
 import org.jooq.generated.tables.records.UsersRecord;
-import org.jooq.generated.tables.records.UsersTeamsRecord;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
 
@@ -98,11 +96,21 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
       throw new UserDoesNotExistException(userData.getUserId());
     }
 
-    Result<Record> teams = db.selectFrom(USERS_TEAMS.join(TEAMS).onKey()).where(USERS_TEAMS.USER_ID.eq(userId)).fetch();
+    Result<Record2<String, Integer>> teams =
+        db.select(TEAMS.TEAM_NAME, TEAMS.ID)
+            .from(USERS_TEAMS)
+            .join(TEAMS)
+            .onKey()
+            .where(USERS_TEAMS.USER_ID.eq(userId))
+            .fetch();
 
-    List<Team> result = teams.stream().map(team -> {
-      return new Team(); //need to get teamId, teamName from each teamRecord
-    }).collect(Collectors.toList());
+    List<Team> result =
+        teams.stream()
+            .map(
+                team -> {
+                  return new Team(team.value2(), team.value1());
+                })
+            .collect(Collectors.toList());
 
     return new UserTeamsResponse(result);
   }
