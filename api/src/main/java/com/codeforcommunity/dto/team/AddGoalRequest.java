@@ -3,15 +3,16 @@ package com.codeforcommunity.dto.team;
 import com.codeforcommunity.dto.ApiDto;
 import com.codeforcommunity.exceptions.HandledException;
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
 public class AddGoalRequest extends ApiDto {
   private Integer goal;
+
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
   private Timestamp start_at;
+
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
   private Timestamp complete_by;
 
@@ -19,7 +20,6 @@ public class AddGoalRequest extends ApiDto {
     this.goal = goal;
     this.start_at = startAt;
     this.complete_by = completeBy;
-
   }
 
   private AddGoalRequest() {}

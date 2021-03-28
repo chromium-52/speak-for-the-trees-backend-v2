@@ -1,6 +1,5 @@
 package com.codeforcommunity.rest;
 
-
 import com.codeforcommunity.exceptions.CreateUserException;
 import com.codeforcommunity.exceptions.EmailAlreadyInUseException;
 import com.codeforcommunity.exceptions.ExpiredSecretKeyException;
@@ -194,12 +193,16 @@ public class FailureHandler {
     end(ctx, message, 400);
   }
 
-  public void handleLeaderCannotLeaveTeamException(RoutingContext ctx, LeaderCannotLeaveTeamException e) {
-    String message = "User" + e.getUserId() + "is the leader of team" + e.getTeamId() +
-            "and must transfer ownership before leaving";
+  public void handleLeaderCannotLeaveTeamException(
+      RoutingContext ctx, LeaderCannotLeaveTeamException e) {
+    String message =
+        "User"
+            + e.getUserId()
+            + "is the leader of team"
+            + e.getTeamId()
+            + "and must transfer ownership before leaving";
     end(ctx, message, 400);
   }
-
 
   public void handleMemberStatusException(RoutingContext ctx, MemberStatusException e) {
     String message =

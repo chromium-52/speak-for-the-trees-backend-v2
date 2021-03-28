@@ -10,6 +10,7 @@ import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
 import com.codeforcommunity.dto.user.ChangeUsernameRequest;
 import com.codeforcommunity.dto.user.DeleteUserRequest;
 import com.codeforcommunity.dto.user.UserDataResponse;
+import com.codeforcommunity.dto.user.UserTeamsResponse;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
@@ -55,6 +56,11 @@ public class ProtectedUserRouter implements IRouter {
     getUserDataRoute.handler(this::handleGetUserDataRoute);
   }
 
+  private void registerGetUserTeams(Router router) {
+    Route getUserTeamsRoute = router.get("/teams");
+    getUserTeamsRoute.handler(this::handleGetUserTeamsRoute);
+  }
+
   private void registerChangeEmail(Router router) {
     Route changePasswordRoute = router.post("/change_email");
     changePasswordRoute.handler(this::handleChangeEmailRoute);
@@ -95,6 +101,14 @@ public class ProtectedUserRouter implements IRouter {
     JWTData userData = ctx.get("jwt_data");
 
     UserDataResponse response = processor.getUserData(userData);
+
+    end(ctx.response(), 200, JsonObject.mapFrom(response).toString());
+  }
+
+  private void handleGetUserTeamsRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+
+    UserTeamsResponse response = processor.getUserTeams(userData);
 
     end(ctx.response(), 200, JsonObject.mapFrom(response).toString());
   }

@@ -7,6 +7,7 @@ import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
 import com.codeforcommunity.dto.user.ChangeUsernameRequest;
 import com.codeforcommunity.dto.user.DeleteUserRequest;
 import com.codeforcommunity.dto.user.UserDataResponse;
+import com.codeforcommunity.dto.user.UserTeamsResponse;
 
 public interface IProtectedUserProcessor {
 
@@ -21,6 +22,9 @@ public interface IProtectedUserProcessor {
 
   /** Get the user's data for use in the site. */
   UserDataResponse getUserData(JWTData userData);
+
+  /** Get the all the teams a user is part of */
+  UserTeamsResponse getUserTeams(JWTData userData);
 
   /** Change the user's email to the provided one */
   void changeEmail(JWTData userData, ChangeEmailRequest changeEmailRequest);

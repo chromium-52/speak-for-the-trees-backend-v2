@@ -17,7 +17,6 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-
 import java.util.List;
 
 public class TeamsRouter implements IRouter {
@@ -84,8 +83,7 @@ public class TeamsRouter implements IRouter {
   private void handleAddGoal(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
     int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
-    AddGoalRequest addGoalRequest =
-        RestFunctions.getJsonBodyAsClass(ctx, AddGoalRequest.class);
+    AddGoalRequest addGoalRequest = RestFunctions.getJsonBodyAsClass(ctx, AddGoalRequest.class);
     processor.addGoal(userData, addGoalRequest, teamId);
     end(ctx.response(), 200);
   }

@@ -1,6 +1,8 @@
 package com.codeforcommunity.processor;
 
+import static org.jooq.generated.Tables.TEAMS;
 import static org.jooq.generated.Tables.USERS;
+import static org.jooq.generated.Tables.USERS_TEAMS;
 import static org.jooq.generated.Tables.VERIFICATION_KEYS;
 
 import com.codeforcommunity.api.IProtectedUserProcessor;
@@ -12,11 +14,18 @@ import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
 import com.codeforcommunity.dto.user.ChangeUsernameRequest;
 import com.codeforcommunity.dto.user.DeleteUserRequest;
+import com.codeforcommunity.dto.user.Team;
 import com.codeforcommunity.dto.user.UserDataResponse;
+import com.codeforcommunity.dto.user.UserTeamsResponse;
 import com.codeforcommunity.enums.PrivilegeLevel;
+import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.*;
 import com.codeforcommunity.requester.Emailer;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.jooq.DSLContext;
+import org.jooq.Record2;
+import org.jooq.Result;
 import org.jooq.generated.tables.pojos.Users;
 import org.jooq.generated.tables.records.UsersRecord;
 
@@ -77,6 +86,36 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
     }
 
     return new UserDataResponse(user.getFirstName(), user.getLastName(), user.getEmail());
+  }
+
+  @Override
+  public UserTeamsResponse getUserTeams(JWTData userData) {
+    int userId = userData.getUserId();
+    UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
+
+    if (user == null) {
+      throw new UserDoesNotExistException(userData.getUserId());
+    }
+
+    Result<Record2<String, Integer>> teams =
+        db.select(TEAMS.TEAM_NAME, TEAMS.ID)
+            .from(USERS_TEAMS)
+            .join(TEAMS)
+            .onKey()
+            .where(USERS_TEAMS.USER_ID.eq(userId))
+            .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.None))
+            .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.PENDING))
+            .fetch();
+
+    List<Team> result =
+        teams.stream()
+            .map(
+                team -> {
+                  return new Team(team.value2(), team.value1());
+                })
+            .collect(Collectors.toList());
+
+    return new UserTeamsResponse(result);
   }
 
   @Override
