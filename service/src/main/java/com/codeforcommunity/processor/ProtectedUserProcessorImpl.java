@@ -103,8 +103,8 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
             .join(TEAMS)
             .onKey()
             .where(USERS_TEAMS.USER_ID.eq(userId))
-                .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.None))
-                .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.PENDING))
+            .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.None))
+            .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.PENDING))
             .fetch();
 
     List<Team> result =
