@@ -18,6 +18,7 @@ import com.codeforcommunity.dto.user.Team;
 import com.codeforcommunity.dto.user.UserDataResponse;
 import com.codeforcommunity.dto.user.UserTeamsResponse;
 import com.codeforcommunity.enums.PrivilegeLevel;
+import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.*;
 import com.codeforcommunity.requester.Emailer;
 import java.util.List;
@@ -102,6 +103,8 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
             .join(TEAMS)
             .onKey()
             .where(USERS_TEAMS.USER_ID.eq(userId))
+                .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.None))
+                .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.PENDING))
             .fetch();
 
     List<Team> result =
