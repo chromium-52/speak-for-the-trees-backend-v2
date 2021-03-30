@@ -52,8 +52,7 @@ public class AddGoalRequest extends ApiDto {
   public List<String> validateFields(String fieldPrefix) throws HandledException {
     String fieldName = fieldPrefix + "add_goal_request.";
     List<String> fields = new ArrayList<>();
-    // TODO: is this supposed to be negative?
-    if (goal == null || goal > 0) {
+    if (goal == null || goal < 0) {
       fields.add(fieldName + "goal");
     }
     if (complete_by == null) {
