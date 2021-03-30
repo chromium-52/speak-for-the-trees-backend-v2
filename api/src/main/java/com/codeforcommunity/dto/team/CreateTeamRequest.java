@@ -50,14 +50,14 @@ public class CreateTeamRequest extends ApiDto {
     if (bio == null) {
       fields.add(fieldName + "bio");
     }
-    if (name == null) {
+    if (isEmpty(name) || name.length() > 100) {
       fields.add(fieldName + "name");
     }
     if (inviteEmails == null) {
       fields.add(fieldName + "inviteEmails");
     } else {
       for (String email : inviteEmails) {
-        if (emailInvalid(email)) {
+        if (email == null || emailInvalid(email)) {
           fields.add(fieldName + "inviteEmails." + email);
         }
       }

@@ -87,7 +87,7 @@ public class NeighborhoodImport extends ApiDto {
     if (neighborhoodId == null) {
       fields.add(fieldName + "neighborhoodId");
     }
-    if (isEmpty(name)) {
+    if (isEmpty(name) || name.length() > 30) {
       fields.add(fieldName + "name");
     }
     if (sqmiles == null || sqmiles.compareTo(BigDecimal.ZERO) <= 0) {

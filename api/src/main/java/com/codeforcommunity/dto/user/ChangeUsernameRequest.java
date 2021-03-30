@@ -38,7 +38,7 @@ public class ChangeUsernameRequest extends ApiDto {
     String fieldName = fieldPrefix + "change_username_request.";
     List<String> fields = new ArrayList<>();
 
-    if (newUsername == null) {
+    if (isEmpty(newUsername) || newUsername.length() > 36) {
       fields.add(fieldName + "username");
     }
     if (password == null) {

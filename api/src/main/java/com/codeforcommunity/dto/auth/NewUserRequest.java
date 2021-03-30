@@ -58,13 +58,16 @@ public class NewUserRequest extends ApiDto {
     String fieldName = fieldPrefix + "new_user_request.";
     List<String> fields = new ArrayList<>();
 
-    if (emailInvalid(email)) {
+    if (isEmpty(username) || username.length() > 36) {
+      fields.add(fieldName + "username");
+    }
+    if (email == null || emailInvalid(email)) {
       fields.add(fieldName + "email");
     }
-    if (isEmpty(firstName)) {
+    if (isEmpty(firstName) || firstName.length() > 36) {
       fields.add(fieldName + "first_name");
     }
-    if (isEmpty(lastName)) {
+    if (isEmpty(lastName) || lastName.length() > 36) {
       fields.add(fieldName + "last_name");
     }
     if (password == null) {

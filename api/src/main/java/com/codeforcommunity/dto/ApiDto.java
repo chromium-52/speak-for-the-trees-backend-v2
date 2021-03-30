@@ -81,7 +81,7 @@ public abstract class ApiDto {
    * @return a boolean representing whether this email is not valid.
    */
   protected boolean emailInvalid(String email) {
-    return email == null || !email.matches("^\\S+@\\S+\\.\\S{2,}$");
+    return email == null || !email.matches("^\\S+@\\S+\\.\\S{2,}$") && email.length() < 255;
   }
 
   /**

@@ -35,10 +35,11 @@ public class InviteContact extends ApiDto {
   public List<String> validateFields(String fieldPrefix) throws HandledException {
     String fieldName = fieldPrefix + "invite_contact";
     List<String> fields = new ArrayList<>();
-    if (name == null) {
+    // TODO: do we want to keep this field? It doesn't look like it's being used anywhere
+    if (isEmpty(name) || name.length() > 36) {
       fields.add(fieldName + "name");
     }
-    if (email == null) {
+    if (isEmpty(email)) {
       fields.add(fieldName + "email");
     }
     return fields;
