@@ -19,6 +19,7 @@ import com.codeforcommunity.exceptions.LeaderCannotLeaveTeamException;
 import com.codeforcommunity.exceptions.MemberApplicationException;
 import com.codeforcommunity.exceptions.MemberStatusException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
+import com.codeforcommunity.exceptions.UserDeletedException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.WrongTeamRoleException;
 import java.sql.Timestamp;
@@ -41,8 +42,12 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   }
 
   private void checkUserExists(int userId) {
-    if (!db.fetchExists(db.selectFrom(USERS).where(USERS.ID.eq(userId)))) {
-      throw new ResourceDoesNotExistException(userId, "User");
+    UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
+    if(user == null) {
+      throw new UserDoesNotExistException(user.getId());
+    }
+    if(user.getDeletedAt() != null) {
+      throw new UserDeletedException(user.getId());
     }
   }
 

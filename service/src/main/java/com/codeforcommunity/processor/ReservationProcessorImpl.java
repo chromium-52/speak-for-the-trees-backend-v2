@@ -56,8 +56,14 @@ public class ReservationProcessorImpl implements IReservationProcessor {
       throw new ResourceDoesNotExistException(blockId, "block");
     }
 
-    if (userId != null && !db.fetchExists(db.selectFrom(USERS).where(USERS.ID.eq(userId)))) {
+    UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
+
+    if (userId != null && user == null) {
       throw new UserDoesNotExistException(userId);
+    }
+
+    if (user != null && user.getDeletedAt() != null) {
+      throw new UserDeletedException(userId);
     }
 
     if (teamId != null && !db.fetchExists(db.selectFrom(TEAMS).where(TEAMS.ID.eq(teamId)))) {

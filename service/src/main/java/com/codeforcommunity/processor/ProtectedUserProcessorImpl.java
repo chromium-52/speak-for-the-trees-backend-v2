@@ -42,9 +42,20 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
     this.emailer = emailer;
   }
 
+  private void userExistsCheck(UsersRecord user) {
+    if(user == null) {
+      throw new UserDoesNotExistException(user.getId());
+    }
+    if(user.getDeletedAt() != null) {
+      throw new UserDeletedException(user.getId());
+    }
+  }
+
   @Override
   public void deleteUser(JWTData userData, DeleteUserRequest deleteUserRequest) {
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
+
+    userExistsCheck(user);
 
     if (!Passwords.isExpectedPassword(deleteUserRequest.getPassword(), user.getPasswordHash())) {
       throw new WrongPasswordException();
@@ -64,10 +75,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   @Override
   public void changePassword(JWTData userData, ChangePasswordRequest changePasswordRequest) {
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
-
-    if (user == null) {
-      throw new UserDoesNotExistException(userData.getUserId());
-    }
+    userExistsCheck(user);
 
     if (Passwords.isExpectedPassword(
         changePasswordRequest.getCurrentPassword(), user.getPasswordHash())) {
@@ -84,10 +92,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   @Override
   public UserDataResponse getUserData(JWTData userData) {
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
-
-    if (user == null) {
-      throw new UserDoesNotExistException(userData.getUserId());
-    }
+    userExistsCheck(user);
 
     return new UserDataResponse(user.getFirstName(), user.getLastName(), user.getEmail());
   }
@@ -97,9 +102,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
     int userId = userData.getUserId();
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
 
-    if (user == null) {
-      throw new UserDoesNotExistException(userData.getUserId());
-    }
+    userExistsCheck(user);
 
     Result<Record2<String, Integer>> teams =
         db.select(TEAMS.TEAM_NAME, TEAMS.ID)
@@ -123,9 +126,8 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   @Override
   public void changeEmail(JWTData userData, ChangeEmailRequest changeEmailRequest) {
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
-    if (user == null) {
-      throw new UserDoesNotExistException(userData.getUserId());
-    }
+
+    userExistsCheck(user);
 
     String previousEmail = user.getEmail();
     if (Passwords.isExpectedPassword(changeEmailRequest.getPassword(), user.getPasswordHash())) {
@@ -147,9 +149,8 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   @Override
   public void changeUsername(JWTData userData, ChangeUsernameRequest changeUsernameRequest) {
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
-    if (user == null) {
-      throw new UserDoesNotExistException(userData.getUserId());
-    }
+
+    userExistsCheck(user);
 
     if (Passwords.isExpectedPassword(changeUsernameRequest.getPassword(), user.getPasswordHash())) {
       if (db.fetchExists(USERS, USERS.USERNAME.eq(changeUsernameRequest.getNewUsername()))) {
@@ -175,9 +176,8 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
         db.selectFrom(USERS)
             .where(USERS.EMAIL.eq(changePrivilegeLevelRequest.getTargetUserEmail()))
             .fetchOne();
-    if (user == null) {
-      throw new UserDoesNotExistException(changePrivilegeLevelRequest.getTargetUserEmail());
-    }
+
+    userExistsCheck(user);
 
     // normal admins can't create super admins
     if (userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN

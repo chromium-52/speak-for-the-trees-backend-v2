@@ -15,6 +15,7 @@ import com.codeforcommunity.exceptions.MissingParameterException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.TokenInvalidException;
 import com.codeforcommunity.exceptions.UsedSecretKeyException;
+import com.codeforcommunity.exceptions.UserDeletedException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.UserNotOnTeamException;
 import com.codeforcommunity.exceptions.UsernameAlreadyInUseException;
@@ -85,6 +86,13 @@ public class FailureHandler {
     String message =
         String.format("No user with property <%s> exists", exception.getIdentifierMessage());
     end(ctx, message, 400);
+  }
+
+  public void handleUserDeleted(RoutingContext ctx, UserDeletedException e) {
+    String message =
+            String.format("User with property <%s> has been deleted", e.getIdentifierMessage());
+    end(ctx, message, 400);
+
   }
 
   public void handleResourceDoesNotExist(RoutingContext ctx, ResourceDoesNotExistException e) {
