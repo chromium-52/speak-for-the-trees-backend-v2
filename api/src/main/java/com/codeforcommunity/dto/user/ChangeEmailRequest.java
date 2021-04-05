@@ -36,7 +36,7 @@ public class ChangeEmailRequest extends ApiDto {
     String fieldName = fieldPrefix + "change_email_request.";
     List<String> fields = new ArrayList<>();
 
-    if (emailInvalid(newEmail)) {
+    if (newEmail == null || emailInvalid(newEmail)) {
       fields.add(fieldName + "email");
     }
     if (password == null) {

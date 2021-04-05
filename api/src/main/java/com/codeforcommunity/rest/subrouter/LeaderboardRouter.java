@@ -12,8 +12,11 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import java.util.Optional;
 
 public class LeaderboardRouter implements IRouter {
+  private static final String PREVIOUS_DAYS_QUERY_PARAM_NAME = "previousDays";
+  private static final Integer DEFAULT_PREVIOUS_DAYS = 100;
 
   private final ILeaderboardProcessor processor;
 
@@ -42,8 +45,10 @@ public class LeaderboardRouter implements IRouter {
   }
 
   private void handleGetUsersLeaderboardRoute(RoutingContext ctx) {
-    GetLeaderboardRequest getLeaderboardRequest =
-        RestFunctions.getJsonBodyAsClass(ctx, GetLeaderboardRequest.class);
+    Optional<Integer> maybePreviousDays =
+        RestFunctions.getOptionalQueryParam(ctx, PREVIOUS_DAYS_QUERY_PARAM_NAME, Integer::parseInt);
+    Integer previousDays = maybePreviousDays.orElse(DEFAULT_PREVIOUS_DAYS);
+    GetLeaderboardRequest getLeaderboardRequest = new GetLeaderboardRequest(previousDays);
 
     GetLeaderboardResponse response = processor.getUsersLeaderboard(getLeaderboardRequest);
 
@@ -51,8 +56,10 @@ public class LeaderboardRouter implements IRouter {
   }
 
   private void handleGetTeamsLeaderboardRoute(RoutingContext ctx) {
-    GetLeaderboardRequest getLeaderboardRequest =
-        RestFunctions.getJsonBodyAsClass(ctx, GetLeaderboardRequest.class);
+    Optional<Integer> maybePreviousDays =
+        RestFunctions.getOptionalQueryParam(ctx, PREVIOUS_DAYS_QUERY_PARAM_NAME, Integer::parseInt);
+    Integer previousDays = maybePreviousDays.orElse(DEFAULT_PREVIOUS_DAYS);
+    GetLeaderboardRequest getLeaderboardRequest = new GetLeaderboardRequest(previousDays);
 
     GetLeaderboardResponse response = processor.getTeamsLeaderboard(getLeaderboardRequest);
 

@@ -7,7 +7,10 @@ import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
+import com.codeforcommunity.dto.user.ChangeUsernameRequest;
+import com.codeforcommunity.dto.user.DeleteUserRequest;
 import com.codeforcommunity.dto.user.UserDataResponse;
+import com.codeforcommunity.dto.user.UserTeamsResponse;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
@@ -32,13 +35,14 @@ public class ProtectedUserRouter implements IRouter {
     registerChangePassword(router);
     registerGetUserData(router);
     registerChangeEmail(router);
+    registerChangeUsername(router);
     registerChangePrivilegeLevel(router);
 
     return router;
   }
 
   private void registerDeleteUser(Router router) {
-    Route deleteUserRoute = router.delete("/");
+    Route deleteUserRoute = router.post("/delete");
     deleteUserRoute.handler(this::handleDeleteUserRoute);
   }
 
@@ -52,9 +56,19 @@ public class ProtectedUserRouter implements IRouter {
     getUserDataRoute.handler(this::handleGetUserDataRoute);
   }
 
+  private void registerGetUserTeams(Router router) {
+    Route getUserTeamsRoute = router.get("/teams");
+    getUserTeamsRoute.handler(this::handleGetUserTeamsRoute);
+  }
+
   private void registerChangeEmail(Router router) {
     Route changePasswordRoute = router.post("/change_email");
     changePasswordRoute.handler(this::handleChangeEmailRoute);
+  }
+
+  private void registerChangeUsername(Router router) {
+    Route changeUsernameRoute = router.post("/change_username");
+    changeUsernameRoute.handler(this::handleChangeUsernameRoute);
   }
 
   private void registerChangePrivilegeLevel(Router router) {
@@ -65,7 +79,10 @@ public class ProtectedUserRouter implements IRouter {
   private void handleDeleteUserRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
 
-    processor.deleteUser(userData);
+    DeleteUserRequest deleteUserRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, DeleteUserRequest.class);
+
+    processor.deleteUser(userData, deleteUserRequest);
 
     end(ctx.response(), 200);
   }
@@ -88,12 +105,30 @@ public class ProtectedUserRouter implements IRouter {
     end(ctx.response(), 200, JsonObject.mapFrom(response).toString());
   }
 
+  private void handleGetUserTeamsRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+
+    UserTeamsResponse response = processor.getUserTeams(userData);
+
+    end(ctx.response(), 200, JsonObject.mapFrom(response).toString());
+  }
+
   private void handleChangeEmailRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
     ChangeEmailRequest changeEmailRequest =
         RestFunctions.getJsonBodyAsClass(ctx, ChangeEmailRequest.class);
 
     processor.changeEmail(userData, changeEmailRequest);
+
+    end(ctx.response(), 200);
+  }
+
+  private void handleChangeUsernameRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    ChangeUsernameRequest changeUsernameRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, ChangeUsernameRequest.class);
+
+    processor.changeUsername(userData, changeUsernameRequest);
 
     end(ctx.response(), 200);
   }

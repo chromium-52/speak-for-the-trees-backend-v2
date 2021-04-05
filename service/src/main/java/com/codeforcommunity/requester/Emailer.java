@@ -102,7 +102,7 @@ public class Emailer {
     templateValues.put("team_name", teamName);
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
     emailBody.ifPresent(
-            s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectAccountDeleted, s));
-    //TODO implement this
+        s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectAccountDeleted, s));
+    // TODO implement this
   }
 }

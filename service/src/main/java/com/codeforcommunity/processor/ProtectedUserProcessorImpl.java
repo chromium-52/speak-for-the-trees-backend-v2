@@ -1,6 +1,8 @@
 package com.codeforcommunity.processor;
 
+import static org.jooq.generated.Tables.TEAMS;
 import static org.jooq.generated.Tables.USERS;
+import static org.jooq.generated.Tables.USERS_TEAMS;
 import static org.jooq.generated.Tables.VERIFICATION_KEYS;
 
 import com.codeforcommunity.api.IProtectedUserProcessor;
@@ -10,11 +12,20 @@ import com.codeforcommunity.dataaccess.AuthDatabaseOperations;
 import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
+import com.codeforcommunity.dto.user.ChangeUsernameRequest;
+import com.codeforcommunity.dto.user.DeleteUserRequest;
+import com.codeforcommunity.dto.user.Team;
 import com.codeforcommunity.dto.user.UserDataResponse;
+import com.codeforcommunity.dto.user.UserTeamsResponse;
 import com.codeforcommunity.enums.PrivilegeLevel;
+import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.*;
 import com.codeforcommunity.requester.Emailer;
+import java.util.List;
+import java.util.stream.Collectors;
 import org.jooq.DSLContext;
+import org.jooq.Record2;
+import org.jooq.Result;
 import org.jooq.generated.tables.pojos.Users;
 import org.jooq.generated.tables.records.UsersRecord;
 
@@ -32,12 +43,17 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   }
 
   @Override
-  public void deleteUser(JWTData userData) {
+  public void deleteUser(JWTData userData, DeleteUserRequest deleteUserRequest) {
+    UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
+
+    if (!Passwords.isExpectedPassword(deleteUserRequest.getPassword(), user.getPasswordHash())) {
+      throw new WrongPasswordException();
+    }
+
     int userId = userData.getUserId();
 
     db.deleteFrom(VERIFICATION_KEYS).where(VERIFICATION_KEYS.USER_ID.eq(userId)).executeAsync();
 
-    UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
     Timestamp now = Timestamp.from(Instant.now());
     user.setDeletedAt(now);
 
@@ -77,6 +93,34 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   }
 
   @Override
+  public UserTeamsResponse getUserTeams(JWTData userData) {
+    int userId = userData.getUserId();
+    UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
+
+    if (user == null) {
+      throw new UserDoesNotExistException(userData.getUserId());
+    }
+
+    Result<Record2<String, Integer>> teams =
+        db.select(TEAMS.TEAM_NAME, TEAMS.ID)
+            .from(USERS_TEAMS)
+            .join(TEAMS)
+            .onKey()
+            .where(USERS_TEAMS.USER_ID.eq(userId))
+            .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.None))
+            .and(USERS_TEAMS.TEAM_ROLE.notEqual(TeamRole.PENDING))
+            .fetch();
+
+    List<Team> result =
+        teams.stream()
+            .map(
+                team -> new Team(team.value2(), team.value1()))
+            .collect(Collectors.toList());
+
+    return new UserTeamsResponse(result);
+  }
+
+  @Override
   public void changeEmail(JWTData userData, ChangeEmailRequest changeEmailRequest) {
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
     if (user == null) {
@@ -98,6 +142,24 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
         previousEmail,
         AuthDatabaseOperations.getFullName(user.into(Users.class)),
         changeEmailRequest.getNewEmail());
+  }
+
+  @Override
+  public void changeUsername(JWTData userData, ChangeUsernameRequest changeUsernameRequest) {
+    UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
+    if (user == null) {
+      throw new UserDoesNotExistException(userData.getUserId());
+    }
+
+    if (Passwords.isExpectedPassword(changeUsernameRequest.getPassword(), user.getPasswordHash())) {
+      if (db.fetchExists(USERS, USERS.USERNAME.eq(changeUsernameRequest.getNewUsername()))) {
+        throw new UsernameAlreadyInUseException(changeUsernameRequest.getNewUsername());
+      }
+      user.setUsername(changeUsernameRequest.getNewUsername());
+      user.store();
+    } else {
+      throw new WrongPasswordException();
+    }
   }
 
   @Override

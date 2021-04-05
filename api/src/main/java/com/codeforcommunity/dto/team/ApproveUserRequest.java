@@ -17,7 +17,8 @@ public class ApproveUserRequest extends ApiDto {
   public ApproveUserRequest() {}
 
   public Integer getUserId() {
-    return userId;  }
+    return userId;
+  }
 
   public void setUserId(Integer userId) {
     this.userId = userId;

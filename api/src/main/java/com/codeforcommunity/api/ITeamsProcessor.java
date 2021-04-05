@@ -7,7 +7,6 @@ import com.codeforcommunity.dto.team.InviteUsersRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
 import com.codeforcommunity.dto.team.UsersTeamDataResponse;
-
 import java.util.List;
 
 public interface ITeamsProcessor {
@@ -35,5 +34,6 @@ public interface ITeamsProcessor {
 
   void leaveTeam(JWTData userData, int teamId);
 
-  void transferOwnership(JWTData userData, TransferOwnershipRequest transferOwnershipRequest, int teamId);
+  void transferOwnership(
+      JWTData userData, TransferOwnershipRequest transferOwnershipRequest, int teamId);
 }

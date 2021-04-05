@@ -8,7 +8,7 @@ import java.util.List;
 public class BlockIDRequest extends ApiDto {
   private Integer blockID;
 
-  public BlockIDRequest(Integer blockID, Integer teamID) {
+  public BlockIDRequest(Integer blockID) {
     this.blockID = blockID;
   }
 
