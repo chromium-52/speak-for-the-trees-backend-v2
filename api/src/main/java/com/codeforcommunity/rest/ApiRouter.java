@@ -77,7 +77,7 @@ public class ApiRouter implements IRouter {
     router.mountSubRouter("/import", importRouter.initializeRouter(vertx));
     router.mountSubRouter("/reservations", reservationRouter.initializeRouter(vertx));
     router.mountSubRouter("/teams", teamsRouter.initializeRouter(vertx));
-    router.mountSubRouter("/site", siteRouter.initializeRouter(vertx));
+    router.mountSubRouter("/sites", siteRouter.initializeRouter(vertx));
 
     return router;
   }
