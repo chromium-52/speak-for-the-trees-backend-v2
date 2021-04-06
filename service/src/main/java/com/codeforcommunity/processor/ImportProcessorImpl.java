@@ -18,10 +18,11 @@ import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.RouteInvalidException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
-import javafx.util.Pair;
 import org.jooq.DSLContext;
 import org.jooq.generated.Tables;
 import org.jooq.generated.tables.records.BlocksRecord;
@@ -156,7 +157,7 @@ public class ImportProcessorImpl implements IImportProcessor {
     }
 
     List<SitesRecord> sitesRecords = new ArrayList<>();
-    List<Pair<SiteEntriesRecord, String>> pairList = new ArrayList<>();
+    List<Map.Entry<SiteEntriesRecord, String>> pairList = new ArrayList<>();
 
     importSitesRequest
         .getSites()
@@ -231,14 +232,14 @@ public class ImportProcessorImpl implements IImportProcessor {
               siteEntry.setTreeDedicatedTo(siteImport.getTreeDedicatedTo());
 
               sitesRecords.add(site);
-              pairList.add(new Pair<>(siteEntry, siteImport.getUsername()));
+              pairList.add(new AbstractMap.SimpleEntry<>(siteEntry, siteImport.getUsername()));
             });
 
     for (SitesRecord record : sitesRecords) {
       record.store();
     }
 
-    for (Pair<SiteEntriesRecord, String> pair : pairList) {
+    for (Map.Entry<SiteEntriesRecord, String> pair : pairList) {
       pair.getKey().store();
       Integer siteEntryId = pair.getKey().getId();
       String username = pair.getValue();
