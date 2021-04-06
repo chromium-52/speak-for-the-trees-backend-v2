@@ -1,4 +1,3 @@
 common/src/main/resources/emails/*.html linguist-detectable=false
 persist/src/main/resources/db/seed/*.json linguist-detectable=false
-persist/src/main/resources/db/seed/*.csv linguist-detectable=false
 persist/src/main/resources/mapData/*.json linguist-detectable=false

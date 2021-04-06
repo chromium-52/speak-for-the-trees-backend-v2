@@ -1,7 +1,7 @@
 package com.codeforcommunity.processor;
 
 import static org.jooq.generated.Tables.BLOCKS;
-import static org.jooq.generated.Tables.SITES;
+import static org.jooq.generated.Tables.ENTRY_USERNAMES;
 import static org.jooq.generated.Tables.TEAMS;
 import static org.jooq.generated.Tables.USERS;
 
@@ -21,9 +21,11 @@ import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import javafx.util.Pair;
 import org.jooq.DSLContext;
 import org.jooq.generated.Tables;
 import org.jooq.generated.tables.records.BlocksRecord;
+import org.jooq.generated.tables.records.EntryUsernamesRecord;
 import org.jooq.generated.tables.records.NeighborhoodsRecord;
 import org.jooq.generated.tables.records.ReservationsRecord;
 import org.jooq.generated.tables.records.SiteEntriesRecord;
@@ -135,6 +137,15 @@ public class ImportProcessorImpl implements IImportProcessor {
     }
   }
 
+  private void importSiteEntryUsername(Integer siteEntryId, String username) {
+    EntryUsernamesRecord record = db.newRecord(ENTRY_USERNAMES);
+
+    record.setEntryId(siteEntryId);
+    record.setUsername(username);
+
+    record.store();
+  }
+
   @Override
   public void importSites(JWTData userData, ImportSitesRequest importSitesRequest) {
     if (userData.getPrivilegeLevel() != PrivilegeLevel.SUPER_ADMIN) {
@@ -144,11 +155,8 @@ public class ImportProcessorImpl implements IImportProcessor {
       throw new UserDoesNotExistException(userData.getUserId());
     }
 
-    // Store user id since it will be used many times in the loop
-    Integer userId = userData.getUserId();
-
     List<SitesRecord> sitesRecords = new ArrayList<>();
-    List<SiteEntriesRecord> siteEntriesRecords = new ArrayList<>();
+    List<Pair<SiteEntriesRecord, String>> pairList = new ArrayList<>();
 
     importSitesRequest
         .getSites()
@@ -157,14 +165,10 @@ public class ImportProcessorImpl implements IImportProcessor {
               SitesRecord site = db.newRecord(Tables.SITES);
               SiteEntriesRecord siteEntry = db.newRecord(Tables.SITE_ENTRIES);
 
-              if (!db.fetchExists(
-                  db.selectFrom(BLOCKS).where(BLOCKS.ID.eq(siteImport.getBlockId())))) {
+              if (siteImport.getBlockId() != null
+                  && !db.fetchExists(
+                      db.selectFrom(BLOCKS).where(BLOCKS.ID.eq(siteImport.getBlockId())))) {
                 throw new ResourceDoesNotExistException(siteImport.getBlockId(), "block");
-              }
-
-              if (!db.fetchExists(
-                  db.selectFrom(SITES).where(SITES.ID.eq(siteImport.getSiteId())))) {
-                // throw exception
               }
 
               // Set all values for the site record
@@ -180,17 +184,67 @@ public class ImportProcessorImpl implements IImportProcessor {
               }
 
               // Set all values for the site entry record
+              siteEntry.setSiteId(siteImport.getSiteId());
+              // siteEntry.setUserId(1); userId is not set due to lack of userId's
+              siteEntry.setUpdatedAt(siteImport.getUpdatedAt());
+              siteEntry.setQa(siteImport.getQa());
+              siteEntry.setTreePresent(siteImport.getTreePresent());
+              siteEntry.setStatus(siteImport.getStatus());
+              siteEntry.setGenus(siteImport.getGenus());
+              siteEntry.setSpecies(siteImport.getSpecies());
+              siteEntry.setCommonName(siteImport.getCommonName());
+              siteEntry.setConfidence(siteImport.getConfidence());
+              siteEntry.setMultistem(siteImport.getMultistem());
+              siteEntry.setDiameter(siteImport.getDiameter());
+              siteEntry.setCircumference(siteImport.getCircumference());
+              siteEntry.setCoverage(siteImport.getCoverage());
+              siteEntry.setPruning(siteImport.getPruning());
+              siteEntry.setCondition(siteImport.getCondition());
+              siteEntry.setDiscoloring(siteImport.getDiscoloring());
+              siteEntry.setLeaning(siteImport.getLeaning());
+              siteEntry.setConstrictingGate(siteImport.getConstrictingGate());
+              siteEntry.setWounds(siteImport.getWounds());
+              siteEntry.setPooling(siteImport.getPooling());
+              siteEntry.setStakesWithWires(siteImport.getStakesWithWires());
+              siteEntry.setStakesWithoutWires(siteImport.getStakesWithoutWires());
+              siteEntry.setLight(siteImport.getLight());
+              siteEntry.setBicycle(siteImport.getBicycle());
+              siteEntry.setBagEmpty(siteImport.getBagEmpty());
+              siteEntry.setBagFilled(siteImport.getBagFilled());
+              siteEntry.setTape(siteImport.getTape());
+              siteEntry.setSuckerGrowth(siteImport.getSuckerGrowth());
+              siteEntry.setSiteType(siteImport.getSiteType());
+              siteEntry.setSidewalkWidth(siteImport.getSidewalkWidth());
+              siteEntry.setSiteWidth(siteImport.getSiteWidth());
+              siteEntry.setSiteLength(siteImport.getSiteLength());
+              siteEntry.setMaterial(siteImport.getMaterial());
+              siteEntry.setRaisedBed(siteImport.getRaisedBed());
+              siteEntry.setFence(siteImport.getFence());
+              siteEntry.setTrash(siteImport.getTrash());
+              siteEntry.setWires(siteImport.getWires());
+              siteEntry.setGrate(siteImport.getGrate());
+              siteEntry.setStump(siteImport.getStump());
+              siteEntry.setTreeNotes(siteImport.getTreeNotes());
+              siteEntry.setSiteNotes(siteImport.getSiteNotes());
+              siteEntry.setMelneaCassTrees(siteImport.getMelneaCassTrees());
+              siteEntry.setMcbNumber(siteImport.getMcbNumber());
+              siteEntry.setTreeDedicatedTo(siteImport.getTreeDedicatedTo());
 
               sitesRecords.add(site);
-              siteEntriesRecords.add(siteEntry);
+              pairList.add(new Pair<>(siteEntry, siteImport.getUsername()));
             });
 
     for (SitesRecord record : sitesRecords) {
       record.store();
     }
 
-    for (SiteEntriesRecord record : siteEntriesRecords) {
-      record.store();
+    for (Pair<SiteEntriesRecord, String> pair : pairList) {
+      pair.getKey().store();
+      Integer siteEntryId = pair.getKey().getId();
+      String username = pair.getValue();
+      if (username != null && !username.equals("")) {
+        importSiteEntryUsername(siteEntryId, pair.getValue());
+      }
     }
   }
 }

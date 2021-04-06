@@ -3,11 +3,14 @@ package com.codeforcommunity.dto.imports;
 import com.codeforcommunity.dto.ApiDto;
 import com.codeforcommunity.exceptions.HandledException;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIgnoreProperties(
+    ignoreUnknown = true) // Allows us to store data in JSON for future use but not import it
 public class SiteImport extends ApiDto {
   private Integer blockId;
   private BigDecimal lat;
@@ -21,12 +24,14 @@ public class SiteImport extends ApiDto {
 
   private Integer siteId;
   private Integer userId;
+  private String username;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
   private Timestamp updatedAt;
 
   private Boolean qa;
   private Boolean treePresent;
+  private String status;
   private String genus;
   private String species;
   private String commonName;
@@ -77,9 +82,11 @@ public class SiteImport extends ApiDto {
       Timestamp deletedAt,
       Integer siteId,
       Integer userId,
+      String username,
       Timestamp updatedAt,
       Boolean qa,
       Boolean treePresent,
+      String status,
       String genus,
       String species,
       String commonName,
@@ -128,9 +135,11 @@ public class SiteImport extends ApiDto {
     this.deletedAt = deletedAt;
     this.siteId = siteId;
     this.userId = userId;
+    this.username = username;
     this.updatedAt = updatedAt;
     this.qa = qa;
     this.treePresent = treePresent;
+    this.status = status;
     this.genus = genus;
     this.species = species;
     this.commonName = commonName;
@@ -246,6 +255,14 @@ public class SiteImport extends ApiDto {
     this.userId = userId;
   }
 
+  public String getUsername() {
+    return username;
+  }
+
+  public void setUsername(String username) {
+    this.username = username;
+  }
+
   public Timestamp getUpdatedAt() {
     return updatedAt;
   }
@@ -268,6 +285,14 @@ public class SiteImport extends ApiDto {
 
   public void setTreePresent(Boolean treePresent) {
     this.treePresent = treePresent;
+  }
+
+  public String getStatus() {
+    return status;
+  }
+
+  public void setStatus(String status) {
+    this.status = status;
   }
 
   public String getGenus() {
@@ -574,16 +599,22 @@ public class SiteImport extends ApiDto {
     this.treeDedicatedTo = treeDedicatedTo;
   }
 
+  public Boolean getMultistem() {
+    return multistem;
+  }
+
+  public void setMultistem(Boolean multistem) {
+    this.multistem = multistem;
+  }
+
   @Override
   public List<String> validateFields(String fieldPrefix) throws HandledException {
     String fieldName = fieldPrefix + "sites.";
     List<String> fields = new ArrayList<>();
 
+    // blockId and zip are null sometimes, so not checked
     if (siteId == null) {
       fields.add(fieldName + "siteId");
-    }
-    if (blockId == null) {
-      fields.add(fieldName + "blockId");
     }
     if (lat == null) {
       fields.add(fieldName + "lat");
@@ -594,9 +625,6 @@ public class SiteImport extends ApiDto {
     if (city == null) {
       fields.add(fieldName + "city");
     }
-    if (zip == null) {
-      fields.add(fieldName + "zip");
-    }
     if (address == null) {
       fields.add(fieldName + "address");
     }
@@ -605,13 +633,5 @@ public class SiteImport extends ApiDto {
     }
 
     return fields;
-  }
-
-  public Boolean getMultistem() {
-    return multistem;
-  }
-
-  public void setMultistem(Boolean multistem) {
-    this.multistem = multistem;
   }
 }
