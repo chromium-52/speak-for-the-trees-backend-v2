@@ -92,5 +92,5 @@ CREATE TABLE IF NOT EXISTS potential_sites (
 );
 
 /* [jooq ignore start] */
-ALTER SEQUENCE sites_id_seq RESTART WITH 3331215;
+ALTER SEQUENCE sites_id_seq RESTART WITH 3331216;
 /* [jooq ignore stop] */
