@@ -157,7 +157,7 @@ public class ImportProcessorImpl implements IImportProcessor {
     }
 
     List<SitesRecord> sitesRecords = new ArrayList<>();
-    List<Map.Entry<SiteEntriesRecord, String>> pairList = new ArrayList<>();
+    List<Map.Entry<SiteEntriesRecord, String>> siteEntryRecordsAndUsernames = new ArrayList<>();
 
     importSitesRequest
         .getSites()
@@ -186,7 +186,8 @@ public class ImportProcessorImpl implements IImportProcessor {
 
               // Set all values for the site entry record
               siteEntry.setSiteId(siteImport.getSiteId());
-              // siteEntry.setUserId(1); userId is not set due to lack of userId's
+              // siteEntry.setUserId(); userId not set due to missing userId's. Username is set
+              // later, stored in different table
               siteEntry.setUpdatedAt(siteImport.getUpdatedAt());
               siteEntry.setQa(siteImport.getQa());
               siteEntry.setTreePresent(siteImport.getTreePresent());
@@ -232,18 +233,19 @@ public class ImportProcessorImpl implements IImportProcessor {
               siteEntry.setTreeDedicatedTo(siteImport.getTreeDedicatedTo());
 
               sitesRecords.add(site);
-              pairList.add(new AbstractMap.SimpleEntry<>(siteEntry, siteImport.getUsername()));
+              siteEntryRecordsAndUsernames.add(
+                  new AbstractMap.SimpleEntry<>(siteEntry, siteImport.getUsername()));
             });
 
     for (SitesRecord record : sitesRecords) {
       record.store();
     }
 
-    for (Map.Entry<SiteEntriesRecord, String> pair : pairList) {
+    for (Map.Entry<SiteEntriesRecord, String> pair : siteEntryRecordsAndUsernames) {
       pair.getKey().store();
       Integer siteEntryId = pair.getKey().getId();
       String username = pair.getValue();
-      if (username != null && !username.equals("")) {
+      if (username != null && !username.isEmpty()) {
         importSiteEntryUsername(siteEntryId, pair.getValue());
       }
     }
