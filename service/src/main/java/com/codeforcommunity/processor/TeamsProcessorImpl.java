@@ -12,6 +12,7 @@ import com.codeforcommunity.dto.team.CreateTeamRequest;
 import com.codeforcommunity.dto.team.GoalResponse;
 import com.codeforcommunity.dto.team.InviteUsersRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
+import com.codeforcommunity.dto.team.TeamGoalDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
 import com.codeforcommunity.dto.team.UsersTeamDataResponse;
 import com.codeforcommunity.enums.TeamRole;
@@ -27,6 +28,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jooq.DSLContext;
+import org.jooq.Result;
 import org.jooq.generated.tables.records.GoalsRecord;
 import org.jooq.generated.tables.records.TeamsRecord;
 import org.jooq.generated.tables.records.UsersRecord;
@@ -92,7 +94,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   }
 
   @Override
-  public TeamDataResponse getTeam(JWTData userData, int teamId) {
+  public TeamGoalDataResponse getTeam(JWTData userData, int teamId) {
     TeamsRecord team = db.selectFrom(TEAMS).where(TEAMS.ID.eq(teamId)).fetchOne();
     if (team == null) {
       throw new ResourceDoesNotExistException(teamId, "Team");
@@ -111,7 +113,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
                         goalsRecord.getCompletedAt()))
             .collect(Collectors.toList());
 
-    return new TeamDataResponse(
+    return new TeamGoalDataResponse(
         team.getId(),
         team.getTeamName(),
         team.getBio(),
@@ -381,5 +383,16 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
       // permissions.
       throw new WrongTeamRoleException(teamId, TeamRole.LEADER);
     }
+  }
+
+  @Override
+  public List<TeamDataResponse> getTeams() {
+    Result<TeamsRecord> teamsRecordResult = db.selectFrom(TEAMS).where(TEAMS.DELETED_AT.isNull()).fetch();
+    return teamsRecordResult.map(teamsRecord -> new TeamDataResponse(teamsRecord.getId(),
+            teamsRecord.getTeamName(),
+            teamsRecord.getBio(),
+            teamsRecord.getFinished(),
+            teamsRecord.getCreatedAt(),
+            teamsRecord.getDeletedAt()));
   }
 }
