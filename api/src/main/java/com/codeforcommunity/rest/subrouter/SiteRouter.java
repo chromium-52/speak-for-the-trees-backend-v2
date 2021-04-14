@@ -72,5 +72,7 @@ public class SiteRouter implements IRouter {
         RestFunctions.getJsonBodyAsClass(ctx, RecordStewardshipRequest.class);
 
     processor.recordStewardship(userData, siteId, recordStewardshipRequest);
+
+    end(ctx.response(), 200);
   }
 }

@@ -8,6 +8,7 @@ import com.codeforcommunity.api.ISiteProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
+import com.codeforcommunity.exceptions.WrongFavoriteStatusException;
 import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.FavoriteSitesRecord;
 import org.jooq.generated.tables.records.StewardshipRecord;
@@ -37,7 +38,7 @@ public class SiteProcessorImpl implements ISiteProcessor {
   public void favoriteSite(JWTData userData, int siteId) {
     checkSiteExists(siteId);
     if (isAlreadyFavorite(userData.getUserId(), siteId)) {
-      // throw exception
+      throw new WrongFavoriteStatusException(true);
     }
 
     FavoriteSitesRecord record = db.newRecord(FAVORITE_SITES);
@@ -49,8 +50,8 @@ public class SiteProcessorImpl implements ISiteProcessor {
   @Override
   public void unfavoriteSite(JWTData userData, int siteId) {
     checkSiteExists(siteId);
-    if (isAlreadyFavorite(userData.getUserId(), siteId)) {
-      throw new ResourceDoesNotExistException(-1, "FavoriteSiteRecord");
+    if (!isAlreadyFavorite(userData.getUserId(), siteId)) {
+      throw new WrongFavoriteStatusException(false);
     }
 
     db.deleteFrom(FAVORITE_SITES)
