@@ -2,7 +2,7 @@ CREATE TABLE IF NOT EXISTS stewardship (
     id              SERIAL      NOT NULL PRIMARY KEY,
     user_id         INT         NOT NULL,
     site_id         INT         NOT NULL,
-    performed_on    DATE,
+    performed_on    DATE        NOT NULL,
     duration        INT,
     watered         BOOLEAN     DEFAULT FALSE,
     mulched         BOOLEAN     DEFAULT FALSE,
