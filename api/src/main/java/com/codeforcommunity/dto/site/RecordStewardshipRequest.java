@@ -4,12 +4,11 @@ import com.codeforcommunity.dto.ApiDto;
 import com.codeforcommunity.exceptions.HandledException;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class RecordStewardshipRequest extends ApiDto {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
-  private Date date;
+  private java.sql.Date date;
 
   private Integer duration;
   private Boolean watered;
@@ -18,7 +17,7 @@ public class RecordStewardshipRequest extends ApiDto {
   private Boolean weeded;
 
   public RecordStewardshipRequest(
-      Date date,
+      java.sql.Date date,
       Integer duration,
       Boolean watered,
       Boolean mulched,
@@ -34,11 +33,11 @@ public class RecordStewardshipRequest extends ApiDto {
 
   private RecordStewardshipRequest() {}
 
-  public Date getDate() {
+  public java.sql.Date getDate() {
     return date;
   }
 
-  public void setDate(Date date) {
+  public void setDate(java.sql.Date date) {
     this.date = date;
   }
 
