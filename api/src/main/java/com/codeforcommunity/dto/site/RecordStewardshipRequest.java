@@ -11,18 +11,18 @@ public class RecordStewardshipRequest extends ApiDto {
   private java.sql.Date date;
 
   private Integer duration;
-  private Boolean watered;
-  private Boolean mulched;
-  private Boolean cleaned;
-  private Boolean weeded;
+  private boolean watered;
+  private boolean mulched;
+  private boolean cleaned;
+  private boolean weeded;
 
   public RecordStewardshipRequest(
       java.sql.Date date,
       Integer duration,
-      Boolean watered,
-      Boolean mulched,
-      Boolean cleaned,
-      Boolean weeded) {
+      boolean watered,
+      boolean mulched,
+      boolean cleaned,
+      boolean weeded) {
     this.date = date;
     this.duration = duration;
     this.watered = watered;
@@ -49,35 +49,35 @@ public class RecordStewardshipRequest extends ApiDto {
     this.duration = duration;
   }
 
-  public Boolean getWatered() {
+  public boolean getWatered() {
     return watered;
   }
 
-  public void setWatered(Boolean watered) {
+  public void setWatered(boolean watered) {
     this.watered = watered;
   }
 
-  public Boolean getMulched() {
+  public boolean getMulched() {
     return mulched;
   }
 
-  public void setMulched(Boolean mulched) {
+  public void setMulched(boolean mulched) {
     this.mulched = mulched;
   }
 
-  public Boolean getCleaned() {
+  public boolean getCleaned() {
     return cleaned;
   }
 
-  public void setCleaned(Boolean cleaned) {
+  public void setCleaned(boolean cleaned) {
     this.cleaned = cleaned;
   }
 
-  public Boolean getWeeded() {
+  public boolean getWeeded() {
     return weeded;
   }
 
-  public void setWeeded(Boolean weeded) {
+  public void setWeeded(boolean weeded) {
     this.weeded = weeded;
   }
 
