@@ -89,6 +89,9 @@ public class RecordStewardshipRequest extends ApiDto {
     if (date == null) {
       fields.add(fieldName + "date");
     }
+    if (duration != null && duration < 0) {
+      fields.add(fieldName + "duration");
+    }
     if (!(watered || mulched || cleaned || weeded)) {
       fields.add(fieldName + "activities");
     }
