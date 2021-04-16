@@ -10,6 +10,8 @@ import com.codeforcommunity.logger.SLogger;
 import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jooq.*;
@@ -139,21 +141,106 @@ public class MapProcessorImpl implements IMapProcessor {
     return new NeighborhoodGeoResponse(features);
   }
 
+  private <T> List<T> mergeSorted(List<T> l1, List<T> l2, Comparator<T> comparator) {
+    if (l1.isEmpty()) {
+      return l2;
+    }
+    if (l2.isEmpty()) {
+      return l1;
+    }
+    T element1 = l1.get(0);
+    T element2 = l2.get(0);
+    List<T> newList = new ArrayList<>();
+    if (comparator.compare(element1, element2) < 0) {
+      newList.add(element1);
+      newList.addAll(mergeSorted(l1.subList(1, l1.size()), l2, comparator));
+      return newList;
+    }
+    newList.add(element2);
+    newList.addAll(mergeSorted(l1, l2.subList(1, l2.size()), comparator));
+    return newList;
+  }
+
   @Override
   public SiteGeoResponse getSiteGeoJson() {
+    List<
+            Record9<
+                Integer,
+                Boolean,
+                Double,
+                String,
+                Timestamp,
+                String,
+                String,
+                BigDecimal,
+                BigDecimal>>
+        nonNullUserRecords =
+            this.db
+                .select(
+                    SITE_ENTRIES.ID,
+                    SITE_ENTRIES.TREE_PRESENT,
+                    SITE_ENTRIES.DIAMETER,
+                    SITE_ENTRIES.SPECIES,
+                    SITE_ENTRIES.UPDATED_AT,
+                    USERS.USERNAME,
+                    SITES.ADDRESS,
+                    SITES.LAT,
+                    SITES.LNG)
+                .from(SITE_ENTRIES)
+                .leftJoin(USERS)
+                .on(SITE_ENTRIES.USER_ID.eq(USERS.ID))
+                .leftJoin(SITES)
+                .on(SITE_ENTRIES.SITE_ID.eq(SITES.ID))
+                .where(SITE_ENTRIES.USER_ID.isNotNull())
+                .orderBy(SITE_ENTRIES.ID)
+                .fetch();
+    List<
+            Record9<
+                Integer,
+                Boolean,
+                Double,
+                String,
+                Timestamp,
+                String,
+                String,
+                BigDecimal,
+                BigDecimal>>
+        nullUserRecords =
+            this.db
+                .select(
+                    SITE_ENTRIES.ID,
+                    SITE_ENTRIES.TREE_PRESENT,
+                    SITE_ENTRIES.DIAMETER,
+                    SITE_ENTRIES.SPECIES,
+                    SITE_ENTRIES.UPDATED_AT,
+                    ENTRY_USERNAMES.USERNAME,
+                    SITES.ADDRESS,
+                    SITES.LAT,
+                    SITES.LNG)
+                .from(SITE_ENTRIES)
+                .leftJoin(ENTRY_USERNAMES)
+                .on(SITE_ENTRIES.ID.eq(ENTRY_USERNAMES.ENTRY_ID))
+                .leftJoin(SITES)
+                .on(SITE_ENTRIES.SITE_ID.eq(SITES.ID))
+                .where(SITE_ENTRIES.USER_ID.isNull())
+                .orderBy(SITE_ENTRIES.ID)
+                .fetch();
+    List<
+            Record9<
+                Integer,
+                Boolean,
+                Double,
+                String,
+                Timestamp,
+                String,
+                String,
+                BigDecimal,
+                BigDecimal>>
+        allSiteEntriesRecords =
+            this.mergeSorted(
+                nonNullUserRecords, nullUserRecords, Comparator.comparingInt(Record9::value1));
     List<SiteFeature> features =
-        this.db
-            .select(
-                SITES.ID,
-                SITE_ENTRIES.TREE_PRESENT,
-                SITE_ENTRIES.DIAMETER,
-                SITE_ENTRIES.SPECIES,
-                SITE_ENTRIES.UPDATED_AT,
-                SITES.ADDRESS,
-                SITE_ENTRIES.UPDATED_BY,
-                SITES.LAT,
-                SITES.LNG)
-            .from(SITES).join(SITE_ENTRIES).onKey().stream()
+        allSiteEntriesRecords.stream()
             .map(this::siteFeatureFromRecord)
             .collect(Collectors.toList());
     return new SiteGeoResponse(features);

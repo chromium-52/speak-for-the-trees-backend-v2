@@ -89,7 +89,6 @@ public class ImportRouter implements IRouter {
     JWTData userData = ctx.get("jwt_data");
     ImportSitesRequest importSitesRequest =
         RestFunctions.getJsonBodyAsClass(ctx, ImportSitesRequest.class);
-
     processor.importSites(userData, importSitesRequest);
 
     end(ctx.response(), 200);
