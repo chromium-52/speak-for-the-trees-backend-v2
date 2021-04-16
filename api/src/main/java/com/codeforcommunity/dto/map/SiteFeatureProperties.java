@@ -1,13 +1,12 @@
 package com.codeforcommunity.dto.map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 public class SiteFeatureProperties {
   Integer id;
   Boolean treePresent;
-  BigDecimal diameter;
+  Double diameter;
   String species;
   Timestamp updatedAt;
   String updatedBy; // username
@@ -16,7 +15,7 @@ public class SiteFeatureProperties {
   public SiteFeatureProperties(
       Integer id,
       Boolean treePresent,
-      BigDecimal diameter,
+      Double diameter,
       String species,
       Timestamp updatedAt,
       String updatedBy,
@@ -39,7 +38,7 @@ public class SiteFeatureProperties {
     return treePresent;
   }
 
-  public BigDecimal getDiameter() {
+  public Double getDiameter() {
     return diameter;
   }
 

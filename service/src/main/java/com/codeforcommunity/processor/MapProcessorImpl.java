@@ -8,7 +8,6 @@ import com.codeforcommunity.dto.map.*;
 import com.codeforcommunity.enums.ReservationAction;
 import com.codeforcommunity.logger.SLogger;
 import io.vertx.core.json.JsonObject;
-
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.util.List;
@@ -16,7 +15,6 @@ import java.util.stream.Collectors;
 import org.jooq.*;
 import org.jooq.generated.tables.records.BlocksRecord;
 import org.jooq.generated.tables.records.NeighborhoodsRecord;
-import org.jooq.generated.tables.records.SitesRecord;
 
 public class MapProcessorImpl implements IMapProcessor {
 
@@ -107,16 +105,19 @@ public class MapProcessorImpl implements IMapProcessor {
     }
   }
 
-  private SiteFeature siteFeatureFromRecord(Record8<Integer, Boolean, BigDecimal, String, Timestamp, String, BigDecimal, BigDecimal> sitesRecord) {
-    SiteFeatureProperties properties = new SiteFeatureProperties(sitesRecord.value1(),
+  private SiteFeature siteFeatureFromRecord(
+      Record9<Integer, Boolean, Double, String, Timestamp, String, String, BigDecimal, BigDecimal>
+          sitesRecord) {
+    SiteFeatureProperties properties =
+        new SiteFeatureProperties(
+            sitesRecord.value1(),
             sitesRecord.value2(),
             sitesRecord.value3(),
             sitesRecord.value4(),
             sitesRecord.value5(),
-            "",
-            sitesRecord.value6()
-    );
-    GeometryPoint geometry = new GeometryPoint(sitesRecord.value7(), sitesRecord.value8());
+            sitesRecord.value6(),
+            sitesRecord.value7());
+    GeometryPoint geometry = new GeometryPoint(sitesRecord.value8(), sitesRecord.value9());
     return new SiteFeature(properties, geometry);
   }
 
@@ -141,13 +142,20 @@ public class MapProcessorImpl implements IMapProcessor {
   @Override
   public SiteGeoResponse getSiteGeoJson() {
     List<SiteFeature> features =
-            this.db.select(SITES.ID, SITE_ENTRIES.TREE_PRESENT, SITE_ENTRIES.DIAMETER,
-                    SITE_ENTRIES.SPECIES, SITE_ENTRIES.UPDATED_AT, SITES.ADDRESS, SITES.LAT, SITES.LNG)
-                    .from(SITES)
-                    .join(SITE_ENTRIES).onKey()
-                    .stream()
-                    .map(this::siteFeatureFromRecord)
-                    .collect(Collectors.toList());
+        this.db
+            .select(
+                SITES.ID,
+                SITE_ENTRIES.TREE_PRESENT,
+                SITE_ENTRIES.DIAMETER,
+                SITE_ENTRIES.SPECIES,
+                SITE_ENTRIES.UPDATED_AT,
+                SITES.ADDRESS,
+                SITE_ENTRIES.UPDATED_BY,
+                SITES.LAT,
+                SITES.LNG)
+            .from(SITES).join(SITE_ENTRIES).onKey().stream()
+            .map(this::siteFeatureFromRecord)
+            .collect(Collectors.toList());
     return new SiteGeoResponse(features);
   }
 }
