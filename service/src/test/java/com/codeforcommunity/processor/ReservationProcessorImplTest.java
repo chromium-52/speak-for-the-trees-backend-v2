@@ -17,8 +17,14 @@ import com.codeforcommunity.exceptions.UserNotOnTeamException;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
+
+import org.jooq.DSLContext;
+import org.jooq.Record;
 import org.jooq.generated.Tables;
 import org.jooq.generated.tables.records.ReservationsRecord;
+import org.jooq.generated.tables.records.UsersRecord;
+import org.jooq.impl.DSL;
+import org.jooq.meta.derby.sys.Sys;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -50,83 +56,66 @@ public class ReservationProcessorImplTest {
     assertEquals(1, mockDb.timesCalled(OperationType.EXISTS));
   }
 
-  // @Test
-  // public void testBasicChecksNonExistingUser() {
-  //   int blockId = 1;
-  //   int userId = 2;
-  //   int teamId = 3;
+   @Test
+   public void testBasicChecksNonExistingTeam() {
+     int blockId = 1;
+     int userId = 2;
+     int teamId = 3;
 
-  //   mockDb.addExistsReturn(true);
-  //   mockDb.addExistsReturn(false);
+     mockDb.addExistsReturn(true);
+     mockDb.addExistsReturn(false);
 
-  //   try {
-  //     this.proc.basicChecks(blockId, userId, teamId);
-  //     fail("Method should've thrown a UserDoesNotExist Exception");
-  //   } catch (UserDoesNotExistException e) {
-  //     assertEquals("id = " + userId, e.getIdentifierMessage());
-  //   }
-  //   assertEquals(2, mockDb.timesCalled(OperationType.EXISTS));
-  // }
+     try {
+       this.proc.basicChecks(blockId, userId, teamId);
+       fail("Method should've thrown a ResourceDoesNotExist Exception");
+     } catch (ResourceDoesNotExistException e) {
+       assertEquals(teamId, e.getResourceId());
+     }
+     assertEquals(2, mockDb.timesCalled(OperationType.EXISTS));
+   }
 
-  // @Test
-  // public void testBasicChecksNonExistingTeam() {
-  //   int blockId = 1;
-  //   int userId = 2;
-  //   int teamId = 3;
+   @Test
+   public void testBasicChecksNonExistingUser() {
+     int blockId = 1;
+     int userId = 2;
+     int teamId = 3;
 
-  //   mockDb.addExistsReturn(true);
-  //   mockDb.addExistsReturn(true);
-  //   mockDb.addExistsReturn(false);
+     mockDb.addExistsReturn(true);
+     mockDb.addExistsReturn(true);
+     mockDb.addExistsReturn(true);
+     mockDb.addExistsReturn(false);
 
-  //   try {
-  //     this.proc.basicChecks(blockId, userId, teamId);
-  //     fail("Method should've thrown a ResourceDoesNotExist Exception");
-  //   } catch (ResourceDoesNotExistException e) {
-  //     assertEquals(teamId, e.getResourceId());
-  //     assertEquals("team", e.getResourceType());
-  //   }
-  //   assertEquals(3, mockDb.timesCalled(OperationType.EXISTS));
-  // }
+     try {
+       this.proc.basicChecks(blockId, userId, teamId);
+       fail("Method should've thrown a UserDoesNotExist Exception");
+     } catch (UserDoesNotExistException e) {
+       assertEquals("id = " + userId, e.getIdentifierMessage());
+     }
+     assertEquals(3, mockDb.timesCalled(OperationType.EXISTS));
+   }
 
-  // @Test
-  // public void testBasicChecksNotOnTeam() {
-  //   int blockId = 1;
-  //   int userId = 2;
-  //   int teamId = 3;
+   @Test
+   public void testBasicChecksSuccess() {
+     int blockId = 1;
+     int userId = 2;
+     int teamId = 3;
+     UsersRecord usersRecord = new UsersRecord();
 
-  //   mockDb.addExistsReturn(true);
-  //   mockDb.addExistsReturn(true);
-  //   mockDb.addExistsReturn(true);
-  //   mockDb.addExistsReturn(false);
 
-  //   try {
-  //     this.proc.basicChecks(blockId, userId, teamId);
-  //     fail("Method should've thrown a UserNotOnTeam Exception");
-  //   } catch (UserNotOnTeamException e) {
-  //     assertEquals(userId, e.getUserId());
-  //     assertEquals(teamId, e.getTeamId());
-  //   }
-  //   assertEquals(4, mockDb.timesCalled(OperationType.EXISTS));
-  // }
+     mockDb.addExistsReturn(true);
+     mockDb.addExistsReturn(true);
+     mockDb.addExistsReturn(true);
+     mockDb.addExistsReturn(true);
+     mockDb.addReturn(OperationType.SELECT, usersRecord);
 
-  // @Test
-  // public void testBasicChecksSuccess() {
-  //   int blockId = 1;
-  //   int userId = 2;
-  //   int teamId = 3;
-
-  //   mockDb.addExistsReturn(true);
-  //   mockDb.addExistsReturn(true);
-  //   mockDb.addExistsReturn(true);
-  //   mockDb.addExistsReturn(true);
-
-  //   try {
-  //     this.proc.basicChecks(blockId, userId, teamId);
-  //   } catch (UserNotOnTeamException | ResourceDoesNotExistException | UserDoesNotExistException e) {
-  //     fail("Method should've returned without exception");
-  //   }
-  //   assertEquals(4, mockDb.timesCalled(OperationType.EXISTS));
-  // }
+     try {
+       this.proc.basicChecks(blockId, userId, teamId);
+     } catch (UserNotOnTeamException | ResourceDoesNotExistException | UserDoesNotExistException e) {
+       System.out.println(e.getMessage());
+       fail("Method should've returned without exception");
+     }
+     assertEquals(3, mockDb.timesCalled(OperationType.EXISTS));
+   }
 
   @Test
   public void testBasicChecksSuccessNullCase() {
