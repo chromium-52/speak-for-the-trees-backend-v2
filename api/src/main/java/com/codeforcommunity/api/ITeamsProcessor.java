@@ -6,7 +6,7 @@ import com.codeforcommunity.dto.team.CreateTeamRequest;
 import com.codeforcommunity.dto.team.InviteUsersRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
-import com.codeforcommunity.dto.team.UsersTeamDataResponse;
+import com.codeforcommunity.dto.team.UsersResponse;
 import java.util.List;
 
 public interface ITeamsProcessor {
@@ -22,7 +22,7 @@ public interface ITeamsProcessor {
 
   void inviteUser(JWTData userData, InviteUsersRequest inviteUserRequest, int teamId);
 
-  List<UsersTeamDataResponse> getApplicants(JWTData userData, int teamId);
+  UsersResponse getApplicants(int teamId);
 
   void applyToTeam(JWTData userData, int teamId);
 
@@ -33,6 +33,8 @@ public interface ITeamsProcessor {
   void kickUser(JWTData userData, int teamId, int memberId);
 
   void leaveTeam(JWTData userData, int teamId);
+
+  UsersResponse getMembers(int teamId);
 
   void transferOwnership(
       JWTData userData, TransferOwnershipRequest transferOwnershipRequest, int teamId);

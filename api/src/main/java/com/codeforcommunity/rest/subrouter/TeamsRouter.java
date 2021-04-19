@@ -9,7 +9,7 @@ import com.codeforcommunity.dto.team.CreateTeamRequest;
 import com.codeforcommunity.dto.team.InviteUsersRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
-import com.codeforcommunity.dto.team.UsersTeamDataResponse;
+import com.codeforcommunity.dto.team.UsersResponse;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
@@ -43,6 +43,7 @@ public class TeamsRouter implements IRouter {
     registerKickUserRoute(router);
     registerLeaveTeamRoute(router);
     registerTransferTeamOwnership(router);
+    registerGetMembersRoute(router);
 
     return router;
   }
@@ -122,9 +123,8 @@ public class TeamsRouter implements IRouter {
   }
 
   private void handleGetApplicantsRoute(RoutingContext ctx) {
-    JWTData userData = ctx.get("jwt_data");
     int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
-    List<UsersTeamDataResponse> response = processor.getApplicants(userData, teamId);
+    UsersResponse response = processor.getApplicants(teamId);
     end(ctx.response(), 200, JsonObject.mapFrom(response).toString());
   }
 
@@ -176,6 +176,18 @@ public class TeamsRouter implements IRouter {
     int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
     processor.disbandTeam(userData, teamId);
     end(ctx.response(), 200);
+  }
+
+  private void registerGetMembersRoute(Router router) {
+    Route getMembersRoute = router.get("/:team_id/members");
+    getMembersRoute.handler(this::handleGetMembersRoute);
+  }
+
+  private void handleGetMembersRoute(RoutingContext ctx) {
+    int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
+    UsersResponse members = processor.getMembers(teamId);
+    end(ctx.response(), 200, JsonObject.mapFrom(members).toString());
+
   }
 
   private void registerKickUserRoute(Router router) {
