@@ -6,9 +6,16 @@ import static org.jooq.generated.Tables.STEWARDSHIP;
 
 import com.codeforcommunity.api.ISiteProcessor;
 import com.codeforcommunity.auth.JWTData;
+import com.codeforcommunity.dto.site.FavoriteSitesResponse;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
+import com.codeforcommunity.dto.site.StewardshipActivitiesResponse;
+import com.codeforcommunity.dto.site.StewardshipActivity;
+import com.codeforcommunity.enums.PrivilegeLevel;
+import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.WrongFavoriteStatusException;
+import java.util.ArrayList;
+import java.util.List;
 import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.FavoriteSitesRecord;
 import org.jooq.generated.tables.records.StewardshipRecord;
@@ -60,6 +67,19 @@ public class SiteProcessorImpl implements ISiteProcessor {
   }
 
   @Override
+  public FavoriteSitesResponse getFavoriteSites(JWTData userData) {
+    List<FavoriteSitesRecord> favoriteSites =
+        db.selectFrom(FAVORITE_SITES)
+            .where(FAVORITE_SITES.USER_ID.eq(userData.getUserId()))
+            .fetch();
+    List<Integer> favorites = new ArrayList<>();
+
+    favoriteSites.forEach(site -> favorites.add(site.getSiteId()));
+
+    return new FavoriteSitesResponse(favorites);
+  }
+
+  @Override
   public void recordStewardship(
       JWTData userData, int siteId, RecordStewardshipRequest recordStewardshipRequest) {
     checkSiteExists(siteId);
@@ -73,5 +93,46 @@ public class SiteProcessorImpl implements ISiteProcessor {
     record.setWeeded(recordStewardshipRequest.getWeeded());
 
     record.store();
+  }
+
+  @Override
+  public void deleteStewardship(JWTData userData, int activityId) {
+    StewardshipRecord activity =
+        db.selectFrom(STEWARDSHIP).where(STEWARDSHIP.ID.eq(activityId)).fetchOne();
+
+    if (activity == null) {
+      throw new ResourceDoesNotExistException(activityId, "Stewardship Activity");
+    }
+    if (!(activity.getUserId().equals(userData.getUserId())
+        || userData.getPrivilegeLevel().equals(PrivilegeLevel.SUPER_ADMIN)
+        || userData.getPrivilegeLevel().equals(PrivilegeLevel.ADMIN))) {
+      throw new AuthException(
+          "User needs to be an admin or the activity's author to delete the record.");
+    }
+
+    db.deleteFrom(STEWARDSHIP).where(STEWARDSHIP.ID.eq(activityId));
+  }
+
+  @Override
+  public StewardshipActivitiesResponse getStewardshipActivities(int siteId) {
+    List<StewardshipRecord> records =
+        db.selectFrom(STEWARDSHIP).where(STEWARDSHIP.SITE_ID.eq(siteId)).fetch();
+    List<StewardshipActivity> activities = new ArrayList<>();
+
+    records.forEach(
+        record -> {
+          StewardshipActivity stewardshipActivity =
+              new StewardshipActivity(
+                  record.getId(),
+                  record.getUserId(),
+                  record.getPerformedOn(),
+                  record.getWatered(),
+                  record.getMulched(),
+                  record.getCleaned(),
+                  record.getWeeded());
+          activities.add(stewardshipActivity);
+        });
+
+    return new StewardshipActivitiesResponse(activities);
   }
 }
