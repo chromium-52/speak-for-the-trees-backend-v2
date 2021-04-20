@@ -8,15 +8,22 @@ import static org.jooq.generated.Tables.USERS_TEAMS;
 
 import com.codeforcommunity.api.IReservationProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.reservation.*;
+import com.codeforcommunity.dto.reservation.BlockIDRequest;
+import com.codeforcommunity.dto.reservation.CompleteReservationRequest;
+import com.codeforcommunity.dto.reservation.MakeReservationRequest;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.enums.ReservationAction;
 import com.codeforcommunity.enums.TeamRole;
-import com.codeforcommunity.exceptions.*;
 import java.sql.Timestamp;
 import java.util.Optional;
+
+import com.codeforcommunity.exceptions.AuthException;
+import com.codeforcommunity.exceptions.IncorrectBlockStatusException;
+import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
+import com.codeforcommunity.exceptions.UserDoesNotExistException;
+import com.codeforcommunity.exceptions.UserNotOnTeamException;
 import org.jooq.DSLContext;
-import org.jooq.generated.tables.records.*;
+import org.jooq.generated.tables.records.ReservationsRecord;
 
 public class ReservationProcessorImpl implements IReservationProcessor {
 

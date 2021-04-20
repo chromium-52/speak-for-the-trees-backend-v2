@@ -1,10 +1,25 @@
 package com.codeforcommunity.processor;
 
-import static org.jooq.generated.Tables.*;
+import static org.jooq.generated.tables.Blocks.BLOCKS;
+import static org.jooq.generated.tables.EntryUsernames.ENTRY_USERNAMES;
+import static org.jooq.generated.tables.Neighborhoods.NEIGHBORHOODS;
+import static org.jooq.generated.tables.Reservations.RESERVATIONS;
+import static org.jooq.generated.tables.SiteEntries.SITE_ENTRIES;
+import static org.jooq.generated.tables.Sites.SITES;
+import static org.jooq.generated.tables.Users.USERS;
 import static org.jooq.impl.DSL.count;
 
 import com.codeforcommunity.api.IMapProcessor;
-import com.codeforcommunity.dto.map.*;
+import com.codeforcommunity.dto.map.BlockFeature;
+import com.codeforcommunity.dto.map.BlockFeatureProperties;
+import com.codeforcommunity.dto.map.BlockGeoResponse;
+import com.codeforcommunity.dto.map.GeometryPoint;
+import com.codeforcommunity.dto.map.NeighborhoodFeature;
+import com.codeforcommunity.dto.map.NeighborhoodFeatureProperties;
+import com.codeforcommunity.dto.map.NeighborhoodGeoResponse;
+import com.codeforcommunity.dto.map.SiteFeature;
+import com.codeforcommunity.dto.map.SiteFeatureProperties;
+import com.codeforcommunity.dto.map.SiteGeoResponse;
 import com.codeforcommunity.enums.ReservationAction;
 import com.codeforcommunity.logger.SLogger;
 import io.vertx.core.json.JsonObject;
@@ -14,7 +29,11 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.jooq.*;
+
+import org.jooq.DSLContext;
+import org.jooq.Record2;
+import org.jooq.Record9;
+import org.jooq.Select;
 import org.jooq.generated.tables.records.BlocksRecord;
 import org.jooq.generated.tables.records.NeighborhoodsRecord;
 

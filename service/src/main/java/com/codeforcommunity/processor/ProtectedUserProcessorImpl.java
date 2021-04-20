@@ -19,7 +19,12 @@ import com.codeforcommunity.dto.user.UserDataResponse;
 import com.codeforcommunity.dto.user.UserTeamsResponse;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.enums.TeamRole;
-import com.codeforcommunity.exceptions.*;
+import com.codeforcommunity.exceptions.AuthException;
+import com.codeforcommunity.exceptions.EmailAlreadyInUseException;
+import com.codeforcommunity.exceptions.UserDoesNotExistException;
+import com.codeforcommunity.exceptions.WrongPasswordException;
+import com.codeforcommunity.exceptions.UsernameAlreadyInUseException;
+import com.codeforcommunity.exceptions.SamePrivilegeLevelException;
 import com.codeforcommunity.requester.Emailer;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -110,9 +115,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
     List<Team> result =
         teams.stream()
             .map(
-                team -> {
-                  return new Team(team.value2(), team.value1());
-                })
+                team -> new Team(team.value2(), team.value1()))
             .collect(Collectors.toList());
 
     return new UserTeamsResponse(result);

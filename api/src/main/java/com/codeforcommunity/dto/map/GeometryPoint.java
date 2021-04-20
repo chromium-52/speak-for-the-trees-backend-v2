@@ -20,4 +20,12 @@ public class GeometryPoint {
   public List<BigDecimal> getCoordinates() {
     return coordinates;
   }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public void setCoordinates(List<BigDecimal> coordinates) {
+    this.coordinates = coordinates;
+  }
 }
