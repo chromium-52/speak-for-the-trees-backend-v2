@@ -14,14 +14,13 @@ import com.codeforcommunity.dto.reservation.MakeReservationRequest;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.enums.ReservationAction;
 import com.codeforcommunity.enums.TeamRole;
-import java.sql.Timestamp;
-import java.util.Optional;
-
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.IncorrectBlockStatusException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.UserNotOnTeamException;
+import java.sql.Timestamp;
+import java.util.Optional;
 import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.ReservationsRecord;
 
