@@ -8,6 +8,7 @@ import static org.jooq.generated.tables.SiteEntries.SITE_ENTRIES;
 import static org.jooq.generated.tables.Sites.SITES;
 import static org.jooq.generated.tables.Users.USERS;
 import static org.jooq.impl.DSL.count;
+import static org.jooq.impl.DSL.max;
 
 import com.codeforcommunity.api.IMapProcessor;
 import com.codeforcommunity.dto.map.BlockFeature;
@@ -195,7 +196,7 @@ public class MapProcessorImpl implements IMapProcessor {
         nonNullUserRecords =
             this.db
                 .select(
-                    SITE_ENTRIES.ID,
+                    SITES.ID,
                     SITE_ENTRIES.TREE_PRESENT,
                     SITE_ENTRIES.DIAMETER,
                     SITE_ENTRIES.SPECIES,
@@ -204,13 +205,19 @@ public class MapProcessorImpl implements IMapProcessor {
                     SITES.ADDRESS,
                     SITES.LAT,
                     SITES.LNG)
-                .from(SITE_ENTRIES)
-                .leftJoin(USERS)
+                .from(SITES)
+                .innerJoin(SITE_ENTRIES)
+                .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
+                .innerJoin(USERS)
                 .on(SITE_ENTRIES.USER_ID.eq(USERS.ID))
-                .leftJoin(SITES)
-                .on(SITE_ENTRIES.SITE_ID.eq(SITES.ID))
-                .where(SITE_ENTRIES.USER_ID.isNotNull())
-                .orderBy(SITE_ENTRIES.ID)
+                .where(
+                    SITE_ENTRIES.UPDATED_AT.in(
+                        this.db
+                            .select(max(SITE_ENTRIES.UPDATED_AT))
+                            .from(SITE_ENTRIES)
+                            .groupBy(SITE_ENTRIES.SITE_ID)
+                            .fetch()))
+                .orderBy(SITES.ID)
                 .fetch();
     List<
             Record9<
@@ -226,7 +233,7 @@ public class MapProcessorImpl implements IMapProcessor {
         nullUserRecords =
             this.db
                 .select(
-                    SITE_ENTRIES.ID,
+                    SITES.ID,
                     SITE_ENTRIES.TREE_PRESENT,
                     SITE_ENTRIES.DIAMETER,
                     SITE_ENTRIES.SPECIES,
@@ -235,13 +242,22 @@ public class MapProcessorImpl implements IMapProcessor {
                     SITES.ADDRESS,
                     SITES.LAT,
                     SITES.LNG)
-                .from(SITE_ENTRIES)
-                .leftJoin(ENTRY_USERNAMES)
+                .from(SITES)
+                .innerJoin(SITE_ENTRIES)
+                .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
+                .innerJoin(ENTRY_USERNAMES)
                 .on(SITE_ENTRIES.ID.eq(ENTRY_USERNAMES.ENTRY_ID))
-                .leftJoin(SITES)
-                .on(SITE_ENTRIES.SITE_ID.eq(SITES.ID))
-                .where(SITE_ENTRIES.USER_ID.isNull())
-                .orderBy(SITE_ENTRIES.ID)
+                .where(
+                    SITE_ENTRIES
+                        .UPDATED_AT
+                        .in(
+                            this.db
+                                .select(max(SITE_ENTRIES.UPDATED_AT))
+                                .from(SITE_ENTRIES)
+                                .groupBy(SITE_ENTRIES.SITE_ID)
+                                .fetch())
+                        .and(SITE_ENTRIES.USER_ID.isNull()))
+                .orderBy(SITES.ID)
                 .fetch();
     List<
             Record9<
