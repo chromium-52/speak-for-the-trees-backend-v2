@@ -68,15 +68,12 @@ public class SiteProcessorImpl implements ISiteProcessor {
 
   @Override
   public FavoriteSitesResponse getFavoriteSites(JWTData userData) {
-    List<FavoriteSitesRecord> favoriteSites =
+    List<Integer> favoriteSites =
         db.selectFrom(FAVORITE_SITES)
             .where(FAVORITE_SITES.USER_ID.eq(userData.getUserId()))
-            .fetch();
-    List<Integer> favorites = new ArrayList<>();
+            .fetch(FAVORITE_SITES.SITE_ID);
 
-    favoriteSites.forEach(site -> favorites.add(site.getSiteId()));
-
-    return new FavoriteSitesResponse(favorites);
+    return new FavoriteSitesResponse(favoriteSites);
   }
 
   @Override
