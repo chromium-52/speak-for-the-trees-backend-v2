@@ -34,10 +34,10 @@ Following these steps, all that is left is to import data into the database. Thi
   }
   ```
   - Copy the "accessToken" returned by that call and add it as the _value_ of a header called 'X-Access-Token' for all seeding API calls
-- Call `POST api/v1/protected/import/neighborhoods` with `persist/src/main/resources/db/seed/neighborhoods.json` as the body
-- Call `POST api/v1/protected/import/blocks` with `persist/src/main/resources/db/seed/blocks.json` as the body. At this point your database has been populated with neighborhood and block data. The following steps are only necessary if you need to test something related to reservations.
+- Call `POST api/v1/protected/import/neighborhoods` with the contents of `persist/src/main/resources/db/seed/neighborhoods.json` as the body
+- Call `POST api/v1/protected/import/blocks` with the contents of `persist/src/main/resources/db/seed/blocks.json` as the body. At this point your database has been populated with neighborhood and block data. The following steps are only necessary if you need to test something related to reservations.
 - Request a SQL script that imports users in the SFTT Slack channel. This is not public due to the sensitivity of the information.
-- Call `POST api/v1/protected/import/reservations` with `persist/src/main/resources/db/seed/reservations.json` as the body. 
+- Call `POST api/v1/protected/import/reservations` with the contents of `persist/src/main/resources/db/seed/reservations.json` as the body. 
 
 At this point your database is fully set up and contains real data for blocks, neighborhoods, users and reservations. 
 
