@@ -1,6 +1,6 @@
 package com.codeforcommunity.processor;
 
-import static org.jooq.generated.Tables.FAVORITE_SITES;
+import static org.jooq.generated.Tables.ADOPTED_SITES;
 import static org.jooq.generated.Tables.SITES;
 import static org.jooq.generated.Tables.STEWARDSHIP;
 
@@ -17,7 +17,7 @@ import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import org.jooq.DSLContext;
-import org.jooq.generated.tables.records.FavoriteSitesRecord;
+import org.jooq.generated.tables.records.AdoptedSitesRecord;
 import org.jooq.generated.tables.records.StewardshipRecord;
 
 public class SiteProcessorImpl implements ISiteProcessor {
@@ -36,9 +36,9 @@ public class SiteProcessorImpl implements ISiteProcessor {
 
   private Boolean isAlreadyAdopted(int userId, int siteId) {
     return db.fetchExists(
-        db.selectFrom(FAVORITE_SITES)
-            .where(FAVORITE_SITES.USER_ID.eq(userId))
-            .and(FAVORITE_SITES.SITE_ID.eq(siteId)));
+        db.selectFrom(ADOPTED_SITES)
+            .where(ADOPTED_SITES.USER_ID.eq(userId))
+            .and(ADOPTED_SITES.SITE_ID.eq(siteId)));
   }
 
   @Override
@@ -48,7 +48,7 @@ public class SiteProcessorImpl implements ISiteProcessor {
       throw new WrongAdoptionStatusException(true);
     }
 
-    FavoriteSitesRecord record = db.newRecord(FAVORITE_SITES);
+    AdoptedSitesRecord record = db.newRecord(ADOPTED_SITES);
     record.setUserId(userData.getUserId());
     record.setSiteId(siteId);
     record.store();
@@ -61,17 +61,17 @@ public class SiteProcessorImpl implements ISiteProcessor {
       throw new WrongAdoptionStatusException(false);
     }
 
-    db.deleteFrom(FAVORITE_SITES)
-        .where(FAVORITE_SITES.USER_ID.eq(userData.getUserId()))
-        .and(FAVORITE_SITES.SITE_ID.eq(siteId));
+    db.deleteFrom(ADOPTED_SITES)
+        .where(ADOPTED_SITES.USER_ID.eq(userData.getUserId()))
+        .and(ADOPTED_SITES.SITE_ID.eq(siteId));
   }
 
   @Override
   public AdoptedSitesResponse getAdoptedSites(JWTData userData) {
     List<Integer> favoriteSites =
-        db.selectFrom(FAVORITE_SITES)
-            .where(FAVORITE_SITES.USER_ID.eq(userData.getUserId()))
-            .fetch(FAVORITE_SITES.SITE_ID);
+        db.selectFrom(ADOPTED_SITES)
+            .where(ADOPTED_SITES.USER_ID.eq(userData.getUserId()))
+            .fetch(ADOPTED_SITES.SITE_ID);
 
     return new AdoptedSitesResponse(favoriteSites);
   }
