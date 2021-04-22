@@ -18,7 +18,7 @@ import com.codeforcommunity.exceptions.UsedSecretKeyException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.UserNotOnTeamException;
 import com.codeforcommunity.exceptions.UsernameAlreadyInUseException;
-import com.codeforcommunity.exceptions.WrongFavoriteStatusException;
+import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import com.codeforcommunity.exceptions.WrongTeamRoleException;
 import com.codeforcommunity.logger.SLogger;
 import io.vertx.ext.web.RoutingContext;
@@ -211,14 +211,14 @@ public class FailureHandler {
     end(ctx, message, 400);
   }
 
-  public void handleWrongFavoriteStatusException(
-      RoutingContext ctx, WrongFavoriteStatusException e) {
+  public void handleWrongAdoptionStatusException(
+      RoutingContext ctx, WrongAdoptionStatusException e) {
     String message;
 
-    if (e.getAlreadyFavorite()) {
-      message = "Site is already marked as a favorite";
+    if (e.getAlreadyAdopted()) {
+      message = "Site is already marked as adopted";
     } else {
-      message = "Site is not marked as a favorite";
+      message = "Site is not marked as adopted";
     }
 
     end(ctx, message, 400);

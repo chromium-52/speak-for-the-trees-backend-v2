@@ -4,7 +4,7 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.ISiteProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.site.FavoriteSitesResponse;
+import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.StewardshipActivitiesResponse;
 import com.codeforcommunity.rest.IRouter;
@@ -27,9 +27,9 @@ public class SiteRouter implements IRouter {
   public Router initializeRouter(Vertx vertx) {
     Router router = Router.router(vertx);
 
-    registerFavoriteSite(router);
-    registerUnfavoriteSite(router);
-    registerGetFavoriteSitesRoute(router);
+    registerAdoptSite(router);
+    registerUnadoptSite(router);
+    registerGetAdoptedSitesRoute(router);
     registerRecordStewardship(router);
     registerDeleteStewardship(router);
     registerGetStewardshipActivites(router);
@@ -37,45 +37,45 @@ public class SiteRouter implements IRouter {
     return router;
   }
 
-  private void registerFavoriteSite(Router router) {
-    Route favoriteSiteRoute = router.post("/:site_id/favorite");
-    favoriteSiteRoute.handler(this::handleFavoriteSiteRoute);
+  private void registerAdoptSite(Router router) {
+    Route adoptSiteRoute = router.post("/:site_id/adopt");
+    adoptSiteRoute.handler(this::handleAdoptSiteRoute);
   }
 
-  private void handleFavoriteSiteRoute(RoutingContext ctx) {
+  private void handleAdoptSiteRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
     int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
 
-    processor.favoriteSite(userData, siteId);
+    processor.adoptSite(userData, siteId);
 
     end(ctx.response(), 200);
   }
 
-  private void registerUnfavoriteSite(Router router) {
-    Route unfavoriteSiteRoute = router.post("/:site_id/unfavorite");
-    unfavoriteSiteRoute.handler(this::handleUnfavoriteSiteRoute);
+  private void registerUnadoptSite(Router router) {
+    Route unadoptSiteRoute = router.post("/:site_id/unadopt");
+    unadoptSiteRoute.handler(this::handleUnadoptSiteRoute);
   }
 
-  private void handleUnfavoriteSiteRoute(RoutingContext ctx) {
+  private void handleUnadoptSiteRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
     int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
 
-    processor.unfavoriteSite(userData, siteId);
+    processor.unadoptSite(userData, siteId);
 
     end(ctx.response(), 200);
   }
 
-  private void registerGetFavoriteSitesRoute(Router router) {
-    Route getFavoriteSitesRoute = router.get("/favorites");
-    getFavoriteSitesRoute.handler(this::handleGetFavoriteSitesRoute);
+  private void registerGetAdoptedSitesRoute(Router router) {
+    Route getAdoptedSitesRoute = router.get("/adopted_sites");
+    getAdoptedSitesRoute.handler(this::handleGetAdoptedSitesRoute);
   }
 
-  private void handleGetFavoriteSitesRoute(RoutingContext ctx) {
+  private void handleGetAdoptedSitesRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
 
-    FavoriteSitesResponse favoriteSitesResponse = processor.getFavoriteSites(userData);
+    AdoptedSitesResponse adoptedSitesResponse = processor.getAdoptedSites(userData);
 
-    end(ctx.response(), 200, JsonObject.mapFrom(favoriteSitesResponse).toString());
+    end(ctx.response(), 200, JsonObject.mapFrom(adoptedSitesResponse).toString());
   }
 
   private void registerRecordStewardship(Router router) {
