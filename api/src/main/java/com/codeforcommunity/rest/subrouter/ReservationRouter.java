@@ -4,7 +4,9 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.IReservationProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.reservation.*;
+import com.codeforcommunity.dto.reservation.BlockIDRequest;
+import com.codeforcommunity.dto.reservation.CompleteReservationRequest;
+import com.codeforcommunity.dto.reservation.MakeReservationRequest;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;

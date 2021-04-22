@@ -1,7 +1,9 @@
 package com.codeforcommunity.api;
 
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.reservation.*;
+import com.codeforcommunity.dto.reservation.BlockIDRequest;
+import com.codeforcommunity.dto.reservation.CompleteReservationRequest;
+import com.codeforcommunity.dto.reservation.MakeReservationRequest;
 
 public interface IReservationProcessor {
 
