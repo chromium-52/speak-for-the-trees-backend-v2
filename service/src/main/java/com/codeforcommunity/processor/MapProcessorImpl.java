@@ -1,18 +1,39 @@
 package com.codeforcommunity.processor;
 
-import static org.jooq.generated.Tables.BLOCKS;
-import static org.jooq.generated.Tables.NEIGHBORHOODS;
-import static org.jooq.generated.Tables.RESERVATIONS;
+import static org.jooq.generated.tables.Blocks.BLOCKS;
+import static org.jooq.generated.tables.EntryUsernames.ENTRY_USERNAMES;
+import static org.jooq.generated.tables.Neighborhoods.NEIGHBORHOODS;
+import static org.jooq.generated.tables.Reservations.RESERVATIONS;
+import static org.jooq.generated.tables.SiteEntries.SITE_ENTRIES;
+import static org.jooq.generated.tables.Sites.SITES;
+import static org.jooq.generated.tables.Users.USERS;
 import static org.jooq.impl.DSL.count;
+import static org.jooq.impl.DSL.max;
 
 import com.codeforcommunity.api.IMapProcessor;
-import com.codeforcommunity.dto.map.*;
+import com.codeforcommunity.dto.map.BlockFeature;
+import com.codeforcommunity.dto.map.BlockFeatureProperties;
+import com.codeforcommunity.dto.map.BlockGeoResponse;
+import com.codeforcommunity.dto.map.GeometryPoint;
+import com.codeforcommunity.dto.map.NeighborhoodFeature;
+import com.codeforcommunity.dto.map.NeighborhoodFeatureProperties;
+import com.codeforcommunity.dto.map.NeighborhoodGeoResponse;
+import com.codeforcommunity.dto.map.SiteFeature;
+import com.codeforcommunity.dto.map.SiteFeatureProperties;
+import com.codeforcommunity.dto.map.SiteGeoResponse;
 import com.codeforcommunity.enums.ReservationAction;
 import com.codeforcommunity.logger.SLogger;
 import io.vertx.core.json.JsonObject;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.jooq.*;
+import org.jooq.DSLContext;
+import org.jooq.Record2;
+import org.jooq.Record9;
+import org.jooq.Select;
 import org.jooq.generated.tables.records.BlocksRecord;
 import org.jooq.generated.tables.records.NeighborhoodsRecord;
 
@@ -105,6 +126,22 @@ public class MapProcessorImpl implements IMapProcessor {
     }
   }
 
+  private SiteFeature siteFeatureFromRecord(
+      Record9<Integer, Boolean, Double, String, Timestamp, String, String, BigDecimal, BigDecimal>
+          sitesRecord) {
+    SiteFeatureProperties properties =
+        new SiteFeatureProperties(
+            sitesRecord.value1(),
+            sitesRecord.value2(),
+            sitesRecord.value3(),
+            sitesRecord.value4(),
+            sitesRecord.value5(),
+            sitesRecord.value6(),
+            sitesRecord.value7());
+    GeometryPoint geometry = new GeometryPoint(sitesRecord.value8(), sitesRecord.value9());
+    return new SiteFeature(properties, geometry);
+  }
+
   @Override
   public BlockGeoResponse getBlockGeoJson() {
     List<BlockFeature> features =
@@ -121,5 +158,125 @@ public class MapProcessorImpl implements IMapProcessor {
             .map(this::neighborhoodFeatureFromRecord)
             .collect(Collectors.toList());
     return new NeighborhoodGeoResponse(features);
+  }
+
+  private <T> List<T> mergeSorted(List<T> l1, List<T> l2, Comparator<T> comparator) {
+    if (l1.isEmpty()) {
+      return l2;
+    }
+    if (l2.isEmpty()) {
+      return l1;
+    }
+    T element1 = l1.get(0);
+    T element2 = l2.get(0);
+    List<T> newList = new ArrayList<>();
+    if (comparator.compare(element1, element2) < 0) {
+      newList.add(element1);
+      newList.addAll(mergeSorted(l1.subList(1, l1.size()), l2, comparator));
+      return newList;
+    }
+    newList.add(element2);
+    newList.addAll(mergeSorted(l1, l2.subList(1, l2.size()), comparator));
+    return newList;
+  }
+
+  @Override
+  public SiteGeoResponse getSiteGeoJson() {
+    List<
+            Record9<
+                Integer,
+                Boolean,
+                Double,
+                String,
+                Timestamp,
+                String,
+                String,
+                BigDecimal,
+                BigDecimal>>
+        nonNullUserRecords =
+            this.db
+                .select(
+                    SITES.ID,
+                    SITE_ENTRIES.TREE_PRESENT,
+                    SITE_ENTRIES.DIAMETER,
+                    SITE_ENTRIES.SPECIES,
+                    SITE_ENTRIES.UPDATED_AT,
+                    USERS.USERNAME,
+                    SITES.ADDRESS,
+                    SITES.LAT,
+                    SITES.LNG)
+                .from(SITES)
+                .innerJoin(SITE_ENTRIES)
+                .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
+                .innerJoin(USERS)
+                .on(SITE_ENTRIES.USER_ID.eq(USERS.ID))
+                .where(
+                    SITE_ENTRIES.UPDATED_AT.in(
+                        this.db
+                            .select(max(SITE_ENTRIES.UPDATED_AT))
+                            .from(SITE_ENTRIES)
+                            .groupBy(SITE_ENTRIES.SITE_ID)
+                            .fetch()))
+                .orderBy(SITES.ID)
+                .fetch();
+    List<
+            Record9<
+                Integer,
+                Boolean,
+                Double,
+                String,
+                Timestamp,
+                String,
+                String,
+                BigDecimal,
+                BigDecimal>>
+        nullUserRecords =
+            this.db
+                .select(
+                    SITES.ID,
+                    SITE_ENTRIES.TREE_PRESENT,
+                    SITE_ENTRIES.DIAMETER,
+                    SITE_ENTRIES.SPECIES,
+                    SITE_ENTRIES.UPDATED_AT,
+                    ENTRY_USERNAMES.USERNAME,
+                    SITES.ADDRESS,
+                    SITES.LAT,
+                    SITES.LNG)
+                .from(SITES)
+                .innerJoin(SITE_ENTRIES)
+                .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
+                .innerJoin(ENTRY_USERNAMES)
+                .on(SITE_ENTRIES.ID.eq(ENTRY_USERNAMES.ENTRY_ID))
+                .where(
+                    SITE_ENTRIES
+                        .UPDATED_AT
+                        .in(
+                            this.db
+                                .select(max(SITE_ENTRIES.UPDATED_AT))
+                                .from(SITE_ENTRIES)
+                                .groupBy(SITE_ENTRIES.SITE_ID)
+                                .fetch())
+                        .and(SITE_ENTRIES.USER_ID.isNull()))
+                .orderBy(SITES.ID)
+                .fetch();
+    List<
+            Record9<
+                Integer,
+                Boolean,
+                Double,
+                String,
+                Timestamp,
+                String,
+                String,
+                BigDecimal,
+                BigDecimal>>
+        allSiteEntriesRecords =
+            this.mergeSorted(
+                nonNullUserRecords, nullUserRecords, Comparator.comparingInt(Record9::value1));
+    List<SiteFeature> features =
+        allSiteEntriesRecords.stream()
+            .map(this::siteFeatureFromRecord)
+            .collect(Collectors.toList());
+    return new SiteGeoResponse(features);
   }
 }
