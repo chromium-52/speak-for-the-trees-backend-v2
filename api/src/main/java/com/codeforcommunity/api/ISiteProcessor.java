@@ -7,13 +7,13 @@ import com.codeforcommunity.dto.site.StewardshipActivitiesResponse;
 
 public interface ISiteProcessor {
 
-  /** Creates a record in the favorite sites table linking the user and the site */
+  /** Creates a record in the adopted sites table linking the user and the site */
   void adoptSite(JWTData userData, int siteId);
 
-  /** Removes the record in the favorite sites table linking the user and the site */
+  /** Removes the record in the adopted sites table linking the user and the site */
   void unadoptSite(JWTData userData, int siteId);
 
-  /** Get users favorite sites */
+  /** Get users adopted sites */
   AdoptedSitesResponse getAdoptedSites(JWTData userData);
 
   /** Records a new stewardship activity in the stewardship table linked to the given site */
