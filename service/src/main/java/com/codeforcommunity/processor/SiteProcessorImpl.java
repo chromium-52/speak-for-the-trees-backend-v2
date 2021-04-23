@@ -1,23 +1,23 @@
 package com.codeforcommunity.processor;
 
-import static org.jooq.generated.Tables.FAVORITE_SITES;
+import static org.jooq.generated.Tables.ADOPTED_SITES;
 import static org.jooq.generated.Tables.SITES;
 import static org.jooq.generated.Tables.STEWARDSHIP;
 
 import com.codeforcommunity.api.ISiteProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.site.FavoriteSitesResponse;
+import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.StewardshipActivitiesResponse;
 import com.codeforcommunity.dto.site.StewardshipActivity;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
-import com.codeforcommunity.exceptions.WrongFavoriteStatusException;
+import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import java.util.ArrayList;
 import java.util.List;
 import org.jooq.DSLContext;
-import org.jooq.generated.tables.records.FavoriteSitesRecord;
+import org.jooq.generated.tables.records.AdoptedSitesRecord;
 import org.jooq.generated.tables.records.StewardshipRecord;
 
 public class SiteProcessorImpl implements ISiteProcessor {
@@ -34,46 +34,46 @@ public class SiteProcessorImpl implements ISiteProcessor {
     }
   }
 
-  private Boolean isAlreadyFavorite(int userId, int siteId) {
+  private Boolean isAlreadyAdopted(int userId, int siteId) {
     return db.fetchExists(
-        db.selectFrom(FAVORITE_SITES)
-            .where(FAVORITE_SITES.USER_ID.eq(userId))
-            .and(FAVORITE_SITES.SITE_ID.eq(siteId)));
+        db.selectFrom(ADOPTED_SITES)
+            .where(ADOPTED_SITES.USER_ID.eq(userId))
+            .and(ADOPTED_SITES.SITE_ID.eq(siteId)));
   }
 
   @Override
-  public void favoriteSite(JWTData userData, int siteId) {
+  public void adoptSite(JWTData userData, int siteId) {
     checkSiteExists(siteId);
-    if (isAlreadyFavorite(userData.getUserId(), siteId)) {
-      throw new WrongFavoriteStatusException(true);
+    if (isAlreadyAdopted(userData.getUserId(), siteId)) {
+      throw new WrongAdoptionStatusException(true);
     }
 
-    FavoriteSitesRecord record = db.newRecord(FAVORITE_SITES);
+    AdoptedSitesRecord record = db.newRecord(ADOPTED_SITES);
     record.setUserId(userData.getUserId());
     record.setSiteId(siteId);
     record.store();
   }
 
   @Override
-  public void unfavoriteSite(JWTData userData, int siteId) {
+  public void unadoptSite(JWTData userData, int siteId) {
     checkSiteExists(siteId);
-    if (!isAlreadyFavorite(userData.getUserId(), siteId)) {
-      throw new WrongFavoriteStatusException(false);
+    if (!isAlreadyAdopted(userData.getUserId(), siteId)) {
+      throw new WrongAdoptionStatusException(false);
     }
 
-    db.deleteFrom(FAVORITE_SITES)
-        .where(FAVORITE_SITES.USER_ID.eq(userData.getUserId()))
-        .and(FAVORITE_SITES.SITE_ID.eq(siteId));
+    db.deleteFrom(ADOPTED_SITES)
+        .where(ADOPTED_SITES.USER_ID.eq(userData.getUserId()))
+        .and(ADOPTED_SITES.SITE_ID.eq(siteId));
   }
 
   @Override
-  public FavoriteSitesResponse getFavoriteSites(JWTData userData) {
+  public AdoptedSitesResponse getAdoptedSites(JWTData userData) {
     List<Integer> favoriteSites =
-        db.selectFrom(FAVORITE_SITES)
-            .where(FAVORITE_SITES.USER_ID.eq(userData.getUserId()))
-            .fetch(FAVORITE_SITES.SITE_ID);
+        db.selectFrom(ADOPTED_SITES)
+            .where(ADOPTED_SITES.USER_ID.eq(userData.getUserId()))
+            .fetch(ADOPTED_SITES.SITE_ID);
 
-    return new FavoriteSitesResponse(favoriteSites);
+    return new AdoptedSitesResponse(favoriteSites);
   }
 
   @Override
