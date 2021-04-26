@@ -19,6 +19,7 @@ import com.codeforcommunity.exceptions.UserDeletedException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.UserNotOnTeamException;
 import com.codeforcommunity.exceptions.UsernameAlreadyInUseException;
+import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import com.codeforcommunity.exceptions.WrongTeamRoleException;
 import com.codeforcommunity.logger.SLogger;
 import io.vertx.ext.web.RoutingContext;
@@ -215,6 +216,19 @@ public class FailureHandler {
   public void handleMemberStatusException(RoutingContext ctx, MemberStatusException e) {
     String message =
         "User " + e.getUserId() + " must be a pending member of Team " + e.getMessage();
+    end(ctx, message, 400);
+  }
+
+  public void handleWrongAdoptionStatusException(
+      RoutingContext ctx, WrongAdoptionStatusException e) {
+    String message;
+
+    if (e.getAlreadyAdopted()) {
+      message = "Site is already marked as adopted";
+    } else {
+      message = "Site is not marked as adopted";
+    }
+
     end(ctx, message, 400);
   }
 
