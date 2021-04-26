@@ -22,10 +22,13 @@ import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.EmailAlreadyInUseException;
 import com.codeforcommunity.exceptions.SamePrivilegeLevelException;
+import com.codeforcommunity.exceptions.UserDeletedException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.UsernameAlreadyInUseException;
 import com.codeforcommunity.exceptions.WrongPasswordException;
 import com.codeforcommunity.requester.Emailer;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jooq.DSLContext;
@@ -33,9 +36,6 @@ import org.jooq.Record2;
 import org.jooq.Result;
 import org.jooq.generated.tables.pojos.Users;
 import org.jooq.generated.tables.records.UsersRecord;
-
-import java.sql.Timestamp;
-import java.time.Instant;
 
 public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
 
@@ -48,10 +48,10 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   }
 
   private void userExistsCheck(UsersRecord user) {
-    if(user == null) {
+    if (user == null) {
       throw new UserDoesNotExistException(user.getId());
     }
-    if(user.getDeletedAt() != null) {
+    if (user.getDeletedAt() != null) {
       throw new UserDeletedException(user.getId());
     }
   }

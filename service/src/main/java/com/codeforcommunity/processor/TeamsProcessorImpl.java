@@ -45,10 +45,10 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   private void checkUserExists(int userId) {
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
-    if(user == null) {
+    if (user == null) {
       throw new UserDoesNotExistException(user.getId());
     }
-    if(user.getDeletedAt() != null) {
+    if (user.getDeletedAt() != null) {
       throw new UserDeletedException(user.getId());
     }
   }
@@ -387,12 +387,16 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   @Override
   public List<TeamDataResponse> getTeams() {
-    Result<TeamsRecord> teamsRecordResult = db.selectFrom(TEAMS).where(TEAMS.DELETED_AT.isNull()).fetch();
-    return teamsRecordResult.map(teamsRecord -> new TeamDataResponse(teamsRecord.getId(),
-            teamsRecord.getTeamName(),
-            teamsRecord.getBio(),
-            teamsRecord.getFinished(),
-            teamsRecord.getCreatedAt(),
-            teamsRecord.getDeletedAt()));
+    Result<TeamsRecord> teamsRecordResult =
+        db.selectFrom(TEAMS).where(TEAMS.DELETED_AT.isNull()).fetch();
+    return teamsRecordResult.map(
+        teamsRecord ->
+            new TeamDataResponse(
+                teamsRecord.getId(),
+                teamsRecord.getTeamName(),
+                teamsRecord.getBio(),
+                teamsRecord.getFinished(),
+                teamsRecord.getCreatedAt(),
+                teamsRecord.getDeletedAt()));
   }
 }

@@ -17,12 +17,14 @@ import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.IncorrectBlockStatusException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
+import com.codeforcommunity.exceptions.UserDeletedException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.UserNotOnTeamException;
 import java.sql.Timestamp;
 import java.util.Optional;
 import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.ReservationsRecord;
+import org.jooq.generated.tables.records.UsersRecord;
 
 public class ReservationProcessorImpl implements IReservationProcessor {
 

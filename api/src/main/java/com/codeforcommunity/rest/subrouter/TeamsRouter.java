@@ -228,5 +228,4 @@ public class TeamsRouter implements IRouter {
     List<TeamDataResponse> getTeamsResponse = processor.getTeams();
     end(ctx.response(), 200, JsonObject.mapFrom(getTeamsResponse).toString());
   }
-
 }

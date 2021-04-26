@@ -91,9 +91,8 @@ public class FailureHandler {
 
   public void handleUserDeleted(RoutingContext ctx, UserDeletedException e) {
     String message =
-            String.format("User with property <%s> has been deleted", e.getIdentifierMessage());
+        String.format("User with property <%s> has been deleted", e.getIdentifierMessage());
     end(ctx, message, 400);
-
   }
 
   public void handleResourceDoesNotExist(RoutingContext ctx, ResourceDoesNotExistException e) {
