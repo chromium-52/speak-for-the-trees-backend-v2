@@ -211,7 +211,8 @@ public class FailureHandler {
     end(ctx, message, 400);
   }
 
-  public void handleWrongFavoriteStatusException(RoutingContext ctx, WrongFavoriteStatusException e) {
+  public void handleWrongFavoriteStatusException(
+      RoutingContext ctx, WrongFavoriteStatusException e) {
     String message;
 
     if (e.getAlreadyFavorite()) {

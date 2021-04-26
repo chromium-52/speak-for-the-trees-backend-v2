@@ -5,6 +5,7 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 import com.codeforcommunity.api.ISiteProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
+import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
@@ -27,6 +28,8 @@ public class SiteRouter implements IRouter {
     registerFavoriteSite(router);
     registerUnfavoriteSite(router);
     registerRecordStewardship(router);
+    registerUpdateSite(router);
+    registerDeleteSite(router);
 
     return router;
   }
@@ -72,6 +75,37 @@ public class SiteRouter implements IRouter {
         RestFunctions.getJsonBodyAsClass(ctx, RecordStewardshipRequest.class);
 
     processor.recordStewardship(userData, siteId, recordStewardshipRequest);
+
+    end(ctx.response(), 200);
+  }
+
+  private void registerUpdateSite(Router router) {
+    Route updateSiteRoute = router.post("/:site_id/update");
+    updateSiteRoute.handler(this::handleUpdateSiteRoute);
+  }
+
+  private void handleUpdateSiteRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
+
+    UpdateSiteRequest updateSiteRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, UpdateSiteRequest.class);
+
+    processor.updateSite(userData, siteId, updateSiteRequest);
+
+    end(ctx.response(), 200);
+  }
+
+  private void registerDeleteSite(Router router) {
+    Route deleteSiteRoute = router.post("/:site_id/delete");
+    deleteSiteRoute.handler(this::handleDeleteSiteRoute);
+  }
+
+  private void handleDeleteSiteRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
+
+    processor.deleteSite(userData, siteId);
 
     end(ctx.response(), 200);
   }
