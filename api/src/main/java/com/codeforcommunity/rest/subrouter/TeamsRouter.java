@@ -8,6 +8,7 @@ import com.codeforcommunity.dto.team.AddGoalRequest;
 import com.codeforcommunity.dto.team.CreateTeamRequest;
 import com.codeforcommunity.dto.team.InviteUsersRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
+import com.codeforcommunity.dto.team.TeamGoalDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
 import com.codeforcommunity.dto.team.UsersTeamDataResponse;
 import com.codeforcommunity.rest.IRouter;
@@ -43,6 +44,7 @@ public class TeamsRouter implements IRouter {
     registerKickUserRoute(router);
     registerLeaveTeamRoute(router);
     registerTransferTeamOwnership(router);
+    registerGetTeamsRoute(router);
 
     return router;
   }
@@ -70,7 +72,7 @@ public class TeamsRouter implements IRouter {
   private void handleGetTeamRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
     int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
-    TeamDataResponse getTeamResponse = processor.getTeam(userData, teamId);
+    TeamGoalDataResponse getTeamResponse = processor.getTeam(userData, teamId);
     end(ctx.response(), 200, JsonObject.mapFrom(getTeamResponse).toString());
   }
 
@@ -215,5 +217,15 @@ public class TeamsRouter implements IRouter {
         RestFunctions.getJsonBodyAsClass(ctx, TransferOwnershipRequest.class);
     processor.transferOwnership(userData, transferOwnershipRequest, teamId);
     end(ctx.response(), 200);
+  }
+
+  private void registerGetTeamsRoute(Router router) {
+    Route getTeamsRoute = router.get("/teams");
+    getTeamsRoute.handler(this::handleGetTeamsRoute);
+  }
+
+  private void handleGetTeamsRoute(RoutingContext ctx) {
+    List<TeamDataResponse> getTeamsResponse = processor.getTeams();
+    end(ctx.response(), 200, JsonObject.mapFrom(getTeamsResponse).toString());
   }
 }

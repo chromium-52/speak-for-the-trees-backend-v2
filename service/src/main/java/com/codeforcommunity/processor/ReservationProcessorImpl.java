@@ -17,12 +17,14 @@ import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.IncorrectBlockStatusException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
+import com.codeforcommunity.exceptions.UserDeletedException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.UserNotOnTeamException;
 import java.sql.Timestamp;
 import java.util.Optional;
 import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.ReservationsRecord;
+import org.jooq.generated.tables.records.UsersRecord;
 
 public class ReservationProcessorImpl implements IReservationProcessor {
 
@@ -62,9 +64,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
       throw new ResourceDoesNotExistException(blockId, "block");
     }
 
-    if (userId != null && !db.fetchExists(db.selectFrom(USERS).where(USERS.ID.eq(userId)))) {
-      throw new UserDoesNotExistException(userId);
-    }
+    UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
 
     if (teamId != null && !db.fetchExists(db.selectFrom(TEAMS).where(TEAMS.ID.eq(teamId)))) {
       throw new ResourceDoesNotExistException(teamId, "team");
@@ -74,6 +74,14 @@ public class ReservationProcessorImpl implements IReservationProcessor {
       if (!isOnTeam(userId, teamId)) {
         throw new UserNotOnTeamException(userId, teamId);
       }
+    }
+
+    if (userId != null && user == null) {
+      throw new UserDoesNotExistException(userId);
+    }
+
+    if (user != null && user.getDeletedAt() != null) {
+      throw new UserDeletedException(userId);
     }
   }
 
