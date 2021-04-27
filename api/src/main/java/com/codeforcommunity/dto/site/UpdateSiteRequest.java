@@ -81,7 +81,7 @@ public class UpdateSiteRequest extends ApiDto {
       Boolean trash,
       Boolean wires,
       Boolean grate,
-      boolean stump,
+      Boolean stump,
       String tree_notes,
       String site_notes) {
     this.tree_present = tree_present;
