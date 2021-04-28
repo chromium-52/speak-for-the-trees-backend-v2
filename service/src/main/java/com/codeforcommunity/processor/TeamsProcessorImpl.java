@@ -14,6 +14,7 @@ import com.codeforcommunity.dto.team.InviteUsersRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
 import com.codeforcommunity.dto.team.UsersResponse;
+import com.codeforcommunity.dto.user.Team;
 import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.LeaderCannotLeaveTeamException;
 import com.codeforcommunity.exceptions.MemberApplicationException;
@@ -352,7 +353,9 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   @Override
   public UsersResponse getMembers(int teamId) {
-    return getUsers(teamId, TeamRole.MEMBER);
+    Map<Integer, TeamRole> users = getUsers(teamId, TeamRole.MEMBER).getUsers();
+    users.putAll(getUsers(teamId, TeamRole.LEADER).getUsers());
+    return new UsersResponse(users);
   }
 
   @Override
