@@ -18,6 +18,7 @@ import com.codeforcommunity.exceptions.UsedSecretKeyException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.UserNotOnTeamException;
 import com.codeforcommunity.exceptions.UsernameAlreadyInUseException;
+import com.codeforcommunity.exceptions.WrongFavoriteStatusException;
 import com.codeforcommunity.exceptions.WrongTeamRoleException;
 import com.codeforcommunity.logger.SLogger;
 import io.vertx.ext.web.RoutingContext;
@@ -207,6 +208,18 @@ public class FailureHandler {
   public void handleMemberStatusException(RoutingContext ctx, MemberStatusException e) {
     String message =
         "User " + e.getUserId() + " must be a pending member of Team " + e.getMessage();
+    end(ctx, message, 400);
+  }
+
+  public void handleWrongFavoriteStatusException(RoutingContext ctx, WrongFavoriteStatusException e) {
+    String message;
+
+    if (e.getAlreadyFavorite()) {
+      message = "Site is already marked as a favorite";
+    } else {
+      message = "Site is not marked as a favorite";
+    }
+
     end(ctx, message, 400);
   }
 
