@@ -15,10 +15,11 @@ import com.codeforcommunity.exceptions.MissingParameterException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.TokenInvalidException;
 import com.codeforcommunity.exceptions.UsedSecretKeyException;
+import com.codeforcommunity.exceptions.UserDeletedException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.UserNotOnTeamException;
 import com.codeforcommunity.exceptions.UsernameAlreadyInUseException;
-import com.codeforcommunity.exceptions.WrongFavoriteStatusException;
+import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import com.codeforcommunity.exceptions.WrongTeamRoleException;
 import com.codeforcommunity.logger.SLogger;
 import io.vertx.ext.web.RoutingContext;
@@ -85,6 +86,12 @@ public class FailureHandler {
   public void handleUserDoesNotExist(RoutingContext ctx, UserDoesNotExistException exception) {
     String message =
         String.format("No user with property <%s> exists", exception.getIdentifierMessage());
+    end(ctx, message, 400);
+  }
+
+  public void handleUserDeleted(RoutingContext ctx, UserDeletedException e) {
+    String message =
+        String.format("User with property <%s> has been deleted", e.getIdentifierMessage());
     end(ctx, message, 400);
   }
 
@@ -211,13 +218,14 @@ public class FailureHandler {
     end(ctx, message, 400);
   }
 
-  public void handleWrongFavoriteStatusException(RoutingContext ctx, WrongFavoriteStatusException e) {
+  public void handleWrongAdoptionStatusException(
+      RoutingContext ctx, WrongAdoptionStatusException e) {
     String message;
 
-    if (e.getAlreadyFavorite()) {
-      message = "Site is already marked as a favorite";
+    if (e.getAlreadyAdopted()) {
+      message = "Site is already marked as adopted";
     } else {
-      message = "Site is not marked as a favorite";
+      message = "Site is not marked as adopted";
     }
 
     end(ctx, message, 400);

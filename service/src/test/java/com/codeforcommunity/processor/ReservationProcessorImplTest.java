@@ -19,6 +19,7 @@ import java.util.HashSet;
 import java.util.Set;
 import org.jooq.generated.Tables;
 import org.jooq.generated.tables.records.ReservationsRecord;
+import org.jooq.generated.tables.records.UsersRecord;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -51,11 +52,31 @@ public class ReservationProcessorImplTest {
   }
 
   @Test
+  public void testBasicChecksNonExistingTeam() {
+    int blockId = 1;
+    int userId = 2;
+    int teamId = 3;
+
+    mockDb.addExistsReturn(true);
+    mockDb.addExistsReturn(false);
+
+    try {
+      this.proc.basicChecks(blockId, userId, teamId);
+      fail("Method should've thrown a ResourceDoesNotExist Exception");
+    } catch (ResourceDoesNotExistException e) {
+      assertEquals(teamId, e.getResourceId());
+    }
+    assertEquals(2, mockDb.timesCalled(OperationType.EXISTS));
+  }
+
+  @Test
   public void testBasicChecksNonExistingUser() {
     int blockId = 1;
     int userId = 2;
     int teamId = 3;
 
+    mockDb.addExistsReturn(true);
+    mockDb.addExistsReturn(true);
     mockDb.addExistsReturn(true);
     mockDb.addExistsReturn(false);
 
@@ -65,48 +86,7 @@ public class ReservationProcessorImplTest {
     } catch (UserDoesNotExistException e) {
       assertEquals("id = " + userId, e.getIdentifierMessage());
     }
-    assertEquals(2, mockDb.timesCalled(OperationType.EXISTS));
-  }
-
-  @Test
-  public void testBasicChecksNonExistingTeam() {
-    int blockId = 1;
-    int userId = 2;
-    int teamId = 3;
-
-    mockDb.addExistsReturn(true);
-    mockDb.addExistsReturn(true);
-    mockDb.addExistsReturn(false);
-
-    try {
-      this.proc.basicChecks(blockId, userId, teamId);
-      fail("Method should've thrown a ResourceDoesNotExist Exception");
-    } catch (ResourceDoesNotExistException e) {
-      assertEquals(teamId, e.getResourceId());
-      assertEquals("team", e.getResourceType());
-    }
     assertEquals(3, mockDb.timesCalled(OperationType.EXISTS));
-  }
-
-  @Test
-  public void testBasicChecksNotOnTeam() {
-    int blockId = 1;
-    int userId = 2;
-    int teamId = 3;
-
-    mockDb.addExistsReturn(true);
-    mockDb.addExistsReturn(true);
-    mockDb.addExistsReturn(true);
-    mockDb.addExistsReturn(false);
-
-    try {
-      this.proc.basicChecks(blockId, userId, teamId);
-      fail("Method should've thrown a UserNotOnTeam Exception");
-    } catch (UserNotOnTeamException e) {
-      assertEquals(userId, e.getUserId());
-      assertEquals(teamId, e.getTeamId());
-    }
-    assertEquals(4, mockDb.timesCalled(OperationType.EXISTS));
   }
 
   @Test
@@ -114,18 +94,21 @@ public class ReservationProcessorImplTest {
     int blockId = 1;
     int userId = 2;
     int teamId = 3;
+    UsersRecord usersRecord = new UsersRecord();
 
     mockDb.addExistsReturn(true);
     mockDb.addExistsReturn(true);
     mockDb.addExistsReturn(true);
     mockDb.addExistsReturn(true);
+    mockDb.addReturn(OperationType.SELECT, usersRecord);
 
     try {
       this.proc.basicChecks(blockId, userId, teamId);
     } catch (UserNotOnTeamException | ResourceDoesNotExistException | UserDoesNotExistException e) {
+      System.out.println(e.getMessage());
       fail("Method should've returned without exception");
     }
-    assertEquals(4, mockDb.timesCalled(OperationType.EXISTS));
+    assertEquals(3, mockDb.timesCalled(OperationType.EXISTS));
   }
 
   @Test

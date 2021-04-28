@@ -5,6 +5,7 @@ import com.codeforcommunity.dto.team.AddGoalRequest;
 import com.codeforcommunity.dto.team.CreateTeamRequest;
 import com.codeforcommunity.dto.team.InviteUsersRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
+import com.codeforcommunity.dto.team.TeamGoalDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
 import com.codeforcommunity.dto.team.UsersResponse;
 import java.util.List;
@@ -14,7 +15,7 @@ public interface ITeamsProcessor {
 
   void createTeam(JWTData userData, CreateTeamRequest createTeamRequest);
 
-  TeamDataResponse getTeam(JWTData userData, int teamId);
+  TeamGoalDataResponse getTeam(JWTData userData, int teamId);
 
   void addGoal(JWTData userData, AddGoalRequest addGoalRequest, int teamId);
 
@@ -38,4 +39,6 @@ public interface ITeamsProcessor {
 
   void transferOwnership(
       JWTData userData, TransferOwnershipRequest transferOwnershipRequest, int teamId);
+
+  List<TeamDataResponse> getTeams();
 }

@@ -19,8 +19,16 @@ import com.codeforcommunity.dto.user.UserDataResponse;
 import com.codeforcommunity.dto.user.UserTeamsResponse;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.enums.TeamRole;
-import com.codeforcommunity.exceptions.*;
+import com.codeforcommunity.exceptions.AuthException;
+import com.codeforcommunity.exceptions.EmailAlreadyInUseException;
+import com.codeforcommunity.exceptions.SamePrivilegeLevelException;
+import com.codeforcommunity.exceptions.UserDeletedException;
+import com.codeforcommunity.exceptions.UserDoesNotExistException;
+import com.codeforcommunity.exceptions.UsernameAlreadyInUseException;
+import com.codeforcommunity.exceptions.WrongPasswordException;
 import com.codeforcommunity.requester.Emailer;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jooq.DSLContext;
@@ -39,9 +47,20 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
     this.emailer = emailer;
   }
 
+  private void userExistsCheck(UsersRecord user) {
+    if (user == null) {
+      throw new UserDoesNotExistException(user.getId());
+    }
+    if (user.getDeletedAt() != null) {
+      throw new UserDeletedException(user.getId());
+    }
+  }
+
   @Override
   public void deleteUser(JWTData userData, DeleteUserRequest deleteUserRequest) {
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
+
+    userExistsCheck(user);
 
     if (!Passwords.isExpectedPassword(deleteUserRequest.getPassword(), user.getPasswordHash())) {
       throw new WrongPasswordException();
@@ -51,7 +70,8 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
 
     db.deleteFrom(VERIFICATION_KEYS).where(VERIFICATION_KEYS.USER_ID.eq(userId)).executeAsync();
 
-    user.delete();
+    Timestamp now = Timestamp.from(Instant.now());
+    user.setDeletedAt(now);
 
     emailer.sendAccountDeactivatedEmail(
         user.getEmail(), AuthDatabaseOperations.getFullName(user.into(Users.class)));
@@ -60,10 +80,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   @Override
   public void changePassword(JWTData userData, ChangePasswordRequest changePasswordRequest) {
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
-
-    if (user == null) {
-      throw new UserDoesNotExistException(userData.getUserId());
-    }
+    userExistsCheck(user);
 
     if (Passwords.isExpectedPassword(
         changePasswordRequest.getCurrentPassword(), user.getPasswordHash())) {
@@ -80,10 +97,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   @Override
   public UserDataResponse getUserData(JWTData userData) {
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
-
-    if (user == null) {
-      throw new UserDoesNotExistException(userData.getUserId());
-    }
+    userExistsCheck(user);
 
     return new UserDataResponse(user.getFirstName(), user.getLastName(), user.getEmail());
   }
@@ -93,9 +107,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
     int userId = userData.getUserId();
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
 
-    if (user == null) {
-      throw new UserDoesNotExistException(userData.getUserId());
-    }
+    userExistsCheck(user);
 
     Result<Record2<String, Integer>> teams =
         db.select(TEAMS.TEAM_NAME, TEAMS.ID)
@@ -109,10 +121,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
 
     List<Team> result =
         teams.stream()
-            .map(
-                team -> {
-                  return new Team(team.value2(), team.value1());
-                })
+            .map(team -> new Team(team.value2(), team.value1()))
             .collect(Collectors.toList());
 
     return new UserTeamsResponse(result);
@@ -121,9 +130,8 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   @Override
   public void changeEmail(JWTData userData, ChangeEmailRequest changeEmailRequest) {
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
-    if (user == null) {
-      throw new UserDoesNotExistException(userData.getUserId());
-    }
+
+    userExistsCheck(user);
 
     String previousEmail = user.getEmail();
     if (Passwords.isExpectedPassword(changeEmailRequest.getPassword(), user.getPasswordHash())) {
@@ -145,9 +153,8 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   @Override
   public void changeUsername(JWTData userData, ChangeUsernameRequest changeUsernameRequest) {
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne();
-    if (user == null) {
-      throw new UserDoesNotExistException(userData.getUserId());
-    }
+
+    userExistsCheck(user);
 
     if (Passwords.isExpectedPassword(changeUsernameRequest.getPassword(), user.getPasswordHash())) {
       if (db.fetchExists(USERS, USERS.USERNAME.eq(changeUsernameRequest.getNewUsername()))) {
@@ -173,9 +180,8 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
         db.selectFrom(USERS)
             .where(USERS.EMAIL.eq(changePrivilegeLevelRequest.getTargetUserEmail()))
             .fetchOne();
-    if (user == null) {
-      throw new UserDoesNotExistException(changePrivilegeLevelRequest.getTargetUserEmail());
-    }
+
+    userExistsCheck(user);
 
     // normal admins can't create super admins
     if (userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN

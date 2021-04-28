@@ -10,7 +10,6 @@ public class RecordStewardshipRequest extends ApiDto {
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
   private java.sql.Date date;
 
-  private Integer duration;
   private boolean watered;
   private boolean mulched;
   private boolean cleaned;
@@ -24,7 +23,6 @@ public class RecordStewardshipRequest extends ApiDto {
       boolean cleaned,
       boolean weeded) {
     this.date = date;
-    this.duration = duration;
     this.watered = watered;
     this.mulched = mulched;
     this.cleaned = cleaned;
@@ -39,14 +37,6 @@ public class RecordStewardshipRequest extends ApiDto {
 
   public void setDate(java.sql.Date date) {
     this.date = date;
-  }
-
-  public Integer getDuration() {
-    return duration;
-  }
-
-  public void setDuration(Integer duration) {
-    this.duration = duration;
   }
 
   public boolean getWatered() {
@@ -88,9 +78,6 @@ public class RecordStewardshipRequest extends ApiDto {
 
     if (date == null) {
       fields.add(fieldName + "date");
-    }
-    if (duration != null && duration < 0) {
-      fields.add(fieldName + "duration");
     }
     if (!(watered || mulched || cleaned || weeded)) {
       fields.add(fieldName + "activities");
