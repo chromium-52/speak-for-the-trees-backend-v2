@@ -6,11 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UpdateSiteRequest extends ApiDto {
-  private Boolean tree_present;
+  private Boolean treePresent;
   private String status;
   private String genus;
   private String species;
-  private String common_name;
+  private String commonName;
   private String confidence;
   private Double diameter;
   private Double circumference;
@@ -20,37 +20,37 @@ public class UpdateSiteRequest extends ApiDto {
   private String condition;
   private Boolean discoloring;
   private Boolean leaning;
-  private Boolean constricting_gate;
+  private Boolean constrictingGate;
   private Boolean wounds;
   private Boolean pooling;
-  private Boolean stakes_with_wires;
-  private Boolean stakes_without_wires;
+  private Boolean stakesWithWires;
+  private Boolean stakesWithoutWires;
   private Boolean light;
   private Boolean bicycle;
-  private Boolean bag_empty;
-  private Boolean bag_filled;
+  private Boolean bagEmpty;
+  private Boolean bagFilled;
   private Boolean tape;
-  private Boolean sucker_growth;
-  private String site_type;
-  private String sidewalk_width;
-  private Double site_width;
-  private Double site_length;
+  private Boolean suckerGrowth;
+  private String siteType;
+  private String sidewalkWidth;
+  private Double siteWidth;
+  private Double siteLength;
   private String material;
-  private Boolean raised_bed;
+  private Boolean raisedBed;
   private Boolean fence;
   private Boolean trash;
   private Boolean wires;
   private Boolean grate;
   private Boolean stump;
-  private String tree_notes;
-  private String site_notes;
+  private String treeNotes;
+  private String siteNotes;
 
   public UpdateSiteRequest(
-      Boolean tree_present,
+      Boolean treePresent,
       String status,
       String genus,
       String species,
-      String common_name,
+      String commonName,
       String confidence,
       Double diameter,
       Double circumference,
@@ -60,35 +60,35 @@ public class UpdateSiteRequest extends ApiDto {
       String condition,
       Boolean discoloring,
       Boolean leaning,
-      Boolean constricting_gate,
+      Boolean constrictingGate,
       Boolean wounds,
       Boolean pooling,
-      Boolean stakes_with_wires,
-      Boolean stakes_without_wires,
+      Boolean stakesWithWires,
+      Boolean stakesWithoutWires,
       Boolean light,
       Boolean bicycle,
-      Boolean bag_empty,
-      Boolean bag_filled,
+      Boolean bagEmpty,
+      Boolean bagFilled,
       Boolean tape,
-      Boolean sucker_growth,
-      String site_type,
-      String sidewalk_width,
-      Double site_width,
-      Double site_length,
+      Boolean suckerGrowth,
+      String siteType,
+      String sidewalkWidth,
+      Double siteWidth,
+      Double siteLength,
       String material,
-      Boolean raised_bed,
+      Boolean raisedBed,
       Boolean fence,
       Boolean trash,
       Boolean wires,
       Boolean grate,
       Boolean stump,
-      String tree_notes,
-      String site_notes) {
-    this.tree_present = tree_present;
+      String treeNotes,
+      String siteNotes) {
+    this.treePresent = treePresent;
     this.status = status;
     this.genus = genus;
     this.species = species;
-    this.common_name = common_name;
+    this.commonName = commonName;
     this.confidence = confidence;
     this.diameter = diameter;
     this.circumference = circumference;
@@ -98,40 +98,38 @@ public class UpdateSiteRequest extends ApiDto {
     this.condition = condition;
     this.discoloring = discoloring;
     this.leaning = leaning;
-    this.constricting_gate = constricting_gate;
+    this.constrictingGate = constrictingGate;
     this.wounds = wounds;
     this.pooling = pooling;
-    this.stakes_with_wires = stakes_with_wires;
-    this.stakes_without_wires = stakes_without_wires;
+    this.stakesWithWires = stakesWithWires;
+    this.stakesWithoutWires = stakesWithoutWires;
     this.light = light;
     this.bicycle = bicycle;
-    this.bag_empty = bag_empty;
-    this.bag_filled = bag_filled;
+    this.bagEmpty = bagEmpty;
+    this.bagFilled = bagFilled;
     this.tape = tape;
-    this.sucker_growth = sucker_growth;
-    this.site_type = site_type;
-    this.sidewalk_width = sidewalk_width;
-    this.site_width = site_width;
-    this.site_length = site_length;
+    this.suckerGrowth = suckerGrowth;
+    this.siteType = siteType;
+    this.sidewalkWidth = sidewalkWidth;
+    this.siteWidth = siteWidth;
+    this.siteLength = siteLength;
     this.material = material;
-    this.raised_bed = raised_bed;
+    this.raisedBed = raisedBed;
     this.fence = fence;
     this.trash = trash;
     this.wires = wires;
     this.grate = grate;
     this.stump = stump;
-    this.tree_notes = tree_notes;
-    this.site_notes = site_notes;
+    this.treeNotes = treeNotes;
+    this.siteNotes = siteNotes;
   }
 
-  private UpdateSiteRequest() {}
-
-  public Boolean isTree_present() {
-    return tree_present;
+  public Boolean isTreePresent() {
+    return treePresent;
   }
 
-  public void setTree_present(Boolean tree_present) {
-    this.tree_present = tree_present;
+  public void setTreePresent(Boolean treePresent) {
+    this.treePresent = treePresent;
   }
 
   public String getStatus() {
@@ -158,12 +156,12 @@ public class UpdateSiteRequest extends ApiDto {
     this.species = species;
   }
 
-  public String getCommon_name() {
-    return common_name;
+  public String getCommonName() {
+    return commonName;
   }
 
-  public void setCommon_name(String common_name) {
-    this.common_name = common_name;
+  public void setCommonName(String commonName) {
+    this.commonName = commonName;
   }
 
   public String getConfidence() {
@@ -238,12 +236,12 @@ public class UpdateSiteRequest extends ApiDto {
     this.leaning = leaning;
   }
 
-  public Boolean isConstricting_gate() {
-    return constricting_gate;
+  public Boolean isConstrictingGate() {
+    return constrictingGate;
   }
 
-  public void setConstricting_gate(Boolean constricting_gate) {
-    this.constricting_gate = constricting_gate;
+  public void setConstrictingGate(Boolean constrictingGate) {
+    this.constrictingGate = constrictingGate;
   }
 
   public Boolean isWounds() {
@@ -262,20 +260,20 @@ public class UpdateSiteRequest extends ApiDto {
     this.pooling = pooling;
   }
 
-  public Boolean isStakes_with_wires() {
-    return stakes_with_wires;
+  public Boolean isStakesWithWires() {
+    return stakesWithWires;
   }
 
-  public void setStakes_with_wires(Boolean stakes_with_wires) {
-    this.stakes_with_wires = stakes_with_wires;
+  public void setStakesWithWires(Boolean stakesWithWires) {
+    this.stakesWithWires = stakesWithWires;
   }
 
-  public Boolean isStakes_without_wires() {
-    return stakes_without_wires;
+  public Boolean isStakesWithoutWires() {
+    return stakesWithoutWires;
   }
 
-  public void setStakes_without_wires(Boolean stakes_without_wires) {
-    this.stakes_without_wires = stakes_without_wires;
+  public void setStakesWithoutWires(Boolean stakesWithoutWires) {
+    this.stakesWithoutWires = stakesWithoutWires;
   }
 
   public Boolean isLight() {
@@ -294,20 +292,20 @@ public class UpdateSiteRequest extends ApiDto {
     this.bicycle = bicycle;
   }
 
-  public Boolean isBag_empty() {
-    return bag_empty;
+  public Boolean isBagEmpty() {
+    return bagEmpty;
   }
 
-  public void setBag_empty(Boolean bag_empty) {
-    this.bag_empty = bag_empty;
+  public void setBagEmpty(Boolean bagEmpty) {
+    this.bagEmpty = bagEmpty;
   }
 
-  public Boolean isBag_filled() {
-    return bag_filled;
+  public Boolean isBagFilled() {
+    return bagFilled;
   }
 
-  public void setBag_filled(Boolean bag_filled) {
-    this.bag_filled = bag_filled;
+  public void setBagFilled(Boolean bagFilled) {
+    this.bagFilled = bagFilled;
   }
 
   public Boolean isTape() {
@@ -318,44 +316,44 @@ public class UpdateSiteRequest extends ApiDto {
     this.tape = tape;
   }
 
-  public Boolean isSucker_growth() {
-    return sucker_growth;
+  public Boolean isSuckerGrowth() {
+    return suckerGrowth;
   }
 
-  public void setSucker_growth(Boolean sucker_growth) {
-    this.sucker_growth = sucker_growth;
+  public void setSuckerGrowth(Boolean suckerGrowth) {
+    this.suckerGrowth = suckerGrowth;
   }
 
-  public String getSite_type() {
-    return site_type;
+  public String getSiteType() {
+    return siteType;
   }
 
-  public void setSite_type(String site_type) {
-    this.site_type = site_type;
+  public void setSiteType(String siteType) {
+    this.siteType = siteType;
   }
 
-  public String getSidewalk_width() {
-    return sidewalk_width;
+  public String getSidewalkWidth() {
+    return sidewalkWidth;
   }
 
-  public void setSidewalk_width(String sidewalk_width) {
-    this.sidewalk_width = sidewalk_width;
+  public void setSidewalkWidth(String sidewalkWidth) {
+    this.sidewalkWidth = sidewalkWidth;
   }
 
-  public Double getSite_width() {
-    return site_width;
+  public Double getSiteWidth() {
+    return siteWidth;
   }
 
-  public void setSite_width(Double site_width) {
-    this.site_width = site_width;
+  public void setSiteWidth(Double siteWidth) {
+    this.siteWidth = siteWidth;
   }
 
-  public Double getSite_length() {
-    return site_length;
+  public Double getSiteLength() {
+    return siteLength;
   }
 
-  public void setSite_length(Double site_length) {
-    this.site_length = site_length;
+  public void setSiteLength(Double siteLength) {
+    this.siteLength = siteLength;
   }
 
   public String getMaterial() {
@@ -366,12 +364,12 @@ public class UpdateSiteRequest extends ApiDto {
     this.material = material;
   }
 
-  public Boolean isRaised_bed() {
-    return raised_bed;
+  public Boolean isRaisedBed() {
+    return raisedBed;
   }
 
-  public void setRaised_bed(Boolean raised_bed) {
-    this.raised_bed = raised_bed;
+  public void setRaisedBed(Boolean raisedBed) {
+    this.raisedBed = raisedBed;
   }
 
   public Boolean isFence() {
@@ -414,20 +412,20 @@ public class UpdateSiteRequest extends ApiDto {
     this.stump = stump;
   }
 
-  public String getTree_notes() {
-    return tree_notes;
+  public String getTreeNotes() {
+    return treeNotes;
   }
 
-  public void setTree_notes(String tree_notes) {
-    this.tree_notes = tree_notes;
+  public void setTreeNotes(String treeNotes) {
+    this.treeNotes = treeNotes;
   }
 
-  public String getSite_notes() {
-    return site_notes;
+  public String getSiteNotes() {
+    return siteNotes;
   }
 
-  public void setSite_notes(String site_notes) {
-    this.site_notes = site_notes;
+  public void setSiteNotes(String siteNotes) {
+    this.siteNotes = siteNotes;
   }
 
   @Override
