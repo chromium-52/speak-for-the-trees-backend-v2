@@ -14,7 +14,8 @@ import com.codeforcommunity.dto.team.InviteUsersRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
 import com.codeforcommunity.dto.team.TeamGoalDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
-import com.codeforcommunity.dto.team.UsersTeamDataResponse;
+import com.codeforcommunity.dto.team.UsersResponse;
+import com.codeforcommunity.dto.user.Team;
 import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.LeaderCannotLeaveTeamException;
 import com.codeforcommunity.exceptions.MemberApplicationException;
@@ -24,8 +25,9 @@ import com.codeforcommunity.exceptions.UserDeletedException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.WrongTeamRoleException;
 import java.sql.Timestamp;
-import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import org.jooq.DSLContext;
 import org.jooq.Result;
@@ -58,6 +60,19 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
       throw new ResourceDoesNotExistException(goalId, "Goal");
     }
   }
+
+  private UsersResponse getUsers(int teamId, TeamRole role) {
+    checkTeamExists(teamId);
+    List<UsersTeamsRecord> applicants =
+            db.selectFrom(USERS_TEAMS).where(USERS_TEAMS.TEAM_ROLE.eq(role)).fetch();
+    Map<Integer, TeamRole> users = new HashMap<>();
+    applicants.forEach(
+            app -> {
+              users.put(app.getUserId(), app.getTeamRole());
+            });
+    return new UsersResponse(users);
+  }
+
 
   public TeamsProcessorImpl(DSLContext db) {
     this.db = db;
@@ -207,18 +222,8 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   }
 
   @Override
-  public List<UsersTeamDataResponse> getApplicants(JWTData userData, int teamId) {
-    checkTeamExists(teamId);
-    List<UsersTeamsRecord> applicants =
-        db.selectFrom(USERS_TEAMS).where(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.PENDING)).fetch();
-    List<UsersTeamDataResponse> responses = new ArrayList<>();
-    applicants.forEach(
-        app -> {
-          UsersTeamDataResponse response =
-              new UsersTeamDataResponse(app.getUserId(), teamId, app.getTeamRole());
-          responses.add(response);
-        });
-    return responses;
+  public UsersResponse getApplicants(int teamId) {
+    return getUsers(teamId, TeamRole.PENDING);
   }
 
   @Override
@@ -351,6 +356,13 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
     } else {
       throw new MemberStatusException(teamId, userData.getUserId());
     }
+  }
+
+  @Override
+  public UsersResponse getMembers(int teamId) {
+    Map<Integer, TeamRole> users = getUsers(teamId, TeamRole.MEMBER).getUsers();
+    users.putAll(getUsers(teamId, TeamRole.LEADER).getUsers());
+    return new UsersResponse(users);
   }
 
   @Override
