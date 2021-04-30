@@ -7,6 +7,7 @@ import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.StewardshipActivitiesResponse;
+import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
@@ -31,6 +32,8 @@ public class SiteRouter implements IRouter {
     registerUnadoptSite(router);
     registerGetAdoptedSitesRoute(router);
     registerRecordStewardship(router);
+    registerUpdateSite(router);
+    registerDeleteSite(router);
     registerDeleteStewardship(router);
     registerGetStewardshipActivites(router);
 
@@ -95,6 +98,23 @@ public class SiteRouter implements IRouter {
     end(ctx.response(), 200);
   }
 
+  private void registerUpdateSite(Router router) {
+    Route updateSiteRoute = router.post("/:site_id/update");
+    updateSiteRoute.handler(this::handleUpdateSiteRoute);
+  }
+
+  private void handleUpdateSiteRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
+
+    UpdateSiteRequest updateSiteRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, UpdateSiteRequest.class);
+
+    processor.updateSite(userData, siteId, updateSiteRequest);
+
+    end(ctx.response(), 200);
+  }
+
   private void registerDeleteStewardship(Router router) {
     Route deleteStewardshipRoute = router.post("/delete_stewardship/:activity_id");
     deleteStewardshipRoute.handler(this::handleDeleteStewardshipRoute);
@@ -105,6 +125,20 @@ public class SiteRouter implements IRouter {
     int activityId = RestFunctions.getRequestParameterAsInt(ctx.request(), "activity_id");
 
     processor.deleteStewardship(userData, activityId);
+
+    end(ctx.response(), 200);
+  }
+
+  private void registerDeleteSite(Router router) {
+    Route deleteSiteRoute = router.post("/:site_id/delete");
+    deleteSiteRoute.handler(this::handleDeleteSiteRoute);
+  }
+
+  private void handleDeleteSiteRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
+
+    processor.deleteSite(userData, siteId);
 
     end(ctx.response(), 200);
   }
