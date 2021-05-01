@@ -4,7 +4,9 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.ISiteProcessor;
 import com.codeforcommunity.auth.JWTData;
+import com.codeforcommunity.dto.site.AddSiteRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
+import com.codeforcommunity.dto.site.GetSiteResponse;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.StewardshipActivitiesResponse;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
@@ -32,6 +34,8 @@ public class SiteRouter implements IRouter {
     registerUnadoptSite(router);
     registerGetAdoptedSitesRoute(router);
     registerRecordStewardship(router);
+    registerAddSite(router);
+    registerGetSite(router);
     registerUpdateSite(router);
     registerDeleteSite(router);
     registerDeleteStewardship(router);
@@ -127,6 +131,34 @@ public class SiteRouter implements IRouter {
     processor.deleteStewardship(userData, activityId);
 
     end(ctx.response(), 200);
+  }
+
+  private void registerAddSite(Router router) {
+    Route addSiteRoute = router.post("/add");
+    addSiteRoute.handler(this::handleAddSiteRoute);
+  }
+
+  private void handleAddSiteRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+
+    AddSiteRequest addSiteRequest = RestFunctions.getJsonBodyAsClass(ctx, AddSiteRequest.class);
+
+    processor.addSite(userData, addSiteRequest);
+
+    end(ctx.response(), 200);
+  }
+
+  private void registerGetSite(Router router) {
+    Route getSiteRoute = router.get("/:site_id");
+    getSiteRoute.handler(this::handleGetSiteRoute);
+  }
+
+  private void handleGetSiteRoute(RoutingContext ctx) {
+    int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
+
+    GetSiteResponse getSiteResponse = processor.getSite(siteId);
+
+    end(ctx.response(), 200, JsonObject.mapFrom(getSiteResponse).toString());
   }
 
   private void registerDeleteSite(Router router) {
