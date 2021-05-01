@@ -1,7 +1,6 @@
 package com.codeforcommunity.dto.team;
 
 import com.codeforcommunity.enums.TeamRole;
-
 import java.util.Map;
 
 public class UsersResponse {
@@ -15,8 +14,7 @@ public class UsersResponse {
     this.users = users;
   }
 
-  private UsersResponse() {
-  }
+  private UsersResponse() {}
 
   public Map<Integer, TeamRole> getUsers() {
     return users;

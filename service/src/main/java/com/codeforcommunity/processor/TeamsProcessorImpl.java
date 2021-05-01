@@ -15,7 +15,6 @@ import com.codeforcommunity.dto.team.TeamDataResponse;
 import com.codeforcommunity.dto.team.TeamGoalDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
 import com.codeforcommunity.dto.team.UsersResponse;
-import com.codeforcommunity.dto.user.Team;
 import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.LeaderCannotLeaveTeamException;
 import com.codeforcommunity.exceptions.MemberApplicationException;
@@ -64,15 +63,14 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   private UsersResponse getUsers(int teamId, TeamRole role) {
     checkTeamExists(teamId);
     List<UsersTeamsRecord> applicants =
-            db.selectFrom(USERS_TEAMS).where(USERS_TEAMS.TEAM_ROLE.eq(role)).fetch();
+        db.selectFrom(USERS_TEAMS).where(USERS_TEAMS.TEAM_ROLE.eq(role)).fetch();
     Map<Integer, TeamRole> users = new HashMap<>();
     applicants.forEach(
-            app -> {
-              users.put(app.getUserId(), app.getTeamRole());
-            });
+        app -> {
+          users.put(app.getUserId(), app.getTeamRole());
+        });
     return new UsersResponse(users);
   }
-
 
   public TeamsProcessorImpl(DSLContext db) {
     this.db = db;

@@ -189,7 +189,6 @@ public class TeamsRouter implements IRouter {
     int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
     UsersResponse members = processor.getMembers(teamId);
     end(ctx.response(), 200, JsonObject.mapFrom(members).toString());
-
   }
 
   private void registerKickUserRoute(Router router) {
