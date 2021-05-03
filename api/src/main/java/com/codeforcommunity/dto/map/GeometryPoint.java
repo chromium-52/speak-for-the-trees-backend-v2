@@ -10,7 +10,7 @@ public class GeometryPoint {
 
   public GeometryPoint(BigDecimal latitude, BigDecimal longitude) {
     this.type = "Point";
-    this.coordinates = Arrays.asList(latitude, longitude);
+    this.coordinates = Arrays.asList(longitude, latitude); //geoJSON standard is long, lat
   }
 
   public String getType() {
