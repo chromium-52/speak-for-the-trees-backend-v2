@@ -104,6 +104,10 @@ public class AddSiteRequest extends UpdateSiteRequest {
     this.address = address;
   }
 
+  public AddSiteRequest() {
+    super();
+  }
+
   public Integer getBlockId() {
     return blockId;
   }
