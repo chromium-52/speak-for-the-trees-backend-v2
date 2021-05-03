@@ -156,7 +156,7 @@ public class AddSiteRequest extends UpdateSiteRequest {
   @Override
   public List<String> validateFields(String fieldPrefix) throws HandledException {
     String fieldName = fieldPrefix + "add_site_request.";
-    List<String> fields = new ArrayList<>();
+    List<String> fields = super.validateFields("");
 
     if (blockId == null) {
       fields.add(fieldName + "block_id");

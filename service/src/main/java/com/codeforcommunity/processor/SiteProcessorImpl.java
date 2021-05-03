@@ -251,6 +251,10 @@ public class SiteProcessorImpl implements ISiteProcessor {
   public GetSiteResponse getSite(int siteId) {
     SitesRecord sitesRecord = db.selectFrom(SITES).where(SITES.ID.eq(siteId)).fetchOne();
 
+    if (sitesRecord == null) {
+      throw new ResourceDoesNotExistException(siteId, "site");
+    }
+
     return new GetSiteResponse(
         sitesRecord.getId(),
         sitesRecord.getBlockId(),
