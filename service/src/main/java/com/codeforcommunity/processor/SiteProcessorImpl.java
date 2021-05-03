@@ -1,14 +1,19 @@
 package com.codeforcommunity.processor;
 
 import static org.jooq.generated.Tables.ADOPTED_SITES;
+import static org.jooq.generated.Tables.ENTRY_USERNAMES;
 import static org.jooq.generated.Tables.SITES;
 import static org.jooq.generated.Tables.SITE_ENTRIES;
 import static org.jooq.generated.Tables.STEWARDSHIP;
+import static org.jooq.generated.Tables.USERS;
 
 import com.codeforcommunity.api.ISiteProcessor;
 import com.codeforcommunity.auth.JWTData;
+import com.codeforcommunity.dto.site.AddSiteRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
+import com.codeforcommunity.dto.site.GetSiteResponse;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
+import com.codeforcommunity.dto.site.SiteEntry;
 import com.codeforcommunity.dto.site.StewardshipActivitiesResponse;
 import com.codeforcommunity.dto.site.StewardshipActivity;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
@@ -106,6 +111,159 @@ public class SiteProcessorImpl implements ISiteProcessor {
     record.setWeeded(recordStewardshipRequest.getWeeded());
 
     record.store();
+  }
+
+  @Override
+  public void addSite(JWTData userData, AddSiteRequest addSiteRequest) {
+    SitesRecord sitesRecord = db.newRecord(SITES);
+
+    sitesRecord.setBlockId(addSiteRequest.getBlockId());
+    sitesRecord.setLat(addSiteRequest.getLat());
+    sitesRecord.setLng(addSiteRequest.getLng());
+    sitesRecord.setCity(addSiteRequest.getCity());
+    sitesRecord.setZip(addSiteRequest.getZip());
+    sitesRecord.setAddress(addSiteRequest.getAddress());
+
+    sitesRecord.store();
+
+    SiteEntriesRecord siteEntriesRecord = db.newRecord(SITE_ENTRIES);
+
+    siteEntriesRecord.setUserId(userData.getUserId());
+    siteEntriesRecord.setSiteId(sitesRecord.getId());
+    siteEntriesRecord.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+    siteEntriesRecord.setTreePresent(addSiteRequest.isTreePresent());
+    siteEntriesRecord.setStatus(addSiteRequest.getStatus());
+    siteEntriesRecord.setGenus(addSiteRequest.getGenus());
+    siteEntriesRecord.setSpecies(addSiteRequest.getSpecies());
+    siteEntriesRecord.setCommonName(addSiteRequest.getCommonName());
+    siteEntriesRecord.setConfidence(addSiteRequest.getConfidence());
+    siteEntriesRecord.setDiameter(addSiteRequest.getDiameter());
+    siteEntriesRecord.setCircumference(addSiteRequest.getCircumference());
+    siteEntriesRecord.setMultistem(addSiteRequest.isMultistem());
+    siteEntriesRecord.setCoverage(addSiteRequest.getCoverage());
+    siteEntriesRecord.setPruning(addSiteRequest.getPruning());
+    siteEntriesRecord.setCondition(addSiteRequest.getCondition());
+    siteEntriesRecord.setDiscoloring(addSiteRequest.isDiscoloring());
+    siteEntriesRecord.setLeaning(addSiteRequest.isLeaning());
+    siteEntriesRecord.setConstrictingGate(addSiteRequest.isConstrictingGate());
+    siteEntriesRecord.setWounds(addSiteRequest.isWounds());
+    siteEntriesRecord.setPooling(addSiteRequest.isPooling());
+    siteEntriesRecord.setStakesWithWires(addSiteRequest.isStakesWithWires());
+    siteEntriesRecord.setStakesWithoutWires(addSiteRequest.isStakesWithoutWires());
+    siteEntriesRecord.setLight(addSiteRequest.isLight());
+    siteEntriesRecord.setBicycle(addSiteRequest.isBicycle());
+    siteEntriesRecord.setBagEmpty(addSiteRequest.isBagEmpty());
+    siteEntriesRecord.setBagFilled(addSiteRequest.isBagFilled());
+    siteEntriesRecord.setTape(addSiteRequest.isTape());
+    siteEntriesRecord.setSuckerGrowth(addSiteRequest.isSuckerGrowth());
+    siteEntriesRecord.setSiteType(addSiteRequest.getSiteType());
+    siteEntriesRecord.setSidewalkWidth(addSiteRequest.getSidewalkWidth());
+    siteEntriesRecord.setSiteWidth(addSiteRequest.getSiteWidth());
+    siteEntriesRecord.setSiteLength(addSiteRequest.getSiteLength());
+    siteEntriesRecord.setMaterial(addSiteRequest.getMaterial());
+    siteEntriesRecord.setRaisedBed(addSiteRequest.isRaisedBed());
+    siteEntriesRecord.setFence(addSiteRequest.isFence());
+    siteEntriesRecord.setTrash(addSiteRequest.isTrash());
+    siteEntriesRecord.setWires(addSiteRequest.isWires());
+    siteEntriesRecord.setGrate(addSiteRequest.isGrate());
+    siteEntriesRecord.setStump(addSiteRequest.isStump());
+    siteEntriesRecord.setTreeNotes(addSiteRequest.getTreeNotes());
+    siteEntriesRecord.setSiteNotes(addSiteRequest.getSiteNotes());
+
+    siteEntriesRecord.store();
+  }
+
+  private List<SiteEntry> getSiteEntries(int siteId) {
+    List<SiteEntriesRecord> records =
+        db.selectFrom(SITE_ENTRIES)
+            .where(SITE_ENTRIES.SITE_ID.eq(siteId))
+            .orderBy(SITE_ENTRIES.UPDATED_AT)
+            .fetch();
+
+    List<SiteEntry> siteEntries = new ArrayList<>();
+
+    records.forEach(
+        record -> {
+          String username;
+          if (record.getUserId() == null) {
+            username =
+                db.selectFrom(ENTRY_USERNAMES)
+                    .where(ENTRY_USERNAMES.ENTRY_ID.eq(record.getId()))
+                    .fetchOne(ENTRY_USERNAMES.USERNAME);
+          } else {
+            username =
+                db.selectFrom(USERS)
+                    .where(USERS.ID.eq(record.getUserId()))
+                    .fetchOne(USERS.USERNAME);
+          }
+
+          SiteEntry siteEntry =
+              new SiteEntry(
+                  record.getId(),
+                  username,
+                  record.getUpdatedAt(),
+                  record.getTreePresent(),
+                  record.getStatus(),
+                  record.getGenus(),
+                  record.getSpecies(),
+                  record.getCommonName(),
+                  record.getConfidence(),
+                  record.getDiameter(),
+                  record.getCircumference(),
+                  record.getMultistem(),
+                  record.getCoverage(),
+                  record.getPruning(),
+                  record.getCondition(),
+                  record.getDiscoloring(),
+                  record.getLeaning(),
+                  record.getConstrictingGate(),
+                  record.getWounds(),
+                  record.getPooling(),
+                  record.getStakesWithWires(),
+                  record.getStakesWithoutWires(),
+                  record.getLight(),
+                  record.getBicycle(),
+                  record.getBagEmpty(),
+                  record.getBagFilled(),
+                  record.getTape(),
+                  record.getSuckerGrowth(),
+                  record.getSiteType(),
+                  record.getSidewalkWidth(),
+                  record.getSiteWidth(),
+                  record.getSiteLength(),
+                  record.getMaterial(),
+                  record.getRaisedBed(),
+                  record.getFence(),
+                  record.getTrash(),
+                  record.getWires(),
+                  record.getGrate(),
+                  record.getStump(),
+                  record.getTreeNotes(),
+                  record.getSiteNotes());
+
+          siteEntries.add(siteEntry);
+        });
+
+    return siteEntries;
+  }
+
+  @Override
+  public GetSiteResponse getSite(int siteId) {
+    SitesRecord sitesRecord = db.selectFrom(SITES).where(SITES.ID.eq(siteId)).fetchOne();
+
+    if (sitesRecord == null) {
+      throw new ResourceDoesNotExistException(siteId, "site");
+    }
+
+    return new GetSiteResponse(
+        sitesRecord.getId(),
+        sitesRecord.getBlockId(),
+        sitesRecord.getLat(),
+        sitesRecord.getLng(),
+        sitesRecord.getCity(),
+        sitesRecord.getZip(),
+        sitesRecord.getAddress(),
+        getSiteEntries(siteId));
   }
 
   @Override
