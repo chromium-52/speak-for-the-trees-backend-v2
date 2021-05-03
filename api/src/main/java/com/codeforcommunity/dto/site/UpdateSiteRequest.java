@@ -124,9 +124,7 @@ public class UpdateSiteRequest extends ApiDto {
     this.siteNotes = siteNotes;
   }
 
-  public UpdateSiteRequest() {
-
-  }
+  public UpdateSiteRequest() {}
 
   public Boolean isTreePresent() {
     return treePresent;
