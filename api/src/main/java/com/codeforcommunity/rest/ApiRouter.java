@@ -6,6 +6,7 @@ import com.codeforcommunity.api.ILeaderboardProcessor;
 import com.codeforcommunity.api.IMapProcessor;
 import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.api.IReservationProcessor;
+import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.api.ISiteProcessor;
 import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTAuthorizer;
@@ -16,6 +17,7 @@ import com.codeforcommunity.rest.subrouter.LeaderboardRouter;
 import com.codeforcommunity.rest.subrouter.MapRouter;
 import com.codeforcommunity.rest.subrouter.ProtectedUserRouter;
 import com.codeforcommunity.rest.subrouter.ReservationRouter;
+import com.codeforcommunity.rest.subrouter.ProtectedSiteRouter;
 import com.codeforcommunity.rest.subrouter.SiteRouter;
 import com.codeforcommunity.rest.subrouter.TeamsRouter;
 import io.vertx.core.Vertx;
@@ -31,6 +33,7 @@ public class ApiRouter implements IRouter {
   private final LeaderboardRouter leaderboardRouter;
   private final MapRouter mapRouter;
   private final TeamsRouter teamsRouter;
+  private final ProtectedSiteRouter protectedSiteRouter;
   private final SiteRouter siteRouter;
 
   public ApiRouter(
@@ -41,6 +44,7 @@ public class ApiRouter implements IRouter {
       ILeaderboardProcessor leaderboardProcessor,
       IMapProcessor mapProcessor,
       ITeamsProcessor teamsProcessor,
+      IProtectedSiteProcessor protectedSiteProcessor,
       ISiteProcessor siteProcessor,
       JWTAuthorizer jwtAuthorizer) {
     this.commonRouter = new CommonRouter(jwtAuthorizer);
@@ -51,6 +55,7 @@ public class ApiRouter implements IRouter {
     this.leaderboardRouter = new LeaderboardRouter(leaderboardProcessor);
     this.mapRouter = new MapRouter(mapProcessor);
     this.teamsRouter = new TeamsRouter(teamsProcessor);
+    this.protectedSiteRouter = new ProtectedSiteRouter(protectedSiteProcessor);
     this.siteRouter = new SiteRouter(siteProcessor);
   }
 
@@ -62,6 +67,7 @@ public class ApiRouter implements IRouter {
     router.mountSubRouter("/protected", defineProtectedRoutes(vertx));
     router.mountSubRouter("/leaderboard", leaderboardRouter.initializeRouter(vertx));
     router.mountSubRouter("/map", mapRouter.initializeRouter(vertx));
+    router.mountSubRouter("/sites", siteRouter.initializeRouter(vertx));
 
     return router;
   }
@@ -77,7 +83,7 @@ public class ApiRouter implements IRouter {
     router.mountSubRouter("/import", importRouter.initializeRouter(vertx));
     router.mountSubRouter("/reservations", reservationRouter.initializeRouter(vertx));
     router.mountSubRouter("/teams", teamsRouter.initializeRouter(vertx));
-    router.mountSubRouter("/sites", siteRouter.initializeRouter(vertx));
+    router.mountSubRouter("/sites", protectedSiteRouter.initializeRouter(vertx));
 
     return router;
   }
