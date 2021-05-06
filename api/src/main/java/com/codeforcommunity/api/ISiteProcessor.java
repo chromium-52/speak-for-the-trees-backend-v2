@@ -10,5 +10,4 @@ public interface ISiteProcessor {
 
   /** Returns all stewardship activities for the given site */
   StewardshipActivitiesResponse getStewardshipActivities(int siteId);
-
 }

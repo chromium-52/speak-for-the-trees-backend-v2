@@ -4,7 +4,6 @@ import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.site.AddSiteRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
-import com.codeforcommunity.dto.site.StewardshipActivitiesResponse;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
 
 public interface IProtectedSiteProcessor {

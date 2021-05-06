@@ -53,7 +53,7 @@ public class SiteRouter implements IRouter {
     int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
 
     StewardshipActivitiesResponse stewardshipActivitiesResponse =
-            processor.getStewardshipActivities(siteId);
+        processor.getStewardshipActivities(siteId);
 
     end(ctx.response(), 200, JsonObject.mapFrom(stewardshipActivitiesResponse).toString());
   }
