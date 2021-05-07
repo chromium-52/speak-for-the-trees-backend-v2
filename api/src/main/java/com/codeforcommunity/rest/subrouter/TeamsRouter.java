@@ -13,9 +13,6 @@ import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
-import java.util.Collections;
-import java.util.List;
-
 public class TeamsRouter implements IRouter {
 
   private final ITeamsProcessor processor;
@@ -234,6 +231,5 @@ public class TeamsRouter implements IRouter {
   private void handleGetTeamsRoute(RoutingContext ctx) {
     GetTeamsResponse getTeamsResponse = processor.getTeams();
     end(ctx.response(), 200, JsonObject.mapFrom(getTeamsResponse).toString());
-
   }
 }

@@ -3,8 +3,6 @@ package com.codeforcommunity.api;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.team.*;
 
-import java.util.List;
-
 public interface ITeamsProcessor {
   void disbandTeam(JWTData userData, int teamId);
 
