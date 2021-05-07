@@ -1,13 +1,8 @@
 package com.codeforcommunity.api;
 
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.team.AddGoalRequest;
-import com.codeforcommunity.dto.team.CreateTeamRequest;
-import com.codeforcommunity.dto.team.InviteUsersRequest;
-import com.codeforcommunity.dto.team.TeamDataResponse;
-import com.codeforcommunity.dto.team.TeamGoalDataResponse;
-import com.codeforcommunity.dto.team.TransferOwnershipRequest;
-import com.codeforcommunity.dto.team.UsersResponse;
+import com.codeforcommunity.dto.team.*;
+
 import java.util.List;
 
 public interface ITeamsProcessor {
@@ -40,5 +35,5 @@ public interface ITeamsProcessor {
   void transferOwnership(
       JWTData userData, TransferOwnershipRequest transferOwnershipRequest, int teamId);
 
-  List<TeamDataResponse> getTeams();
+  GetTeamsResponse getTeams();
 }

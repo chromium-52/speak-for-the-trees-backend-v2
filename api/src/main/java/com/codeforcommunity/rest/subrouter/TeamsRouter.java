@@ -4,13 +4,7 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.team.AddGoalRequest;
-import com.codeforcommunity.dto.team.CreateTeamRequest;
-import com.codeforcommunity.dto.team.InviteUsersRequest;
-import com.codeforcommunity.dto.team.TeamDataResponse;
-import com.codeforcommunity.dto.team.TeamGoalDataResponse;
-import com.codeforcommunity.dto.team.TransferOwnershipRequest;
-import com.codeforcommunity.dto.team.UsersResponse;
+import com.codeforcommunity.dto.team.*;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
@@ -18,6 +12,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+
+import java.util.Collections;
 import java.util.List;
 
 public class TeamsRouter implements IRouter {
@@ -231,12 +227,13 @@ public class TeamsRouter implements IRouter {
   }
 
   private void registerGetTeamsRoute(Router router) {
-    Route getTeamsRoute = router.get("/teams");
+    Route getTeamsRoute = router.get("/");
     getTeamsRoute.handler(this::handleGetTeamsRoute);
   }
 
   private void handleGetTeamsRoute(RoutingContext ctx) {
-    List<TeamDataResponse> getTeamsResponse = processor.getTeams();
+    GetTeamsResponse getTeamsResponse = processor.getTeams();
     end(ctx.response(), 200, JsonObject.mapFrom(getTeamsResponse).toString());
+
   }
 }
