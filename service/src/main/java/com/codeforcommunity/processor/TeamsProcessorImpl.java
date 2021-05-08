@@ -7,7 +7,15 @@ import static org.jooq.generated.tables.UsersTeams.USERS_TEAMS;
 
 import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.team.*;
+import com.codeforcommunity.dto.team.AddGoalRequest;
+import com.codeforcommunity.dto.team.CreateTeamRequest;
+import com.codeforcommunity.dto.team.GoalResponse;
+import com.codeforcommunity.dto.team.InviteUsersRequest;
+import com.codeforcommunity.dto.team.TeamDataResponse;
+import com.codeforcommunity.dto.team.GetTeamsResponse;
+import com.codeforcommunity.dto.team.TeamGoalDataResponse;
+import com.codeforcommunity.dto.team.TransferOwnershipRequest;
+import com.codeforcommunity.dto.team.UsersResponse;
 import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.LeaderCannotLeaveTeamException;
 import com.codeforcommunity.exceptions.MemberApplicationException;

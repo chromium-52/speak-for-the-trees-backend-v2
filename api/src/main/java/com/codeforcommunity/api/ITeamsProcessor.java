@@ -1,7 +1,13 @@
 package com.codeforcommunity.api;
 
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.team.*;
+import com.codeforcommunity.dto.team.AddGoalRequest;
+import com.codeforcommunity.dto.team.CreateTeamRequest;
+import com.codeforcommunity.dto.team.InviteUsersRequest;
+import com.codeforcommunity.dto.team.GetTeamsResponse;
+import com.codeforcommunity.dto.team.TeamGoalDataResponse;
+import com.codeforcommunity.dto.team.TransferOwnershipRequest;
+import com.codeforcommunity.dto.team.UsersResponse;
 
 public interface ITeamsProcessor {
   void disbandTeam(JWTData userData, int teamId);
