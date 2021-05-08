@@ -97,6 +97,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
     StewardshipRecord record = db.newRecord(STEWARDSHIP);
     record.setUserId(userData.getUserId());
+    record.setSiteId(siteId);
     record.setPerformedOn(recordStewardshipRequest.getDate());
     record.setWatered(recordStewardshipRequest.getWatered());
     record.setMulched(recordStewardshipRequest.getMulched());
