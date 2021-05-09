@@ -47,7 +47,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   private void checkUserExists(int userId) {
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
     if (user == null) {
-      throw new UserDoesNotExistException(user.getId());
+      throw new UserDoesNotExistException(userId);
     }
     if (user.getDeletedAt() != null) {
       throw new UserDeletedException(user.getId());
@@ -66,9 +66,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
         db.selectFrom(USERS_TEAMS).where(USERS_TEAMS.TEAM_ROLE.eq(role)).fetch();
     Map<Integer, TeamRole> users = new HashMap<>();
     applicants.forEach(
-        app -> {
-          users.put(app.getUserId(), app.getTeamRole());
-        });
+        app -> users.put(app.getUserId(), app.getTeamRole()));
     return new UsersResponse(users);
   }
 
@@ -171,7 +169,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
             .fetchOne();
 
     if (usersTeamsRecord != null) {
-      db.deleteFrom(GOALS).where(GOALS.ID.eq(goalId));
+      db.deleteFrom(GOALS).where(GOALS.ID.eq(goalId)).execute();
     } else {
       throw new WrongTeamRoleException(teamId, TeamRole.LEADER);
     }

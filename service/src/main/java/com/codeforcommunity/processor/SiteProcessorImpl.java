@@ -84,7 +84,8 @@ public class SiteProcessorImpl implements ISiteProcessor {
 
     db.deleteFrom(ADOPTED_SITES)
         .where(ADOPTED_SITES.USER_ID.eq(userData.getUserId()))
-        .and(ADOPTED_SITES.SITE_ID.eq(siteId));
+        .and(ADOPTED_SITES.SITE_ID.eq(siteId))
+        .execute();
   }
 
   @Override
@@ -341,7 +342,7 @@ public class SiteProcessorImpl implements ISiteProcessor {
           "User needs to be an admin or the activity's author to delete the record.");
     }
 
-    db.deleteFrom(STEWARDSHIP).where(STEWARDSHIP.ID.eq(activityId));
+    db.deleteFrom(STEWARDSHIP).where(STEWARDSHIP.ID.eq(activityId)).execute();
   }
 
   @Override
