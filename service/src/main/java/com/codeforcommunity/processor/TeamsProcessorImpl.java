@@ -65,8 +65,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
     List<UsersTeamsRecord> applicants =
         db.selectFrom(USERS_TEAMS).where(USERS_TEAMS.TEAM_ROLE.eq(role)).fetch();
     Map<Integer, TeamRole> users = new HashMap<>();
-    applicants.forEach(
-        app -> users.put(app.getUserId(), app.getTeamRole()));
+    applicants.forEach(app -> users.put(app.getUserId(), app.getTeamRole()));
     return new UsersResponse(users);
   }
 

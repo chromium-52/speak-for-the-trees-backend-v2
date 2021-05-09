@@ -175,10 +175,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
       throw new AuthException("User does not have the required privilege level");
     }
     String targetEmail = changePrivilegeLevelRequest.getTargetUserEmail();
-    UsersRecord user =
-        db.selectFrom(USERS)
-            .where(USERS.EMAIL.eq(targetEmail))
-            .fetchOne();
+    UsersRecord user = db.selectFrom(USERS).where(USERS.EMAIL.eq(targetEmail)).fetchOne();
 
     userRecordExistsCheck(user, new UserDoesNotExistException(targetEmail));
 
