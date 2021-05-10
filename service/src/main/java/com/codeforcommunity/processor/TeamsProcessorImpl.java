@@ -12,6 +12,7 @@ import com.codeforcommunity.dto.team.CreateTeamRequest;
 import com.codeforcommunity.dto.team.GoalResponse;
 import com.codeforcommunity.dto.team.InviteUsersRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
+import com.codeforcommunity.dto.team.GetTeamsResponse;
 import com.codeforcommunity.dto.team.TeamGoalDataResponse;
 import com.codeforcommunity.dto.team.TransferOwnershipRequest;
 import com.codeforcommunity.dto.team.UsersResponse;
@@ -393,17 +394,18 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   }
 
   @Override
-  public List<TeamDataResponse> getTeams() {
+  public GetTeamsResponse getTeams() {
     Result<TeamsRecord> teamsRecordResult =
         db.selectFrom(TEAMS).where(TEAMS.DELETED_AT.isNull()).fetch();
-    return teamsRecordResult.map(
-        teamsRecord ->
-            new TeamDataResponse(
-                teamsRecord.getId(),
-                teamsRecord.getTeamName(),
-                teamsRecord.getBio(),
-                teamsRecord.getFinished(),
-                teamsRecord.getCreatedAt(),
-                teamsRecord.getDeletedAt()));
+    return new GetTeamsResponse(
+        teamsRecordResult.map(
+            teamsRecord ->
+                new TeamDataResponse(
+                    teamsRecord.getId(),
+                    teamsRecord.getTeamName(),
+                    teamsRecord.getBio(),
+                    teamsRecord.getFinished(),
+                    teamsRecord.getCreatedAt(),
+                    teamsRecord.getDeletedAt())));
   }
 }
