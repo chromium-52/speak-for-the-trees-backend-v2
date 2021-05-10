@@ -38,16 +38,14 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   }
 
   private Boolean isAlreadyAdopted(int siteId) {
-    return db.fetchExists(
-        db.selectFrom(ADOPTED_SITES)
-            .where(ADOPTED_SITES.SITE_ID.eq(siteId)));
+    return db.fetchExists(db.selectFrom(ADOPTED_SITES).where(ADOPTED_SITES.SITE_ID.eq(siteId)));
   }
 
   private Boolean isAlreadyAdoptedByUser(int userId, int siteId) {
     return db.fetchExists(
-            db.selectFrom(ADOPTED_SITES)
-                    .where(ADOPTED_SITES.USER_ID.eq(userId))
-                    .and(ADOPTED_SITES.SITE_ID.eq(siteId)));
+        db.selectFrom(ADOPTED_SITES)
+            .where(ADOPTED_SITES.USER_ID.eq(userId))
+            .and(ADOPTED_SITES.SITE_ID.eq(siteId)));
   }
 
   /**
@@ -83,7 +81,8 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
     db.deleteFrom(ADOPTED_SITES)
         .where(ADOPTED_SITES.USER_ID.eq(userData.getUserId()))
-        .and(ADOPTED_SITES.SITE_ID.eq(siteId));
+        .and(ADOPTED_SITES.SITE_ID.eq(siteId))
+        .execute();
   }
 
   @Override
@@ -248,6 +247,6 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
           "User needs to be an admin or the activity's author to delete the record.");
     }
 
-    db.deleteFrom(STEWARDSHIP).where(STEWARDSHIP.ID.eq(activityId));
+    db.deleteFrom(STEWARDSHIP).where(STEWARDSHIP.ID.eq(activityId)).execute();
   }
 }
