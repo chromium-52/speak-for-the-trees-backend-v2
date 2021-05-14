@@ -21,6 +21,7 @@ import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.EmailAlreadyInUseException;
+import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.SamePrivilegeLevelException;
 import com.codeforcommunity.exceptions.UserDeletedException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
@@ -174,7 +175,14 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
         || userData.getPrivilegeLevel() == PrivilegeLevel.SUPER_ADMIN)) {
       throw new AuthException("User does not have the required privilege level");
     }
+
     String targetEmail = changePrivilegeLevelRequest.getTargetUserEmail();
+
+    // check if target user exists
+    if (!db.fetchExists(db.selectFrom(USERS).where(USERS.EMAIL.eq(targetEmail)))) {
+      throw new UserDoesNotExistException(targetEmail);
+    }
+
     UsersRecord user = db.selectFrom(USERS).where(USERS.EMAIL.eq(targetEmail)).fetchOne();
 
     userRecordExistsCheck(user, new UserDoesNotExistException(targetEmail));
