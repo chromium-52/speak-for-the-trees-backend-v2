@@ -99,7 +99,7 @@ public class SiteImport extends ApiDto {
       String condition,
       Boolean discoloring,
       Boolean leaning,
-      Boolean constrictingGate,
+      Boolean constrictingGrate,
       Boolean wounds,
       Boolean pooling,
       Boolean stakesWithWires,
@@ -152,7 +152,7 @@ public class SiteImport extends ApiDto {
     this.condition = condition;
     this.discoloring = discoloring;
     this.leaning = leaning;
-    this.constrictingGrate = constrictingGate;
+    this.constrictingGrate = constrictingGrate;
     this.wounds = wounds;
     this.pooling = pooling;
     this.stakesWithWires = stakesWithWires;
