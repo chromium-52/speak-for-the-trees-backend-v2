@@ -185,6 +185,11 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
       throw new AuthException("User does not have the required privilege level");
     }
 
+    // normal admins can't change the privilege level of super admins
+    if (userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN && user.getPrivilegeLevel() == PrivilegeLevel.SUPER_ADMIN) {
+      throw new AuthException("Standard admins cannot change the privilege level of super admins");
+    }
+
     byte[] passwordHash =
         db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId())).fetchOne().getPasswordHash();
 
