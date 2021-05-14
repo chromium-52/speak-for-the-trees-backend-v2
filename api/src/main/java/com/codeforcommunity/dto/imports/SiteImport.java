@@ -44,7 +44,7 @@ public class SiteImport extends ApiDto {
   private String condition;
   private Boolean discoloring;
   private Boolean leaning;
-  private Boolean constrictingGate;
+  private Boolean constrictingGrate;
   private Boolean wounds;
   private Boolean pooling;
   private Boolean stakesWithWires;
@@ -152,7 +152,7 @@ public class SiteImport extends ApiDto {
     this.condition = condition;
     this.discoloring = discoloring;
     this.leaning = leaning;
-    this.constrictingGate = constrictingGate;
+    this.constrictingGrate = constrictingGate;
     this.wounds = wounds;
     this.pooling = pooling;
     this.stakesWithWires = stakesWithWires;
@@ -383,12 +383,12 @@ public class SiteImport extends ApiDto {
     this.leaning = leaning;
   }
 
-  public Boolean getConstrictingGate() {
-    return constrictingGate;
+  public Boolean getConstrictingGrate() {
+    return constrictingGrate;
   }
 
-  public void setConstrictingGate(Boolean constrictingGate) {
-    this.constrictingGate = constrictingGate;
+  public void setConstrictingGrate(Boolean constrictingGrate) {
+    this.constrictingGrate = constrictingGrate;
   }
 
   public Boolean getWounds() {

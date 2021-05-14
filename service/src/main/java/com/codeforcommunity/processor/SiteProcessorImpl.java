@@ -146,7 +146,7 @@ public class SiteProcessorImpl implements ISiteProcessor {
     siteEntriesRecord.setCondition(addSiteRequest.getCondition());
     siteEntriesRecord.setDiscoloring(addSiteRequest.isDiscoloring());
     siteEntriesRecord.setLeaning(addSiteRequest.isLeaning());
-    siteEntriesRecord.setConstrictingGate(addSiteRequest.isConstrictingGate());
+    siteEntriesRecord.setConstrictingGrate(addSiteRequest.isConstrictingGrate());
     siteEntriesRecord.setWounds(addSiteRequest.isWounds());
     siteEntriesRecord.setPooling(addSiteRequest.isPooling());
     siteEntriesRecord.setStakesWithWires(addSiteRequest.isStakesWithWires());
@@ -217,7 +217,7 @@ public class SiteProcessorImpl implements ISiteProcessor {
                   record.getCondition(),
                   record.getDiscoloring(),
                   record.getLeaning(),
-                  record.getConstrictingGate(),
+                  record.getConstrictingGrate(),
                   record.getWounds(),
                   record.getPooling(),
                   record.getStakesWithWires(),
@@ -290,7 +290,7 @@ public class SiteProcessorImpl implements ISiteProcessor {
     record.setCondition(updateSiteRequest.getCondition());
     record.setDiscoloring(updateSiteRequest.isDiscoloring());
     record.setLeaning(updateSiteRequest.isLeaning());
-    record.setConstrictingGate(updateSiteRequest.isConstrictingGate());
+    record.setConstrictingGrate(updateSiteRequest.isConstrictingGrate());
     record.setWounds(updateSiteRequest.isWounds());
     record.setPooling(updateSiteRequest.isPooling());
     record.setStakesWithWires(updateSiteRequest.isStakesWithWires());

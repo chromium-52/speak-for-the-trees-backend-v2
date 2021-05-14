@@ -1,0 +1,1 @@
+ALTER TABLE site_entries RENAME COLUMN constricting_gate TO constricting_grate;

@@ -204,7 +204,7 @@ public class ImportProcessorImpl implements IImportProcessor {
               siteEntry.setCondition(siteImport.getCondition());
               siteEntry.setDiscoloring(siteImport.getDiscoloring());
               siteEntry.setLeaning(siteImport.getLeaning());
-              siteEntry.setConstrictingGate(siteImport.getConstrictingGate());
+              siteEntry.setConstrictingGrate(siteImport.getConstrictingGrate());
               siteEntry.setWounds(siteImport.getWounds());
               siteEntry.setPooling(siteImport.getPooling());
               siteEntry.setStakesWithWires(siteImport.getStakesWithWires());
