@@ -104,7 +104,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   public UserDataResponse getUserData(JWTData userData) {
     UsersRecord user = userExistsCheck(userData);
 
-    return new UserDataResponse(user.getFirstName(), user.getLastName(), user.getEmail());
+    return new UserDataResponse(user.getFirstName(), user.getLastName(), user.getEmail(), user.getUsername());
   }
 
   @Override
@@ -183,6 +183,11 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
     if (userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN
         && changePrivilegeLevelRequest.getNewLevel() == PrivilegeLevel.SUPER_ADMIN) {
       throw new AuthException("User does not have the required privilege level");
+    }
+
+    // normal admins can't change the privilege level of super admins
+    if (userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN && user.getPrivilegeLevel() == PrivilegeLevel.SUPER_ADMIN) {
+      throw new AuthException("Standard admins cannot change the privilege level of super admins");
     }
 
     byte[] passwordHash =
