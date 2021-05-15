@@ -118,7 +118,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
                 goalsRecord ->
                     new GoalResponse(
                         goalsRecord.getId(),
-                        goalsRecord.getTeamId(),
+                        goalsRecord.getGoal(),
                         goalsRecord.getStartAt(),
                         goalsRecord.getCompleteBy(),
                         goalsRecord.getCompletedAt()))
