@@ -183,9 +183,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
       throw new UserDoesNotExistException(targetEmail);
     }
 
-    UsersRecord user = db.selectFrom(USERS).where(USERS.EMAIL.eq(targetEmail)).fetchOne();
-
-    userRecordExistsCheck(user, new UserDoesNotExistException(targetEmail));
+    UsersRecord targetUser = db.selectFrom(USERS).where(USERS.EMAIL.eq(targetEmail)).fetchOne();
 
     // normal admins can't create super admins
     if (userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN
@@ -194,7 +192,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
     }
 
     // normal admins can't change the privilege level of super admins
-    if (userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN && user.getPrivilegeLevel() == PrivilegeLevel.SUPER_ADMIN) {
+    if (userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN && targetUser.getPrivilegeLevel() == PrivilegeLevel.SUPER_ADMIN) {
       throw new AuthException("Standard admins cannot change the privilege level of super admins");
     }
 
@@ -203,11 +201,11 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
 
     // check password and if the privilege level is different
     if (Passwords.isExpectedPassword(changePrivilegeLevelRequest.getPassword(), passwordHash)) {
-      if (user.getPrivilegeLevel().equals(changePrivilegeLevelRequest.getNewLevel())) {
+      if (targetUser.getPrivilegeLevel().equals(changePrivilegeLevelRequest.getNewLevel())) {
         throw new SamePrivilegeLevelException();
       }
-      user.setPrivilegeLevel(changePrivilegeLevelRequest.getNewLevel());
-      user.store();
+      targetUser.setPrivilegeLevel(changePrivilegeLevelRequest.getNewLevel());
+      targetUser.store();
     } else {
       throw new WrongPasswordException();
     }
