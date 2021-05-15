@@ -3,7 +3,6 @@ package com.codeforcommunity.rest.subrouter;
 import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.IMapProcessor;
-import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.map.BlockGeoResponse;
 import com.codeforcommunity.dto.map.NeighborhoodGeoResponse;
 import com.codeforcommunity.dto.map.SiteGeoResponse;
@@ -49,24 +48,18 @@ public class MapRouter implements IRouter {
   }
 
   private void handleGetBlocks(RoutingContext ctx) {
-    JWTData userData = ctx.get("jwt_data");
-
     BlockGeoResponse response = processor.getBlockGeoJson();
 
     end(ctx.response(), 200, JsonObject.mapFrom(response).toString());
   }
 
   private void handleGetNeighborhoods(RoutingContext ctx) {
-    JWTData userData = ctx.get("jwt_data");
-
     NeighborhoodGeoResponse response = processor.getNeighborhoodGeoJson();
 
     end(ctx.response(), 200, JsonObject.mapFrom(response).toString());
   }
 
   private void handleGetSites(RoutingContext ctx) {
-    JWTData userData = ctx.get("jwt_data");
-
     SiteGeoResponse response = processor.getSiteGeoJson();
 
     end(ctx.response(), 200, JsonObject.mapFrom(response).toString());
