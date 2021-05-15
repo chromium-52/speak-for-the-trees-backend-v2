@@ -21,7 +21,6 @@ import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.EmailAlreadyInUseException;
-import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.SamePrivilegeLevelException;
 import com.codeforcommunity.exceptions.UserDeletedException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
@@ -105,7 +104,8 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   public UserDataResponse getUserData(JWTData userData) {
     UsersRecord user = userExistsCheck(userData);
 
-    return new UserDataResponse(user.getFirstName(), user.getLastName(), user.getEmail(), user.getUsername());
+    return new UserDataResponse(
+        user.getFirstName(), user.getLastName(), user.getEmail(), user.getUsername());
   }
 
   @Override
@@ -192,7 +192,8 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
     }
 
     // normal admins can't change the privilege level of super admins
-    if (userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN && targetUser.getPrivilegeLevel() == PrivilegeLevel.SUPER_ADMIN) {
+    if (userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN
+        && targetUser.getPrivilegeLevel() == PrivilegeLevel.SUPER_ADMIN) {
       throw new AuthException("Standard admins cannot change the privilege level of super admins");
     }
 
