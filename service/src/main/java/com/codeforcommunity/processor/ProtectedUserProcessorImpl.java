@@ -104,7 +104,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   public UserDataResponse getUserData(JWTData userData) {
     UsersRecord user = userExistsCheck(userData);
 
-    return new UserDataResponse(user.getFirstName(), user.getLastName(), user.getEmail());
+    return new UserDataResponse(user.getFirstName(), user.getLastName(), user.getEmail(), user.getUsername());
   }
 
   @Override
