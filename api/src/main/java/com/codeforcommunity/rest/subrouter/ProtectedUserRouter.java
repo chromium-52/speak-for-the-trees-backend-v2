@@ -34,6 +34,7 @@ public class ProtectedUserRouter implements IRouter {
     registerDeleteUser(router);
     registerChangePassword(router);
     registerGetUserData(router);
+    registerGetUserTeams(router);
     registerChangeEmail(router);
     registerChangeUsername(router);
     registerChangePrivilegeLevel(router);
