@@ -238,7 +238,7 @@ public class UpdateSiteRequest extends ApiDto {
     this.leaning = leaning;
   }
 
-  public Boolean isConstrictingGate() {
+  public Boolean isConstrictingGrate() {
     return constrictingGrate;
   }
 
