@@ -25,14 +25,15 @@ import com.codeforcommunity.enums.ReservationAction;
 import com.codeforcommunity.logger.SLogger;
 import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jooq.DSLContext;
+import org.jooq.Record10;
 import org.jooq.Record2;
-import org.jooq.Record9;
 import org.jooq.Select;
 import org.jooq.generated.tables.records.BlocksRecord;
 import org.jooq.generated.tables.records.NeighborhoodsRecord;
@@ -127,7 +128,17 @@ public class MapProcessorImpl implements IMapProcessor {
   }
 
   private SiteFeature siteFeatureFromRecord(
-      Record9<Integer, Boolean, Double, String, Timestamp, String, String, BigDecimal, BigDecimal>
+      Record10<
+              Integer,
+              Boolean,
+              Double,
+              String,
+              Timestamp,
+              String,
+              String,
+              BigDecimal,
+              BigDecimal,
+              Date>
           sitesRecord) {
     SiteFeatureProperties properties =
         new SiteFeatureProperties(
@@ -137,7 +148,8 @@ public class MapProcessorImpl implements IMapProcessor {
             sitesRecord.value4(),
             sitesRecord.value5(),
             sitesRecord.value6(),
-            sitesRecord.value7());
+            sitesRecord.value7(),
+            sitesRecord.value10());
     GeometryPoint geometry = new GeometryPoint(sitesRecord.value8(), sitesRecord.value9());
     return new SiteFeature(properties, geometry);
   }
@@ -183,7 +195,7 @@ public class MapProcessorImpl implements IMapProcessor {
   @Override
   public SiteGeoResponse getSiteGeoJson() {
     List<
-            Record9<
+            Record10<
                 Integer,
                 Boolean,
                 Double,
@@ -192,7 +204,8 @@ public class MapProcessorImpl implements IMapProcessor {
                 String,
                 String,
                 BigDecimal,
-                BigDecimal>>
+                BigDecimal,
+                Date>>
         nonNullUserRecords =
             this.db
                 .select(
@@ -204,7 +217,8 @@ public class MapProcessorImpl implements IMapProcessor {
                     USERS.USERNAME,
                     SITES.ADDRESS,
                     SITES.LAT,
-                    SITES.LNG)
+                    SITES.LNG,
+                    SITE_ENTRIES.PLANTING_DATE)
                 .from(SITES)
                 .innerJoin(SITE_ENTRIES)
                 .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
@@ -220,7 +234,7 @@ public class MapProcessorImpl implements IMapProcessor {
                 .orderBy(SITES.ID)
                 .fetch();
     List<
-            Record9<
+            Record10<
                 Integer,
                 Boolean,
                 Double,
@@ -229,7 +243,8 @@ public class MapProcessorImpl implements IMapProcessor {
                 String,
                 String,
                 BigDecimal,
-                BigDecimal>>
+                BigDecimal,
+                Date>>
         nullUserRecords =
             this.db
                 .select(
@@ -241,7 +256,8 @@ public class MapProcessorImpl implements IMapProcessor {
                     ENTRY_USERNAMES.USERNAME,
                     SITES.ADDRESS,
                     SITES.LAT,
-                    SITES.LNG)
+                    SITES.LNG,
+                    SITE_ENTRIES.PLANTING_DATE)
                 .from(SITES)
                 .innerJoin(SITE_ENTRIES)
                 .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
@@ -260,7 +276,7 @@ public class MapProcessorImpl implements IMapProcessor {
                 .orderBy(SITES.ID)
                 .fetch();
     List<
-            Record9<
+            Record10<
                 Integer,
                 Boolean,
                 Double,
@@ -269,10 +285,11 @@ public class MapProcessorImpl implements IMapProcessor {
                 String,
                 String,
                 BigDecimal,
-                BigDecimal>>
+                BigDecimal,
+                Date>>
         allSiteEntriesRecords =
             this.mergeSorted(
-                nonNullUserRecords, nullUserRecords, Comparator.comparingInt(Record9::value1));
+                nonNullUserRecords, nullUserRecords, Comparator.comparingInt(Record10::value1));
     List<SiteFeature> features =
         allSiteEntriesRecords.stream()
             .map(this::siteFeatureFromRecord)

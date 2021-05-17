@@ -1,6 +1,7 @@
 package com.codeforcommunity.dto.map;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import java.sql.Date;
 import java.sql.Timestamp;
 
 public class SiteFeatureProperties {
@@ -11,6 +12,7 @@ public class SiteFeatureProperties {
   Timestamp updatedAt;
   String updatedBy; // username
   String address;
+  Date plantingDate;
 
   public SiteFeatureProperties(
       Integer id,
@@ -19,7 +21,8 @@ public class SiteFeatureProperties {
       String species,
       Timestamp updatedAt,
       String updatedBy,
-      String address) {
+      String address,
+      Date plantingDate) {
     this.id = id;
     this.treePresent = treePresent;
     this.diameter = diameter;
@@ -27,6 +30,7 @@ public class SiteFeatureProperties {
     this.updatedAt = updatedAt;
     this.updatedBy = updatedBy;
     this.address = address;
+    this.plantingDate = plantingDate;
   }
 
   public Integer getId() {
@@ -58,5 +62,9 @@ public class SiteFeatureProperties {
 
   public String getAddress() {
     return address;
+  }
+
+  public Date getPlantingDate() {
+    return plantingDate;
   }
 }

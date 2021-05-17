@@ -1,0 +1,1 @@
+ALTER TABLE site_entries ADD COLUMN planting_date DATE DEFAULT NULL;
