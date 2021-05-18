@@ -9,6 +9,7 @@ import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.team.AddGoalRequest;
 import com.codeforcommunity.dto.team.CreateTeamRequest;
+import com.codeforcommunity.dto.team.GetTeamsResponse;
 import com.codeforcommunity.dto.team.GoalResponse;
 import com.codeforcommunity.dto.team.InviteUsersRequest;
 import com.codeforcommunity.dto.team.TeamDataResponse;
@@ -47,7 +48,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   private void checkUserExists(int userId) {
     UsersRecord user = db.selectFrom(USERS).where(USERS.ID.eq(userId)).fetchOne();
     if (user == null) {
-      throw new UserDoesNotExistException(user.getId());
+      throw new UserDoesNotExistException(userId);
     }
     if (user.getDeletedAt() != null) {
       throw new UserDeletedException(user.getId());
@@ -65,10 +66,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
     List<UsersTeamsRecord> applicants =
         db.selectFrom(USERS_TEAMS).where(USERS_TEAMS.TEAM_ROLE.eq(role)).fetch();
     Map<Integer, TeamRole> users = new HashMap<>();
-    applicants.forEach(
-        app -> {
-          users.put(app.getUserId(), app.getTeamRole());
-        });
+    applicants.forEach(app -> users.put(app.getUserId(), app.getTeamRole()));
     return new UsersResponse(users);
   }
 
@@ -120,7 +118,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
                 goalsRecord ->
                     new GoalResponse(
                         goalsRecord.getId(),
-                        goalsRecord.getTeamId(),
+                        goalsRecord.getGoal(),
                         goalsRecord.getStartAt(),
                         goalsRecord.getCompleteBy(),
                         goalsRecord.getCompletedAt()))
@@ -171,7 +169,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
             .fetchOne();
 
     if (usersTeamsRecord != null) {
-      db.deleteFrom(GOALS).where(GOALS.ID.eq(goalId));
+      db.deleteFrom(GOALS).where(GOALS.ID.eq(goalId)).execute();
     } else {
       throw new WrongTeamRoleException(teamId, TeamRole.LEADER);
     }
@@ -396,17 +394,18 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   }
 
   @Override
-  public List<TeamDataResponse> getTeams() {
+  public GetTeamsResponse getTeams() {
     Result<TeamsRecord> teamsRecordResult =
         db.selectFrom(TEAMS).where(TEAMS.DELETED_AT.isNull()).fetch();
-    return teamsRecordResult.map(
-        teamsRecord ->
-            new TeamDataResponse(
-                teamsRecord.getId(),
-                teamsRecord.getTeamName(),
-                teamsRecord.getBio(),
-                teamsRecord.getFinished(),
-                teamsRecord.getCreatedAt(),
-                teamsRecord.getDeletedAt()));
+    return new GetTeamsResponse(
+        teamsRecordResult.map(
+            teamsRecord ->
+                new TeamDataResponse(
+                    teamsRecord.getId(),
+                    teamsRecord.getTeamName(),
+                    teamsRecord.getBio(),
+                    teamsRecord.getFinished(),
+                    teamsRecord.getCreatedAt(),
+                    teamsRecord.getDeletedAt())));
   }
 }

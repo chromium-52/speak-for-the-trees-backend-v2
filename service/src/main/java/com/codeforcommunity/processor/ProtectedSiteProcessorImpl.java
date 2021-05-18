@@ -37,11 +37,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     }
   }
 
-  private Boolean isAlreadyAdopted(int siteId) {
-    return db.fetchExists(db.selectFrom(ADOPTED_SITES).where(ADOPTED_SITES.SITE_ID.eq(siteId)));
-  }
-
-  private Boolean isAlreadyAdoptedByUser(int userId, int siteId) {
+  private Boolean isAlreadyAdopted(int userId, int siteId) {
     return db.fetchExists(
         db.selectFrom(ADOPTED_SITES)
             .where(ADOPTED_SITES.USER_ID.eq(userId))
@@ -62,7 +58,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   @Override
   public void adoptSite(JWTData userData, int siteId) {
     checkSiteExists(siteId);
-    if (isAlreadyAdopted(siteId)) {
+    if (isAlreadyAdopted(userData.getUserId(), siteId)) {
       throw new WrongAdoptionStatusException(true);
     }
 
@@ -75,7 +71,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   @Override
   public void unadoptSite(JWTData userData, int siteId) {
     checkSiteExists(siteId);
-    if (!isAlreadyAdoptedByUser(userData.getUserId(), siteId)) {
+    if (!isAlreadyAdopted(userData.getUserId(), siteId)) {
       throw new WrongAdoptionStatusException(false);
     }
 
@@ -102,7 +98,6 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
     StewardshipRecord record = db.newRecord(STEWARDSHIP);
     record.setUserId(userData.getUserId());
-    record.setSiteId(siteId);
     record.setPerformedOn(recordStewardshipRequest.getDate());
     record.setWatered(recordStewardshipRequest.getWatered());
     record.setMulched(recordStewardshipRequest.getMulched());
@@ -144,7 +139,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     siteEntriesRecord.setCondition(addSiteRequest.getCondition());
     siteEntriesRecord.setDiscoloring(addSiteRequest.isDiscoloring());
     siteEntriesRecord.setLeaning(addSiteRequest.isLeaning());
-    siteEntriesRecord.setConstrictingGate(addSiteRequest.isConstrictingGate());
+    siteEntriesRecord.setConstrictingGrate(addSiteRequest.isConstrictingGrate());
     siteEntriesRecord.setWounds(addSiteRequest.isWounds());
     siteEntriesRecord.setPooling(addSiteRequest.isPooling());
     siteEntriesRecord.setStakesWithWires(addSiteRequest.isStakesWithWires());
@@ -172,7 +167,6 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     siteEntriesRecord.store();
   }
 
-  @Override
   public void updateSite(JWTData userData, int siteId, UpdateSiteRequest updateSiteRequest) {
     checkSiteExists(siteId);
 
@@ -195,7 +189,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     record.setCondition(updateSiteRequest.getCondition());
     record.setDiscoloring(updateSiteRequest.isDiscoloring());
     record.setLeaning(updateSiteRequest.isLeaning());
-    record.setConstrictingGate(updateSiteRequest.isConstrictingGate());
+    record.setConstrictingGrate(updateSiteRequest.isConstrictingGrate());
     record.setWounds(updateSiteRequest.isWounds());
     record.setPooling(updateSiteRequest.isPooling());
     record.setStakesWithWires(updateSiteRequest.isStakesWithWires());

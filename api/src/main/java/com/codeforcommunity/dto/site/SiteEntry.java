@@ -24,7 +24,7 @@ public class SiteEntry {
   private final String condition;
   private final Boolean discoloring;
   private final Boolean leaning;
-  private final Boolean constrictingGate;
+  private final Boolean constrictingGrate;
   private final Boolean wounds;
   private final Boolean pooling;
   private final Boolean stakesWithWires;
@@ -67,7 +67,7 @@ public class SiteEntry {
       String condition,
       Boolean discoloring,
       Boolean leaning,
-      Boolean constrictingGate,
+      Boolean constrictingGrate,
       Boolean wounds,
       Boolean pooling,
       Boolean stakesWithWires,
@@ -108,7 +108,7 @@ public class SiteEntry {
     this.condition = condition;
     this.discoloring = discoloring;
     this.leaning = leaning;
-    this.constrictingGate = constrictingGate;
+    this.constrictingGrate = constrictingGrate;
     this.wounds = wounds;
     this.pooling = pooling;
     this.stakesWithWires = stakesWithWires;
@@ -202,8 +202,8 @@ public class SiteEntry {
     return leaning;
   }
 
-  public Boolean getConstrictingGate() {
-    return constrictingGate;
+  public Boolean getConstrictingGrate() {
+    return constrictingGrate;
   }
 
   public Boolean getWounds() {

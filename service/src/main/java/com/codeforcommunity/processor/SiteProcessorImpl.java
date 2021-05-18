@@ -76,7 +76,7 @@ public class SiteProcessorImpl implements ISiteProcessor {
                   record.getCondition(),
                   record.getDiscoloring(),
                   record.getLeaning(),
-                  record.getConstrictingGate(),
+                  record.getConstrictingGrate(),
                   record.getWounds(),
                   record.getPooling(),
                   record.getStakesWithWires(),

@@ -31,7 +31,7 @@ public interface IReservationProcessor {
   void markForQA(JWTData userData, BlockIDRequest markForQARequest);
 
   /** Marks the block as complete again, meaning SFTT approves of the block completion */
-  void passQA(JWTData userData, BlockIDRequest passQARequest); // TODO
+  void passQA(JWTData userData, BlockIDRequest passQARequest); // TODO: Implement this route
 
   /** Marks the block as open again, meaning SFTT does not approve of the block completion */
   void failQA(JWTData userData, BlockIDRequest failQARequest);
