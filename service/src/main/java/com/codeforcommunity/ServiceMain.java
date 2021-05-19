@@ -4,6 +4,7 @@ import com.codeforcommunity.api.IAuthProcessor;
 import com.codeforcommunity.api.IImportProcessor;
 import com.codeforcommunity.api.ILeaderboardProcessor;
 import com.codeforcommunity.api.IMapProcessor;
+import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.api.IReservationProcessor;
 import com.codeforcommunity.api.ISiteProcessor;
@@ -16,6 +17,7 @@ import com.codeforcommunity.processor.AuthProcessorImpl;
 import com.codeforcommunity.processor.ImportProcessorImpl;
 import com.codeforcommunity.processor.LeaderboardProcessorImpl;
 import com.codeforcommunity.processor.MapProcessorImpl;
+import com.codeforcommunity.processor.ProtectedSiteProcessorImpl;
 import com.codeforcommunity.processor.ProtectedUserProcessorImpl;
 import com.codeforcommunity.processor.ReservationProcessorImpl;
 import com.codeforcommunity.processor.SiteProcessorImpl;
@@ -99,6 +101,7 @@ public class ServiceMain {
     ILeaderboardProcessor leaderboardProc = new LeaderboardProcessorImpl(this.db);
     IMapProcessor mapProc = new MapProcessorImpl(this.db);
     ITeamsProcessor teamsProc = new TeamsProcessorImpl(this.db);
+    IProtectedSiteProcessor protectedSiteProc = new ProtectedSiteProcessorImpl(this.db);
     ISiteProcessor siteProc = new SiteProcessorImpl(this.db);
 
     // Create the API router and start the HTTP server
@@ -111,6 +114,7 @@ public class ServiceMain {
             leaderboardProc,
             mapProc,
             teamsProc,
+            protectedSiteProc,
             siteProc,
             jwtAuthorizer);
 
