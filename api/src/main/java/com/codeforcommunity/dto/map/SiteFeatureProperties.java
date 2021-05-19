@@ -13,6 +13,7 @@ public class SiteFeatureProperties {
   String updatedBy; // username
   String address;
   Date plantingDate;
+  Integer adopterId;
 
   public SiteFeatureProperties(
       Integer id,
@@ -22,7 +23,8 @@ public class SiteFeatureProperties {
       Timestamp updatedAt,
       String updatedBy,
       String address,
-      Date plantingDate) {
+      Date plantingDate,
+      Integer adopterId) {
     this.id = id;
     this.treePresent = treePresent;
     this.diameter = diameter;
@@ -31,6 +33,7 @@ public class SiteFeatureProperties {
     this.updatedBy = updatedBy;
     this.address = address;
     this.plantingDate = plantingDate;
+    this.adopterId = adopterId;
   }
 
   public Integer getId() {
@@ -66,5 +69,9 @@ public class SiteFeatureProperties {
 
   public Date getPlantingDate() {
     return plantingDate;
+  }
+
+  public Integer getAdopterId() {
+    return adopterId;
   }
 }

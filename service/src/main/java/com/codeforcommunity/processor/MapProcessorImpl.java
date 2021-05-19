@@ -1,5 +1,6 @@
 package com.codeforcommunity.processor;
 
+import static org.jooq.generated.tables.AdoptedSites.ADOPTED_SITES;
 import static org.jooq.generated.tables.Blocks.BLOCKS;
 import static org.jooq.generated.tables.EntryUsernames.ENTRY_USERNAMES;
 import static org.jooq.generated.tables.Neighborhoods.NEIGHBORHOODS;
@@ -32,7 +33,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jooq.DSLContext;
-import org.jooq.Record10;
+import org.jooq.Record11;
 import org.jooq.Record2;
 import org.jooq.Select;
 import org.jooq.generated.tables.records.BlocksRecord;
@@ -128,7 +129,7 @@ public class MapProcessorImpl implements IMapProcessor {
   }
 
   private SiteFeature siteFeatureFromRecord(
-      Record10<
+      Record11<
               Integer,
               Boolean,
               Double,
@@ -138,7 +139,8 @@ public class MapProcessorImpl implements IMapProcessor {
               String,
               BigDecimal,
               BigDecimal,
-              Date>
+              Date,
+              Integer>
           sitesRecord) {
     SiteFeatureProperties properties =
         new SiteFeatureProperties(
@@ -149,7 +151,8 @@ public class MapProcessorImpl implements IMapProcessor {
             sitesRecord.value5(),
             sitesRecord.value6(),
             sitesRecord.value7(),
-            sitesRecord.value10());
+            sitesRecord.value10(),
+            sitesRecord.value11());
     GeometryPoint geometry = new GeometryPoint(sitesRecord.value8(), sitesRecord.value9());
     return new SiteFeature(properties, geometry);
   }
@@ -195,7 +198,7 @@ public class MapProcessorImpl implements IMapProcessor {
   @Override
   public SiteGeoResponse getSiteGeoJson() {
     List<
-            Record10<
+            Record11<
                 Integer,
                 Boolean,
                 Double,
@@ -205,7 +208,8 @@ public class MapProcessorImpl implements IMapProcessor {
                 String,
                 BigDecimal,
                 BigDecimal,
-                Date>>
+                Date,
+                Integer>>
         nonNullUserRecords =
             this.db
                 .select(
@@ -218,12 +222,15 @@ public class MapProcessorImpl implements IMapProcessor {
                     SITES.ADDRESS,
                     SITES.LAT,
                     SITES.LNG,
-                    SITE_ENTRIES.PLANTING_DATE)
+                    SITE_ENTRIES.PLANTING_DATE,
+                    ADOPTED_SITES.USER_ID)
                 .from(SITES)
                 .innerJoin(SITE_ENTRIES)
                 .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
                 .innerJoin(USERS)
                 .on(SITE_ENTRIES.USER_ID.eq(USERS.ID))
+                .leftJoin(ADOPTED_SITES)
+                .on(ADOPTED_SITES.SITE_ID.eq(SITE_ENTRIES.ID))
                 .where(
                     SITE_ENTRIES.UPDATED_AT.in(
                         this.db
@@ -234,7 +241,7 @@ public class MapProcessorImpl implements IMapProcessor {
                 .orderBy(SITES.ID)
                 .fetch();
     List<
-            Record10<
+            Record11<
                 Integer,
                 Boolean,
                 Double,
@@ -244,7 +251,8 @@ public class MapProcessorImpl implements IMapProcessor {
                 String,
                 BigDecimal,
                 BigDecimal,
-                Date>>
+                Date,
+                Integer>>
         nullUserRecords =
             this.db
                 .select(
@@ -257,12 +265,15 @@ public class MapProcessorImpl implements IMapProcessor {
                     SITES.ADDRESS,
                     SITES.LAT,
                     SITES.LNG,
-                    SITE_ENTRIES.PLANTING_DATE)
+                    SITE_ENTRIES.PLANTING_DATE,
+                    ADOPTED_SITES.USER_ID)
                 .from(SITES)
                 .innerJoin(SITE_ENTRIES)
                 .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
                 .innerJoin(ENTRY_USERNAMES)
                 .on(SITE_ENTRIES.ID.eq(ENTRY_USERNAMES.ENTRY_ID))
+                .leftJoin(ADOPTED_SITES)
+                .on(ADOPTED_SITES.SITE_ID.eq(SITE_ENTRIES.ID))
                 .where(
                     SITE_ENTRIES
                         .UPDATED_AT
@@ -276,7 +287,7 @@ public class MapProcessorImpl implements IMapProcessor {
                 .orderBy(SITES.ID)
                 .fetch();
     List<
-            Record10<
+            Record11<
                 Integer,
                 Boolean,
                 Double,
@@ -286,10 +297,11 @@ public class MapProcessorImpl implements IMapProcessor {
                 String,
                 BigDecimal,
                 BigDecimal,
-                Date>>
+                Date,
+                Integer>>
         allSiteEntriesRecords =
             this.mergeSorted(
-                nonNullUserRecords, nullUserRecords, Comparator.comparingInt(Record10::value1));
+                nonNullUserRecords, nullUserRecords, Comparator.comparingInt(Record11::value1));
     List<SiteFeature> features =
         allSiteEntriesRecords.stream()
             .map(this::siteFeatureFromRecord)
