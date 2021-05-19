@@ -48,6 +48,7 @@ public class SiteEntry {
   private final Boolean stump;
   private final String treeNotes;
   private final String siteNotes;
+  private final String adopter;
 
   public SiteEntry(
       Integer id,
@@ -90,7 +91,8 @@ public class SiteEntry {
       Boolean grate,
       Boolean stump,
       String treeNotes,
-      String siteNotes) {
+      String siteNotes,
+      String adopter) {
     this.id = id;
     this.username = username;
     this.updatedAt = updatedAt;
@@ -132,6 +134,7 @@ public class SiteEntry {
     this.stump = stump;
     this.treeNotes = treeNotes;
     this.siteNotes = siteNotes;
+    this.adopter = adopter;
   }
 
   public Integer getId() {
@@ -296,5 +299,9 @@ public class SiteEntry {
 
   public String getSiteNotes() {
     return siteNotes;
+  }
+
+  public String getAdopter() {
+    return adopter;
   }
 }
