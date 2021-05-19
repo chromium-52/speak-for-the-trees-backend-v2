@@ -199,19 +199,19 @@ public class SiteProcessorImpl implements ISiteProcessor {
           }
 
           // Finds if the site is adopted, and if it is returns the username of the adopter
-          String adopter;
-          AdoptedSitesRecord adoptedSitesRecord =
-              db.selectFrom(ADOPTED_SITES).where(ADOPTED_SITES.SITE_ID.eq(siteId)).fetchOne();
-          if (adoptedSitesRecord == null) {
-            adopter = null;
-          } else {
-            adopter =
-                db.select(USERS.USERNAME)
-                    .from(USERS)
-                    .where(USERS.ID.eq(adoptedSitesRecord.getUserId()))
-                    .fetchOne()
-                    .value1();
-          }
+//          String adopter;
+//          AdoptedSitesRecord adoptedSitesRecord =
+//              db.selectFrom(ADOPTED_SITES).where(ADOPTED_SITES.SITE_ID.eq(siteId)).fetchOne();
+//          if (adoptedSitesRecord == null) {
+//            adopter = null;
+//          } else {
+//            adopter =
+//                db.select(USERS.USERNAME)
+//                    .from(USERS)
+//                    .where(USERS.ID.eq(adoptedSitesRecord.getUserId()))
+//                    .fetchOne()
+//                    .value1();
+//          }
 
           SiteEntry siteEntry =
               new SiteEntry(
@@ -256,7 +256,7 @@ public class SiteProcessorImpl implements ISiteProcessor {
                   record.getStump(),
                   record.getTreeNotes(),
                   record.getSiteNotes(),
-                  adopter);
+                  null); //TODO: Fix
 
           siteEntries.add(siteEntry);
         });
