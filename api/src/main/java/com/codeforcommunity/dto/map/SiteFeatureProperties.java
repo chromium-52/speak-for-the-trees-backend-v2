@@ -10,10 +10,10 @@ public class SiteFeatureProperties {
   Double diameter;
   String species;
   Timestamp updatedAt;
-  String updatedBy; // username
-  String address;
   Date plantingDate;
+  String updatedBy; // username
   Integer adopterId;
+  String address;
 
   public SiteFeatureProperties(
       Integer id,
@@ -21,19 +21,19 @@ public class SiteFeatureProperties {
       Double diameter,
       String species,
       Timestamp updatedAt,
-      String updatedBy,
-      String address,
       Date plantingDate,
-      Integer adopterId) {
+      String updatedBy,
+      Integer adopterId,
+      String address) {
     this.id = id;
     this.treePresent = treePresent;
     this.diameter = diameter;
     this.species = species;
     this.updatedAt = updatedAt;
-    this.updatedBy = updatedBy;
-    this.address = address;
     this.plantingDate = plantingDate;
+    this.updatedBy = updatedBy;
     this.adopterId = adopterId;
+    this.address = address;
   }
 
   public Integer getId() {
