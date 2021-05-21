@@ -1,5 +1,6 @@
 package com.codeforcommunity.processor;
 
+import static org.jooq.generated.tables.AdoptedSites.ADOPTED_SITES;
 import static org.jooq.generated.tables.Blocks.BLOCKS;
 import static org.jooq.generated.tables.EntryUsernames.ENTRY_USERNAMES;
 import static org.jooq.generated.tables.Neighborhoods.NEIGHBORHOODS;
@@ -25,14 +26,16 @@ import com.codeforcommunity.enums.ReservationAction;
 import com.codeforcommunity.logger.SLogger;
 import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jooq.DSLContext;
+import org.jooq.Record11;
 import org.jooq.Record2;
-import org.jooq.Record9;
+import org.jooq.Result;
 import org.jooq.Select;
 import org.jooq.generated.tables.records.BlocksRecord;
 import org.jooq.generated.tables.records.NeighborhoodsRecord;
@@ -127,7 +130,18 @@ public class MapProcessorImpl implements IMapProcessor {
   }
 
   private SiteFeature siteFeatureFromRecord(
-      Record9<Integer, Boolean, Double, String, Timestamp, String, String, BigDecimal, BigDecimal>
+      Record11<
+              Integer, // #1: Site ID
+              Boolean, // #2: Tree Present
+              Double, // #3: Diameter
+              String, // #4: Species
+              Timestamp, // #5: Updated At
+              Date, // #6: Planting Date
+              String, // #7: Username
+              Integer, // #8: Adopter User ID
+              String, // #9: Address
+              BigDecimal, // #10: Lat
+              BigDecimal> // #11: Lng
           sitesRecord) {
     SiteFeatureProperties properties =
         new SiteFeatureProperties(
@@ -137,8 +151,10 @@ public class MapProcessorImpl implements IMapProcessor {
             sitesRecord.value4(),
             sitesRecord.value5(),
             sitesRecord.value6(),
-            sitesRecord.value7());
-    GeometryPoint geometry = new GeometryPoint(sitesRecord.value8(), sitesRecord.value9());
+            sitesRecord.value7(),
+            sitesRecord.value8(),
+            sitesRecord.value9());
+    GeometryPoint geometry = new GeometryPoint(sitesRecord.value10(), sitesRecord.value11());
     return new SiteFeature(properties, geometry);
   }
 
@@ -182,17 +198,19 @@ public class MapProcessorImpl implements IMapProcessor {
 
   @Override
   public SiteGeoResponse getSiteGeoJson() {
-    List<
-            Record9<
-                Integer,
-                Boolean,
-                Double,
-                String,
-                Timestamp,
-                String,
-                String,
-                BigDecimal,
-                BigDecimal>>
+    Result<
+            Record11<
+                Integer, // Site ID
+                Boolean, // Tree Present
+                Double, // Diameter
+                String, // Species
+                Timestamp, // Updated At
+                Date, // Planting Date
+                String, // Username
+                Integer, // Adopter User ID
+                String, // Address
+                BigDecimal, // Lat
+                BigDecimal>> // Lng
         nonNullUserRecords =
             this.db
                 .select(
@@ -201,7 +219,9 @@ public class MapProcessorImpl implements IMapProcessor {
                     SITE_ENTRIES.DIAMETER,
                     SITE_ENTRIES.SPECIES,
                     SITE_ENTRIES.UPDATED_AT,
+                    SITE_ENTRIES.PLANTING_DATE,
                     USERS.USERNAME,
+                    ADOPTED_SITES.USER_ID,
                     SITES.ADDRESS,
                     SITES.LAT,
                     SITES.LNG)
@@ -210,6 +230,8 @@ public class MapProcessorImpl implements IMapProcessor {
                 .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
                 .innerJoin(USERS)
                 .on(SITE_ENTRIES.USER_ID.eq(USERS.ID))
+                .leftJoin(ADOPTED_SITES)
+                .on(ADOPTED_SITES.SITE_ID.eq(SITE_ENTRIES.ID))
                 .where(
                     SITE_ENTRIES.UPDATED_AT.in(
                         this.db
@@ -219,17 +241,19 @@ public class MapProcessorImpl implements IMapProcessor {
                             .fetch()))
                 .orderBy(SITES.ID)
                 .fetch();
-    List<
-            Record9<
-                Integer,
-                Boolean,
-                Double,
-                String,
-                Timestamp,
-                String,
-                String,
-                BigDecimal,
-                BigDecimal>>
+    Result<
+            Record11<
+                Integer, // Site ID
+                Boolean, // Tree Present
+                Double, // Diameter
+                String, // Species
+                Timestamp, // Updated At
+                Date, // Planting Date
+                String, // Username
+                Integer, // Adopter User ID
+                String, // Address
+                BigDecimal, // Lat
+                BigDecimal>> // Lng
         nullUserRecords =
             this.db
                 .select(
@@ -238,7 +262,9 @@ public class MapProcessorImpl implements IMapProcessor {
                     SITE_ENTRIES.DIAMETER,
                     SITE_ENTRIES.SPECIES,
                     SITE_ENTRIES.UPDATED_AT,
-                    ENTRY_USERNAMES.USERNAME,
+                    SITE_ENTRIES.PLANTING_DATE,
+                    USERS.USERNAME,
+                    ADOPTED_SITES.USER_ID,
                     SITES.ADDRESS,
                     SITES.LAT,
                     SITES.LNG)
@@ -247,6 +273,8 @@ public class MapProcessorImpl implements IMapProcessor {
                 .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
                 .innerJoin(ENTRY_USERNAMES)
                 .on(SITE_ENTRIES.ID.eq(ENTRY_USERNAMES.ENTRY_ID))
+                .leftJoin(ADOPTED_SITES)
+                .on(ADOPTED_SITES.SITE_ID.eq(SITE_ENTRIES.ID))
                 .where(
                     SITE_ENTRIES
                         .UPDATED_AT
@@ -260,19 +288,21 @@ public class MapProcessorImpl implements IMapProcessor {
                 .orderBy(SITES.ID)
                 .fetch();
     List<
-            Record9<
-                Integer,
-                Boolean,
-                Double,
-                String,
-                Timestamp,
-                String,
-                String,
-                BigDecimal,
-                BigDecimal>>
+            Record11<
+                Integer, // Site ID
+                Boolean, // Tree Present
+                Double, // Diameter
+                String, // Species
+                Timestamp, // Updated At
+                Date, // Planting Date
+                String, // Username
+                Integer, // Adopter User ID
+                String, // Address
+                BigDecimal, // Lat
+                BigDecimal>> // Lng
         allSiteEntriesRecords =
             this.mergeSorted(
-                nonNullUserRecords, nullUserRecords, Comparator.comparingInt(Record9::value1));
+                nonNullUserRecords, nullUserRecords, Comparator.comparingInt(Record11::value1));
     List<SiteFeature> features =
         allSiteEntriesRecords.stream()
             .map(this::siteFeatureFromRecord)

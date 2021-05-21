@@ -1,5 +1,6 @@
 package com.codeforcommunity.processor;
 
+import static org.jooq.generated.Tables.ADOPTED_SITES;
 import static org.jooq.generated.Tables.ENTRY_USERNAMES;
 import static org.jooq.generated.Tables.SITES;
 import static org.jooq.generated.Tables.SITE_ENTRIES;
@@ -15,6 +16,7 @@ import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import java.util.ArrayList;
 import java.util.List;
 import org.jooq.DSLContext;
+import org.jooq.generated.tables.records.AdoptedSitesRecord;
 import org.jooq.generated.tables.records.SiteEntriesRecord;
 import org.jooq.generated.tables.records.SitesRecord;
 import org.jooq.generated.tables.records.StewardshipRecord;
@@ -55,6 +57,21 @@ public class SiteProcessorImpl implements ISiteProcessor {
                 db.selectFrom(USERS)
                     .where(USERS.ID.eq(record.getUserId()))
                     .fetchOne(USERS.USERNAME);
+          }
+
+          // Finds if the site is adopted, and if it is returns the username of the adopter
+          String adopter;
+          AdoptedSitesRecord adoptedSitesRecord =
+              db.selectFrom(ADOPTED_SITES).where(ADOPTED_SITES.SITE_ID.eq(siteId)).fetchOne();
+          if (adoptedSitesRecord == null) {
+            adopter = null;
+          } else {
+            adopter =
+                db.select(USERS.USERNAME)
+                    .from(USERS)
+                    .where(USERS.ID.eq(adoptedSitesRecord.getUserId()))
+                    .fetchOne()
+                    .value1();
           }
 
           SiteEntry siteEntry =
@@ -99,7 +116,8 @@ public class SiteProcessorImpl implements ISiteProcessor {
                   record.getGrate(),
                   record.getStump(),
                   record.getTreeNotes(),
-                  record.getSiteNotes());
+                  record.getSiteNotes(),
+                  adopter);
 
           siteEntries.add(siteEntry);
         });
