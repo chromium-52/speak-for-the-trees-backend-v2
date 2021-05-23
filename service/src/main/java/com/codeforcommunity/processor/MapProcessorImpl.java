@@ -182,10 +182,10 @@ public class MapProcessorImpl implements IMapProcessor {
     int i = 0;
     int j = 0;
     List<T> newList = new ArrayList<>();
-    while(i < length1 && j < length2) {
+    while (i < length1 && j < length2) {
       T element1 = l1.get(i);
       T element2 = l2.get(j);
-      if(comparator.compare(element1, element2) < 0) {
+      if (comparator.compare(element1, element2) < 0) {
         newList.add(element1);
         i++;
       } else {
