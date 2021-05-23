@@ -177,22 +177,33 @@ public class MapProcessorImpl implements IMapProcessor {
   }
 
   private <T> List<T> mergeSorted(List<T> l1, List<T> l2, Comparator<T> comparator) {
-    if (l1.isEmpty()) {
-      return l2;
-    }
-    if (l2.isEmpty()) {
-      return l1;
-    }
-    T element1 = l1.get(0);
-    T element2 = l2.get(0);
+    int length1 = l1.size();
+    int length2 = l2.size();
+    int i = 0;
+    int j = 0;
     List<T> newList = new ArrayList<>();
-    if (comparator.compare(element1, element2) < 0) {
-      newList.add(element1);
-      newList.addAll(mergeSorted(l1.subList(1, l1.size()), l2, comparator));
-      return newList;
+    while(i < length1 && j < length2) {
+      T element1 = l1.get(i);
+      T element2 = l2.get(j);
+      if(comparator.compare(element1, element2) < 0) {
+        newList.add(element1);
+        i++;
+      } else {
+        newList.add(element2);
+        j++;
+      }
     }
-    newList.add(element2);
-    newList.addAll(mergeSorted(l1, l2.subList(1, l2.size()), comparator));
+
+    // Store remaining elements of first array
+    if (i < length1) {
+      newList.addAll(l1.subList(i, length1));
+    }
+
+    // Store remaining elements of second array
+    if (j < length2) {
+      newList.addAll(l2.subList(j, length2));
+    }
+
     return newList;
   }
 
@@ -263,7 +274,7 @@ public class MapProcessorImpl implements IMapProcessor {
                     SITE_ENTRIES.SPECIES,
                     SITE_ENTRIES.UPDATED_AT,
                     SITE_ENTRIES.PLANTING_DATE,
-                    USERS.USERNAME,
+                    ENTRY_USERNAMES.USERNAME,
                     ADOPTED_SITES.USER_ID,
                     SITES.ADDRESS,
                     SITES.LAT,
