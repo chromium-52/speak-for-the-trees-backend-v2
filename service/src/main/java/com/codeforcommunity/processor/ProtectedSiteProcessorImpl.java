@@ -37,7 +37,11 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     }
   }
 
-  private Boolean isAlreadyAdopted(int userId, int siteId) {
+  private Boolean isAlreadyAdopted(int siteId) {
+    return db.fetchExists(db.selectFrom(ADOPTED_SITES).where(ADOPTED_SITES.SITE_ID.eq(siteId)));
+  }
+
+  private Boolean isAlreadyAdoptedByUser(int userId, int siteId) {
     return db.fetchExists(
         db.selectFrom(ADOPTED_SITES)
             .where(ADOPTED_SITES.USER_ID.eq(userId))
@@ -58,7 +62,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   @Override
   public void adoptSite(JWTData userData, int siteId) {
     checkSiteExists(siteId);
-    if (isAlreadyAdopted(userData.getUserId(), siteId)) {
+    if (isAlreadyAdopted(siteId)) {
       throw new WrongAdoptionStatusException(true);
     }
 
@@ -71,7 +75,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   @Override
   public void unadoptSite(JWTData userData, int siteId) {
     checkSiteExists(siteId);
-    if (!isAlreadyAdopted(userData.getUserId(), siteId)) {
+    if (!isAlreadyAdoptedByUser(userData.getUserId(), siteId)) {
       throw new WrongAdoptionStatusException(false);
     }
 
