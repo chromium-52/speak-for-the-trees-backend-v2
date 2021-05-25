@@ -242,7 +242,7 @@ public class MapProcessorImpl implements IMapProcessor {
                 .innerJoin(USERS)
                 .on(SITE_ENTRIES.USER_ID.eq(USERS.ID))
                 .leftJoin(ADOPTED_SITES)
-                .on(ADOPTED_SITES.SITE_ID.eq(SITE_ENTRIES.ID))
+                .on(ADOPTED_SITES.SITE_ID.eq(SITE_ENTRIES.SITE_ID))
                 .where(
                     SITE_ENTRIES.UPDATED_AT.in(
                         this.db
@@ -285,7 +285,7 @@ public class MapProcessorImpl implements IMapProcessor {
                 .innerJoin(ENTRY_USERNAMES)
                 .on(SITE_ENTRIES.ID.eq(ENTRY_USERNAMES.ENTRY_ID))
                 .leftJoin(ADOPTED_SITES)
-                .on(ADOPTED_SITES.SITE_ID.eq(SITE_ENTRIES.ID))
+                .on(ADOPTED_SITES.SITE_ID.eq(SITE_ENTRIES.SITE_ID))
                 .where(
                     SITE_ENTRIES
                         .UPDATED_AT
