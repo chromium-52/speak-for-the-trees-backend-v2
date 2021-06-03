@@ -16,11 +16,7 @@ public class RecordStewardshipRequest extends ApiDto {
   private boolean weeded;
 
   public RecordStewardshipRequest(
-      java.sql.Date date,
-      boolean watered,
-      boolean mulched,
-      boolean cleaned,
-      boolean weeded) {
+      java.sql.Date date, boolean watered, boolean mulched, boolean cleaned, boolean weeded) {
     this.date = date;
     this.watered = watered;
     this.mulched = mulched;
