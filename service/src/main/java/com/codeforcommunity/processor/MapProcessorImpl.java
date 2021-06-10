@@ -209,6 +209,10 @@ public class MapProcessorImpl implements IMapProcessor {
 
   @Override
   public SiteGeoResponse getSiteGeoJson() {
+    // Since this SQL query takes a long time, we cache the result
+    if (!SiteGeoResponseCache.isExpired()) {
+      return SiteGeoResponseCache.getResponse();
+    }
     Result<
             Record11<
                 Integer, // Site ID
@@ -318,6 +322,34 @@ public class MapProcessorImpl implements IMapProcessor {
         allSiteEntriesRecords.stream()
             .map(this::siteFeatureFromRecord)
             .collect(Collectors.toList());
-    return new SiteGeoResponse(features);
+
+    SiteGeoResponse response = new SiteGeoResponse(features);
+    SiteGeoResponseCache.setResponse(response);
+    return response;
+  }
+
+  /**
+   * SiteGeoResponseCache is a basic in-memory cache to remember previous SiteGeoResponse results,
+   * and only recompute values when the data in the cache is expired. This was implemented because
+   * getSiteGeoJson() takes too long, (an average of 5000ms as of writing) to perform and load
+   * testing revealed the Vert.x event loop getting overloaded.
+   */
+  private static class SiteGeoResponseCache {
+    private static SiteGeoResponse response;
+    private static long expireTime = 0;
+    private static final long timeToLive = 10000; // in milliseconds, 5000 is the avg. response time
+
+    public static SiteGeoResponse getResponse() {
+      return response;
+    }
+
+    public static void setResponse(SiteGeoResponse newResponse) {
+      response = newResponse;
+      expireTime = System.currentTimeMillis() + timeToLive;
+    }
+
+    public static boolean isExpired() {
+      return System.currentTimeMillis() >= expireTime;
+    }
   }
 }
