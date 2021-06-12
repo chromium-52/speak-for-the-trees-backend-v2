@@ -27,14 +27,17 @@ import com.codeforcommunity.logger.SLogger;
 import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jooq.DSLContext;
+import org.jooq.Record10;
 import org.jooq.Record11;
 import org.jooq.Record2;
+import org.jooq.Record9;
 import org.jooq.Result;
 import org.jooq.Select;
 import org.jooq.generated.tables.records.BlocksRecord;
@@ -130,18 +133,17 @@ public class MapProcessorImpl implements IMapProcessor {
   }
 
   private SiteFeature siteFeatureFromRecord(
-      Record11<
-              Integer, // #1: Site ID
-              Boolean, // #2: Tree Present
-              Double, // #3: Diameter
-              String, // #4: Species
-              Timestamp, // #5: Updated At
-              Date, // #6: Planting Date
-              String, // #7: Username
-              Integer, // #8: Adopter User ID
-              String, // #9: Address
-              BigDecimal, // #10: Lat
-              BigDecimal> // #11: Lng
+      Record10<
+              Integer, // #1 Site ID
+              Boolean, // #2 Tree Present
+              Double, // #3 Diameter
+              String, // #4 Common Name
+              Timestamp, // #5 Updated At
+              Date, // #6 Planting Date
+              Integer, // #7 Adopter User ID
+              String, // #8 Address
+              BigDecimal, // #9 Lat
+              BigDecimal> // #10 Lng
           sitesRecord) {
     SiteFeatureProperties properties =
         new SiteFeatureProperties(
@@ -152,9 +154,8 @@ public class MapProcessorImpl implements IMapProcessor {
             sitesRecord.value5(),
             sitesRecord.value6(),
             sitesRecord.value7(),
-            sitesRecord.value8(),
-            sitesRecord.value9());
-    GeometryPoint geometry = new GeometryPoint(sitesRecord.value10(), sitesRecord.value11());
+            sitesRecord.value8());
+    GeometryPoint geometry = new GeometryPoint(sitesRecord.value9(), sitesRecord.value10());
     return new SiteFeature(properties, geometry);
   }
 
@@ -176,37 +177,6 @@ public class MapProcessorImpl implements IMapProcessor {
     return new NeighborhoodGeoResponse(features);
   }
 
-  private <T> List<T> mergeSorted(List<T> l1, List<T> l2, Comparator<T> comparator) {
-    int length1 = l1.size();
-    int length2 = l2.size();
-    int i = 0;
-    int j = 0;
-    List<T> newList = new ArrayList<>();
-    while (i < length1 && j < length2) {
-      T element1 = l1.get(i);
-      T element2 = l2.get(j);
-      if (comparator.compare(element1, element2) < 0) {
-        newList.add(element1);
-        i++;
-      } else {
-        newList.add(element2);
-        j++;
-      }
-    }
-
-    // Store remaining elements of first array
-    if (i < length1) {
-      newList.addAll(l1.subList(i, length1));
-    }
-
-    // Store remaining elements of second array
-    if (j < length2) {
-      newList.addAll(l2.subList(j, length2));
-    }
-
-    return newList;
-  }
-
   @Override
   public SiteGeoResponse getSiteGeoJson() {
     // Since this SQL query takes a long time, we cache the result
@@ -214,112 +184,46 @@ public class MapProcessorImpl implements IMapProcessor {
       return SiteGeoResponseCache.getResponse();
     }
     Result<
-            Record11<
-                Integer, // Site ID
-                Boolean, // Tree Present
-                Double, // Diameter
-                String, // Species
-                Timestamp, // Updated At
-                Date, // Planting Date
-                String, // Username
-                Integer, // Adopter User ID
-                String, // Address
-                BigDecimal, // Lat
-                BigDecimal>> // Lng
-        nonNullUserRecords =
+            Record10<
+                            Integer, // Site ID
+                            Boolean, // Tree Present
+                            Double, // Diameter
+                            String, // Common Name
+                            Timestamp, // Updated At
+                            Date, // Planting Date
+                            Integer, // Adopter User ID
+                            String, // Address
+                            BigDecimal, // Lat
+                            BigDecimal>> // Lng
+        userRecords =
             this.db
-                .select(
-                    SITES.ID,
-                    SITE_ENTRIES.TREE_PRESENT,
-                    SITE_ENTRIES.DIAMETER,
-                    SITE_ENTRIES.SPECIES,
-                    SITE_ENTRIES.UPDATED_AT,
-                    SITE_ENTRIES.PLANTING_DATE,
-                    USERS.USERNAME,
-                    ADOPTED_SITES.USER_ID,
-                    SITES.ADDRESS,
-                    SITES.LAT,
-                    SITES.LNG)
-                .from(SITES)
-                .innerJoin(SITE_ENTRIES)
-                .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
-                .innerJoin(USERS)
-                .on(SITE_ENTRIES.USER_ID.eq(USERS.ID))
-                .leftJoin(ADOPTED_SITES)
-                .on(ADOPTED_SITES.SITE_ID.eq(SITE_ENTRIES.SITE_ID))
-                .where(
-                    SITE_ENTRIES.UPDATED_AT.in(
-                        this.db
-                            .select(max(SITE_ENTRIES.UPDATED_AT))
-                            .from(SITE_ENTRIES)
-                            .groupBy(SITE_ENTRIES.SITE_ID)
-                            .fetch()))
-                .orderBy(SITES.ID)
-                .fetch();
-    Result<
-            Record11<
-                Integer, // Site ID
-                Boolean, // Tree Present
-                Double, // Diameter
-                String, // Species
-                Timestamp, // Updated At
-                Date, // Planting Date
-                String, // Username
-                Integer, // Adopter User ID
-                String, // Address
-                BigDecimal, // Lat
-                BigDecimal>> // Lng
-        nullUserRecords =
-            this.db
-                .select(
-                    SITES.ID,
-                    SITE_ENTRIES.TREE_PRESENT,
-                    SITE_ENTRIES.DIAMETER,
-                    SITE_ENTRIES.SPECIES,
-                    SITE_ENTRIES.UPDATED_AT,
-                    SITE_ENTRIES.PLANTING_DATE,
-                    ENTRY_USERNAMES.USERNAME,
-                    ADOPTED_SITES.USER_ID,
-                    SITES.ADDRESS,
-                    SITES.LAT,
-                    SITES.LNG)
-                .from(SITES)
-                .innerJoin(SITE_ENTRIES)
-                .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
-                .innerJoin(ENTRY_USERNAMES)
-                .on(SITE_ENTRIES.ID.eq(ENTRY_USERNAMES.ENTRY_ID))
-                .leftJoin(ADOPTED_SITES)
-                .on(ADOPTED_SITES.SITE_ID.eq(SITE_ENTRIES.SITE_ID))
-                .where(
-                    SITE_ENTRIES
-                        .UPDATED_AT
-                        .in(
-                            this.db
-                                .select(max(SITE_ENTRIES.UPDATED_AT))
-                                .from(SITE_ENTRIES)
-                                .groupBy(SITE_ENTRIES.SITE_ID)
-                                .fetch())
-                        .and(SITE_ENTRIES.USER_ID.isNull()))
-                .orderBy(SITES.ID)
-                .fetch();
-    List<
-            Record11<
-                Integer, // Site ID
-                Boolean, // Tree Present
-                Double, // Diameter
-                String, // Species
-                Timestamp, // Updated At
-                Date, // Planting Date
-                String, // Username
-                Integer, // Adopter User ID
-                String, // Address
-                BigDecimal, // Lat
-                BigDecimal>> // Lng
-        allSiteEntriesRecords =
-            this.mergeSorted(
-                nonNullUserRecords, nullUserRecords, Comparator.comparingInt(Record11::value1));
+                    .select(
+                            SITES.ID,
+                            SITE_ENTRIES.TREE_PRESENT,
+                            SITE_ENTRIES.DIAMETER,
+                            SITE_ENTRIES.SPECIES,
+                            SITE_ENTRIES.UPDATED_AT,
+                            SITE_ENTRIES.PLANTING_DATE,
+                            ADOPTED_SITES.USER_ID,
+                            SITES.ADDRESS,
+                            SITES.LAT,
+                            SITES.LNG)
+                    .from(SITES)
+                    .innerJoin(SITE_ENTRIES)
+                    .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
+                    .leftJoin(ADOPTED_SITES)
+                    .on(ADOPTED_SITES.SITE_ID.eq(SITE_ENTRIES.SITE_ID))
+                    .where(
+                            SITE_ENTRIES.UPDATED_AT.in(
+                                    this.db
+                                            .select(max(SITE_ENTRIES.UPDATED_AT))
+                                            .from(SITE_ENTRIES)
+                                            .groupBy(SITE_ENTRIES.SITE_ID)))
+                    .orderBy(SITES.ID)
+                    .fetch();
+
     List<SiteFeature> features =
-        allSiteEntriesRecords.stream()
+        userRecords.stream()
             .map(this::siteFeatureFromRecord)
             .collect(Collectors.toList());
 

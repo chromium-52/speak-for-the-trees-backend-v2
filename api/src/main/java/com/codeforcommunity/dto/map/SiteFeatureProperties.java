@@ -8,10 +8,9 @@ public class SiteFeatureProperties {
   Integer id;
   Boolean treePresent;
   Double diameter;
-  String species;
+  String commonName;
   Timestamp updatedAt;
   Date plantingDate;
-  String updatedBy; // username
   Integer adopterId;
   String address;
 
@@ -19,19 +18,17 @@ public class SiteFeatureProperties {
       Integer id,
       Boolean treePresent,
       Double diameter,
-      String species,
+      String commonName,
       Timestamp updatedAt,
       Date plantingDate,
-      String updatedBy,
       Integer adopterId,
       String address) {
     this.id = id;
     this.treePresent = treePresent;
     this.diameter = diameter;
-    this.species = species;
-    this.updatedAt = updatedAt;
+    this.commonName = commonName;
     this.plantingDate = plantingDate;
-    this.updatedBy = updatedBy;
+    this.updatedAt = updatedAt;
     this.adopterId = adopterId;
     this.address = address;
   }
@@ -45,22 +42,12 @@ public class SiteFeatureProperties {
     return treePresent;
   }
 
-  public Double getDiameter() {
+  public Double diameter() {
     return diameter;
   }
 
-  public String getSpecies() {
-    return species;
-  }
-
-  @JsonProperty("updated_at")
-  public Timestamp getUpdatedAt() {
-    return updatedAt;
-  }
-
-  @JsonProperty("updated_by")
-  public String getUpdatedBy() {
-    return updatedBy;
+  public String getCommonName() {
+    return commonName;
   }
 
   public String getAddress() {
@@ -69,6 +56,10 @@ public class SiteFeatureProperties {
 
   public Date getPlantingDate() {
     return plantingDate;
+  }
+
+  public Timestamp getUpdatedAt() {
+    return updatedAt;
   }
 
   public Integer getAdopterId() {
