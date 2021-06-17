@@ -25,12 +25,11 @@ import com.codeforcommunity.logger.SLogger;
 import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jooq.DSLContext;
-import org.jooq.Record10;
 import org.jooq.Record2;
+import org.jooq.Record8;
 import org.jooq.Result;
 import org.jooq.Select;
 import org.jooq.generated.tables.records.BlocksRecord;
@@ -126,17 +125,15 @@ public class MapProcessorImpl implements IMapProcessor {
   }
 
   private SiteFeature siteFeatureFromRecord(
-      Record10<
+      Record8<
               Integer, // #1 Site ID
               Boolean, // #2 Tree Present
-              Double, // #3 Diameter
-              String, // #4 Common Name
-              Timestamp, // #5 Updated At
-              Date, // #6 Planting Date
-              Integer, // #7 Adopter User ID
-              String, // #8 Address
-              BigDecimal, // #9 Lat
-              BigDecimal> // #10 Lng
+              String, // #3 Common Name
+              Date, // #4 Planting Date
+              Integer, // #5 Adopter User ID
+              String, // #6 Address
+              BigDecimal, // #7 Lat
+              BigDecimal> // #8 Lng
           sitesRecord) {
     SiteFeatureProperties properties =
         new SiteFeatureProperties(
@@ -145,10 +142,8 @@ public class MapProcessorImpl implements IMapProcessor {
             sitesRecord.value3(),
             sitesRecord.value4(),
             sitesRecord.value5(),
-            sitesRecord.value6(),
-            sitesRecord.value7(),
-            sitesRecord.value8());
-    GeometryPoint geometry = new GeometryPoint(sitesRecord.value9(), sitesRecord.value10());
+            sitesRecord.value6());
+    GeometryPoint geometry = new GeometryPoint(sitesRecord.value7(), sitesRecord.value8());
     return new SiteFeature(properties, geometry);
   }
 
@@ -177,12 +172,10 @@ public class MapProcessorImpl implements IMapProcessor {
       return SiteGeoResponseCache.getResponse();
     }
     Result<
-            Record10<
+            Record8<
                 Integer, // Site ID
                 Boolean, // Tree Present
-                Double, // Diameter
                 String, // Common Name
-                Timestamp, // Updated At
                 Date, // Planting Date
                 Integer, // Adopter User ID
                 String, // Address
@@ -193,9 +186,7 @@ public class MapProcessorImpl implements IMapProcessor {
                 .select(
                     SITES.ID,
                     SITE_ENTRIES.TREE_PRESENT,
-                    SITE_ENTRIES.DIAMETER,
                     SITE_ENTRIES.COMMON_NAME,
-                    SITE_ENTRIES.UPDATED_AT,
                     SITE_ENTRIES.PLANTING_DATE,
                     ADOPTED_SITES.USER_ID,
                     SITES.ADDRESS,
