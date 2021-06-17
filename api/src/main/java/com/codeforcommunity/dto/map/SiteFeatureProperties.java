@@ -30,7 +30,6 @@ public class SiteFeatureProperties {
     return id;
   }
 
-  @JsonProperty("tree_present")
   public Boolean getTreePresent() {
     return treePresent;
   }
