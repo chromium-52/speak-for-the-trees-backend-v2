@@ -2,12 +2,10 @@ package com.codeforcommunity.processor;
 
 import static org.jooq.generated.tables.AdoptedSites.ADOPTED_SITES;
 import static org.jooq.generated.tables.Blocks.BLOCKS;
-import static org.jooq.generated.tables.EntryUsernames.ENTRY_USERNAMES;
 import static org.jooq.generated.tables.Neighborhoods.NEIGHBORHOODS;
 import static org.jooq.generated.tables.Reservations.RESERVATIONS;
 import static org.jooq.generated.tables.SiteEntries.SITE_ENTRIES;
 import static org.jooq.generated.tables.Sites.SITES;
-import static org.jooq.generated.tables.Users.USERS;
 import static org.jooq.impl.DSL.count;
 import static org.jooq.impl.DSL.max;
 
@@ -27,17 +25,12 @@ import com.codeforcommunity.logger.SLogger;
 import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.sql.Time;
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jooq.DSLContext;
 import org.jooq.Record10;
-import org.jooq.Record11;
 import org.jooq.Record2;
-import org.jooq.Record9;
 import org.jooq.Result;
 import org.jooq.Select;
 import org.jooq.generated.tables.records.BlocksRecord;
@@ -185,47 +178,45 @@ public class MapProcessorImpl implements IMapProcessor {
     }
     Result<
             Record10<
-                            Integer, // Site ID
-                            Boolean, // Tree Present
-                            Double, // Diameter
-                            String, // Common Name
-                            Timestamp, // Updated At
-                            Date, // Planting Date
-                            Integer, // Adopter User ID
-                            String, // Address
-                            BigDecimal, // Lat
-                            BigDecimal>> // Lng
+                Integer, // Site ID
+                Boolean, // Tree Present
+                Double, // Diameter
+                String, // Common Name
+                Timestamp, // Updated At
+                Date, // Planting Date
+                Integer, // Adopter User ID
+                String, // Address
+                BigDecimal, // Lat
+                BigDecimal>> // Lng
         userRecords =
             this.db
-                    .select(
-                            SITES.ID,
-                            SITE_ENTRIES.TREE_PRESENT,
-                            SITE_ENTRIES.DIAMETER,
-                            SITE_ENTRIES.SPECIES,
-                            SITE_ENTRIES.UPDATED_AT,
-                            SITE_ENTRIES.PLANTING_DATE,
-                            ADOPTED_SITES.USER_ID,
-                            SITES.ADDRESS,
-                            SITES.LAT,
-                            SITES.LNG)
-                    .from(SITES)
-                    .innerJoin(SITE_ENTRIES)
-                    .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
-                    .leftJoin(ADOPTED_SITES)
-                    .on(ADOPTED_SITES.SITE_ID.eq(SITE_ENTRIES.SITE_ID))
-                    .where(
-                            SITE_ENTRIES.UPDATED_AT.in(
-                                    this.db
-                                            .select(max(SITE_ENTRIES.UPDATED_AT))
-                                            .from(SITE_ENTRIES)
-                                            .groupBy(SITE_ENTRIES.SITE_ID)))
-                    .orderBy(SITES.ID)
-                    .fetch();
+                .select(
+                    SITES.ID,
+                    SITE_ENTRIES.TREE_PRESENT,
+                    SITE_ENTRIES.DIAMETER,
+                    SITE_ENTRIES.COMMON_NAME,
+                    SITE_ENTRIES.UPDATED_AT,
+                    SITE_ENTRIES.PLANTING_DATE,
+                    ADOPTED_SITES.USER_ID,
+                    SITES.ADDRESS,
+                    SITES.LAT,
+                    SITES.LNG)
+                .from(SITES)
+                .join(SITE_ENTRIES)
+                .on(SITES.ID.eq(SITE_ENTRIES.SITE_ID))
+                .leftJoin(ADOPTED_SITES)
+                .on(ADOPTED_SITES.SITE_ID.eq(SITE_ENTRIES.SITE_ID))
+                .where(
+                    SITE_ENTRIES.UPDATED_AT.in(
+                        this.db
+                            .select(max(SITE_ENTRIES.UPDATED_AT))
+                            .from(SITE_ENTRIES)
+                            .groupBy(SITE_ENTRIES.SITE_ID)))
+                .orderBy(SITES.ID)
+                .fetch();
 
     List<SiteFeature> features =
-        userRecords.stream()
-            .map(this::siteFeatureFromRecord)
-            .collect(Collectors.toList());
+        userRecords.stream().map(this::siteFeatureFromRecord).collect(Collectors.toList());
 
     SiteGeoResponse response = new SiteGeoResponse(features);
     SiteGeoResponseCache.setResponse(response);

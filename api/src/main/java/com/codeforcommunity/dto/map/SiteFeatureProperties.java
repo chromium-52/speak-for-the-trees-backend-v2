@@ -42,7 +42,7 @@ public class SiteFeatureProperties {
     return treePresent;
   }
 
-  public Double diameter() {
+  public Double getDiameter() {
     return diameter;
   }
 
