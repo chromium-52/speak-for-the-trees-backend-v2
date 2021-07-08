@@ -39,7 +39,7 @@ public class SiteProcessorImpl implements ISiteProcessor {
     List<SiteEntriesRecord> records =
         db.selectFrom(SITE_ENTRIES)
             .where(SITE_ENTRIES.SITE_ID.eq(siteId))
-            .orderBy(SITE_ENTRIES.UPDATED_AT)
+            .orderBy(SITE_ENTRIES.UPDATED_AT.desc())
             .fetch();
 
     List<SiteEntry> siteEntries = new ArrayList<>();
