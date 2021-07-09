@@ -177,7 +177,7 @@ public class MapProcessorImpl implements IMapProcessor {
       return SiteGeoResponseCache.getResponse();
     }
 
-    Field<Timestamp> maxDate = max(SITE_ENTRIES.UPDATED_AT).as("MaxDate");
+    Field<Timestamp> maxDate = max(SITE_ENTRIES.UPDATED_AT).as("maxDate");
 
     Table<
             Record2<
