@@ -7,8 +7,8 @@ import static org.jooq.generated.tables.Reservations.RESERVATIONS;
 import static org.jooq.generated.tables.SiteEntries.SITE_ENTRIES;
 import static org.jooq.generated.tables.Sites.SITES;
 import static org.jooq.impl.DSL.count;
-import static org.jooq.impl.DSL.table;
 import static org.jooq.impl.DSL.max;
+import static org.jooq.impl.DSL.table;
 
 import com.codeforcommunity.api.IMapProcessor;
 import com.codeforcommunity.dto.map.BlockFeature;
@@ -37,7 +37,6 @@ import org.jooq.Record8;
 import org.jooq.Result;
 import org.jooq.Select;
 import org.jooq.Table;
-import org.jooq.generated.tables.SiteEntries;
 import org.jooq.generated.tables.records.BlocksRecord;
 import org.jooq.generated.tables.records.NeighborhoodsRecord;
 
@@ -180,32 +179,39 @@ public class MapProcessorImpl implements IMapProcessor {
 
     Field<Timestamp> maxDate = max(SITE_ENTRIES.UPDATED_AT).as("MaxDate");
 
-    Table<Record2<
-              Integer, // Site Entry ID
-              Timestamp // Updated_At
-            >> recentlyUpdated = table(
-                    this.db.select(
-                            SITE_ENTRIES.SITE_ID,
-                            maxDate
-                    ).from(SITE_ENTRIES)
-                    .groupBy(SITE_ENTRIES.SITE_ID)
-    ).as("recentlyUpdated");
+    Table<
+            Record2<
+                Integer, // Site Entry ID
+                Timestamp // Updated_At
+            >>
+        recentlyUpdated =
+            table(
+                    this.db
+                        .select(SITE_ENTRIES.SITE_ID, maxDate)
+                        .from(SITE_ENTRIES)
+                        .groupBy(SITE_ENTRIES.SITE_ID))
+                .as("recentlyUpdated");
 
-    Table<Record4<
-                    Integer, // Site ID
-                    Boolean, // Tree Present
-                    String, // Common Name
-                    Date // Planting Date
-                >> newEntries = table(this.db
-            .select(SITE_ENTRIES.SITE_ID,
-                    SITE_ENTRIES.TREE_PRESENT,
-                    SITE_ENTRIES.COMMON_NAME,
-                    SITE_ENTRIES.PLANTING_DATE)
-            .from(SITE_ENTRIES)
-            .join(recentlyUpdated)
-            .on(SITE_ENTRIES.SITE_ID.eq(recentlyUpdated.field(SITE_ENTRIES.SITE_ID)))
-            .and(SITE_ENTRIES.UPDATED_AT.eq(recentlyUpdated.field(maxDate))
-            )).as("newEntries");
+    Table<
+            Record4<
+                Integer, // Site ID
+                Boolean, // Tree Present
+                String, // Common Name
+                Date // Planting Date
+            >>
+        newEntries =
+            table(
+                    this.db
+                        .select(
+                            SITE_ENTRIES.SITE_ID,
+                            SITE_ENTRIES.TREE_PRESENT,
+                            SITE_ENTRIES.COMMON_NAME,
+                            SITE_ENTRIES.PLANTING_DATE)
+                        .from(SITE_ENTRIES)
+                        .join(recentlyUpdated)
+                        .on(SITE_ENTRIES.SITE_ID.eq(recentlyUpdated.field(SITE_ENTRIES.SITE_ID)))
+                        .and(SITE_ENTRIES.UPDATED_AT.eq(recentlyUpdated.field(maxDate))))
+                .as("newEntries");
     Result<
             Record8<
                 Integer, // Site ID
@@ -220,9 +226,9 @@ public class MapProcessorImpl implements IMapProcessor {
             this.db
                 .select(
                     SITES.ID,
-                        newEntries.field(SITE_ENTRIES.TREE_PRESENT),
-                        newEntries.field(SITE_ENTRIES.COMMON_NAME),
-                        newEntries.field(SITE_ENTRIES.PLANTING_DATE),
+                    newEntries.field(SITE_ENTRIES.TREE_PRESENT),
+                    newEntries.field(SITE_ENTRIES.COMMON_NAME),
+                    newEntries.field(SITE_ENTRIES.PLANTING_DATE),
                     ADOPTED_SITES.USER_ID,
                     SITES.ADDRESS,
                     SITES.LAT,
