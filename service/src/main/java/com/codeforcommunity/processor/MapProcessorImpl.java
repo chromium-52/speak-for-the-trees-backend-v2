@@ -26,9 +26,11 @@ import com.codeforcommunity.logger.SLogger;
 import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jooq.DSLContext;
+import org.jooq.Field;
 import org.jooq.Record2;
 import org.jooq.Record4;
 import org.jooq.Record8;
@@ -176,7 +178,18 @@ public class MapProcessorImpl implements IMapProcessor {
       return SiteGeoResponseCache.getResponse();
     }
 
-    SiteEntries allEntries = SITE_ENTRIES.as("allEntries");
+    Field<Timestamp> maxDate = max(SITE_ENTRIES.UPDATED_AT).as("MaxDate");
+
+    Table<Record2<
+              Integer, // Site Entry ID
+              Timestamp // Updated_At
+            >> recentlyUpdated = table(
+                    this.db.select(
+                            SITE_ENTRIES.SITE_ID,
+                            maxDate
+                    ).from(SITE_ENTRIES)
+                    .groupBy(SITE_ENTRIES.SITE_ID)
+    ).as("recentlyUpdated");
 
     Table<Record4<
                     Integer, // Site ID
@@ -189,13 +202,9 @@ public class MapProcessorImpl implements IMapProcessor {
                     SITE_ENTRIES.COMMON_NAME,
                     SITE_ENTRIES.PLANTING_DATE)
             .from(SITE_ENTRIES)
-            .where(SITE_ENTRIES.UPDATED_AT.eq(
-                    this.db
-                            .select(max(allEntries.UPDATED_AT))
-                            .from(allEntries)
-                            .where(allEntries.SITE_ID.eq(SITE_ENTRIES.SITE_ID)
-                    ))
-
+            .join(recentlyUpdated)
+            .on(SITE_ENTRIES.SITE_ID.eq(recentlyUpdated.field(SITE_ENTRIES.SITE_ID)))
+            .and(SITE_ENTRIES.UPDATED_AT.eq(recentlyUpdated.field(maxDate))
             )).as("newEntries");
     Result<
             Record8<
@@ -222,7 +231,7 @@ public class MapProcessorImpl implements IMapProcessor {
                 .leftJoin(newEntries)
                 .on(SITES.ID.eq(newEntries.field(SITE_ENTRIES.SITE_ID)))
                 .leftJoin(ADOPTED_SITES)
-                .on(ADOPTED_SITES.SITE_ID.eq(newEntries.field(SITE_ENTRIES.SITE_ID)))
+                .on(ADOPTED_SITES.SITE_ID.eq(SITES.ID))
                 .orderBy(SITES.ID)
                 .fetch();
 
