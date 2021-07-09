@@ -21,22 +21,21 @@ import com.codeforcommunity.dto.map.NeighborhoodGeoResponse;
 import com.codeforcommunity.dto.map.SiteFeature;
 import com.codeforcommunity.dto.map.SiteFeatureProperties;
 import com.codeforcommunity.dto.map.SiteGeoResponse;
-import com.codeforcommunity.dto.map.TimeStamp;
 import com.codeforcommunity.enums.ReservationAction;
 import com.codeforcommunity.logger.SLogger;
 import io.vertx.core.json.JsonObject;
 import java.math.BigDecimal;
 import java.sql.Date;
-import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jooq.DSLContext;
 import org.jooq.Record2;
-import org.jooq.Record5;
+import org.jooq.Record4;
 import org.jooq.Record8;
 import org.jooq.Result;
 import org.jooq.Select;
 import org.jooq.Table;
+import org.jooq.generated.tables.SiteEntries;
 import org.jooq.generated.tables.records.BlocksRecord;
 import org.jooq.generated.tables.records.NeighborhoodsRecord;
 
@@ -177,20 +176,27 @@ public class MapProcessorImpl implements IMapProcessor {
       return SiteGeoResponseCache.getResponse();
     }
 
-    Table<Record5<
+    SiteEntries allEntries = SITE_ENTRIES.as("allEntries");
+
+    Table<Record4<
                     Integer, // Site ID
                     Boolean, // Tree Present
                     String, // Common Name
-                    Date, // Planting Date
-                    Timestamp // Updated at
-                >> entries = table(this.db
+                    Date // Planting Date
+                >> newEntries = table(this.db
             .select(SITE_ENTRIES.SITE_ID,
                     SITE_ENTRIES.TREE_PRESENT,
                     SITE_ENTRIES.COMMON_NAME,
-                    SITE_ENTRIES.PLANTING_DATE,
-                    max(SITE_ENTRIES.UPDATED_AT))
+                    SITE_ENTRIES.PLANTING_DATE)
             .from(SITE_ENTRIES)
-            .groupBy(SITE_ENTRIES.SITE_ID)).as("entries");
+            .where(SITE_ENTRIES.UPDATED_AT.eq(
+                    this.db
+                            .select(max(allEntries.UPDATED_AT))
+                            .from(allEntries)
+                            .where(allEntries.SITE_ID.eq(SITE_ENTRIES.SITE_ID)
+                    ))
+
+            )).as("newEntries");
     Result<
             Record8<
                 Integer, // Site ID
@@ -205,18 +211,18 @@ public class MapProcessorImpl implements IMapProcessor {
             this.db
                 .select(
                     SITES.ID,
-                    SITE_ENTRIES.TREE_PRESENT,
-                    SITE_ENTRIES.COMMON_NAME,
-                    SITE_ENTRIES.PLANTING_DATE,
+                        newEntries.field(SITE_ENTRIES.TREE_PRESENT),
+                        newEntries.field(SITE_ENTRIES.COMMON_NAME),
+                        newEntries.field(SITE_ENTRIES.PLANTING_DATE),
                     ADOPTED_SITES.USER_ID,
                     SITES.ADDRESS,
                     SITES.LAT,
                     SITES.LNG)
                 .from(SITES)
-                .join(entries)
-                .on(SITES.ID.eq(entries.field(SITE_ENTRIES.SITE_ID)))
+                .leftJoin(newEntries)
+                .on(SITES.ID.eq(newEntries.field(SITE_ENTRIES.SITE_ID)))
                 .leftJoin(ADOPTED_SITES)
-                .on(ADOPTED_SITES.SITE_ID.eq(entries.field(SITE_ENTRIES.SITE_ID)))
+                .on(ADOPTED_SITES.SITE_ID.eq(newEntries.field(SITE_ENTRIES.SITE_ID)))
                 .orderBy(SITES.ID)
                 .fetch();
 
