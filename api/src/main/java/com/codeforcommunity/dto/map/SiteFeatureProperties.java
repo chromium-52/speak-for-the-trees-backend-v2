@@ -1,6 +1,5 @@
 package com.codeforcommunity.dto.map;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
 import java.sql.Date;
 
 public class SiteFeatureProperties {
