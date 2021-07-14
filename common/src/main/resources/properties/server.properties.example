@@ -20,7 +20,7 @@ database_password = placeholder_db_password
 # =======================================================================================================
 # EMAIL PROPERTIES
 # =======================================================================================================
-email_send_email = trees@sfttbos.org
+email_send_email = map.treeboston@gmail.com
 email_send_password = gmail-App-Password
 email_sender_name = Speak For The Trees Boston
 email_host = smtp.gmail.com
