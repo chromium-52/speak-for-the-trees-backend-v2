@@ -113,30 +113,25 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
       throw new ResourceDoesNotExistException(teamId, "Team");
     }
 
-    List<Record3<
-                  Integer, // User Id
-                  String, // Username
-                  TeamRole // team role
-                >> members = db
-            .select(USERS_TEAMS.USER_ID,
-                    USERS.USERNAME,
-                    USERS_TEAMS.TEAM_ROLE)
-            .from(USERS_TEAMS)
-            .join(USERS)
-            .on(USERS_TEAMS.USER_ID.eq(USERS.ID))
-            .where(
-                    USERS_TEAMS.TEAM_ID.eq(teamId)
-            ).fetch();
+    List<
+            Record3<
+                Integer, // User Id
+                String, // Username
+                TeamRole // team role
+            >>
+        members =
+            db.select(USERS_TEAMS.USER_ID, USERS.USERNAME, USERS_TEAMS.TEAM_ROLE)
+                .from(USERS_TEAMS)
+                .join(USERS)
+                .on(USERS_TEAMS.USER_ID.eq(USERS.ID))
+                .where(USERS_TEAMS.TEAM_ID.eq(teamId))
+                .fetch();
     List<TeamMembersResponse> membersResponses =
-      members.stream()
-              .map(
-                  member ->
-                      new TeamMembersResponse(
-                              member.value1(),
-                              member.value2(),
-                              member.value3()
-                      )
-              ).collect(Collectors.toList());
+        members.stream()
+            .map(
+                member ->
+                    new TeamMembersResponse(member.value1(), member.value2(), member.value3()))
+            .collect(Collectors.toList());
 
     List<GoalsRecord> goalsRecords = db.selectFrom(GOALS).where(GOALS.TEAM_ID.eq(teamId)).fetch();
     List<GoalResponse> goalsResponses =

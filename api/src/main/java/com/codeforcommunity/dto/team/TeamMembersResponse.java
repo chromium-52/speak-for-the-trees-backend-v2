@@ -7,7 +7,6 @@ public class TeamMembersResponse {
   private final String username;
   private final TeamRole teamRole;
 
-
   public TeamMembersResponse(int userId, String username, TeamRole teamRole) {
     this.userId = userId;
     this.username = username;

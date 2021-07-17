@@ -21,7 +21,9 @@ public class TeamGoalDataResponse extends TeamDataResponse {
     this.goals = goals;
   }
 
-  public List<TeamMembersResponse> getMembers() { return members; }
+  public List<TeamMembersResponse> getMembers() {
+    return members;
+  }
 
   public List<GoalResponse> getGoals() {
     return goals;
