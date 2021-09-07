@@ -197,18 +197,18 @@ public class FailureHandler {
   }
 
   public void handleMemberApplicationException(RoutingContext ctx, MemberApplicationException e) {
-    String message = "User" + e.getUserId() + "has already applied for team" + e.getTeamId();
+    String message = "User " + e.getUserId() + " has already applied for team " + e.getTeamId();
     end(ctx, message, 400);
   }
 
   public void handleLeaderCannotLeaveTeamException(
       RoutingContext ctx, LeaderCannotLeaveTeamException e) {
     String message =
-        "User"
+        "User "
             + e.getUserId()
-            + "is the leader of team"
+            + " is the leader of team "
             + e.getTeamId()
-            + "and must transfer ownership before leaving";
+            + " and must transfer ownership before leaving";
     end(ctx, message, 400);
   }
 
