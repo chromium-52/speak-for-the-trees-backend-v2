@@ -76,6 +76,8 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   @Override
   public void disbandTeam(JWTData userData, int teamId) {
+    checkTeamExists(teamId);
+
     UsersTeamsRecord usersTeamsRecord =
         db.selectFrom(USERS_TEAMS)
             .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
