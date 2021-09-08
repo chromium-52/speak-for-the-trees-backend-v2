@@ -220,8 +220,20 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   }
 
   @Override
-  public UsersResponse getApplicants(int teamId) {
-    return getUsers(teamId, TeamRole.PENDING);
+  public UsersResponse getApplicants(JWTData userData, int teamId) {
+    checkTeamExists(teamId);
+    UsersTeamsRecord userTeamsRecord =
+            db.selectFrom(USERS_TEAMS)
+                    .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
+                    .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+                    .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))
+                    .fetchOne();
+
+    if (userTeamsRecord != null) {
+      return getUsers(teamId, TeamRole.PENDING);
+    } else {
+      throw new WrongTeamRoleException(teamId, TeamRole.LEADER);
+    }
   }
 
   @Override

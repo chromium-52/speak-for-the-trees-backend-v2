@@ -110,7 +110,7 @@ public class FailureHandler {
   public void handleUserNotOnTeam(RoutingContext ctx, UserNotOnTeamException e) {
     String message =
         String.format("The user <%d> is not on a team with id <%d>", e.getUserId(), e.getTeamId());
-    end(ctx, message, 400);
+    end(ctx, message, 401);
   }
 
   public void handleMissingHeader(RoutingContext ctx, MissingHeaderException e) {

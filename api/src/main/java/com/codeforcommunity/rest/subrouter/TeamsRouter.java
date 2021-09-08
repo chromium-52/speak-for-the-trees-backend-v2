@@ -124,8 +124,9 @@ public class TeamsRouter implements IRouter {
   }
 
   private void handleGetApplicantsRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
     int teamId = RestFunctions.getRequestParameterAsInt(ctx.request(), "team_id");
-    UsersResponse response = processor.getApplicants(teamId);
+    UsersResponse response = processor.getApplicants(userData, teamId);
     end(ctx.response(), 200, JsonObject.mapFrom(response).toString());
   }
 
