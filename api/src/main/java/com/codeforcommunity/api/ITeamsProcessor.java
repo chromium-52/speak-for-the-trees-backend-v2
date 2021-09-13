@@ -22,7 +22,7 @@ public interface ITeamsProcessor {
 
   void inviteUser(JWTData userData, InviteUsersRequest inviteUserRequest, int teamId);
 
-  UsersResponse getApplicants(int teamId);
+  UsersResponse getApplicants(JWTData userData, int teamId);
 
   void applyToTeam(JWTData userData, int teamId);
 
