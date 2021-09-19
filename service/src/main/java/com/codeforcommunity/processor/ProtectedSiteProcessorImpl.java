@@ -16,6 +16,7 @@ import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.util.List;
 import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.AdoptedSitesRecord;
@@ -60,7 +61,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   }
 
   @Override
-  public void adoptSite(JWTData userData, int siteId) {
+  public void adoptSite(JWTData userData, int siteId, LocalDate dateAdopted) {
     checkSiteExists(siteId);
     if (isAlreadyAdopted(siteId)) {
       throw new WrongAdoptionStatusException(true);
@@ -69,6 +70,12 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     AdoptedSitesRecord record = db.newRecord(ADOPTED_SITES);
     record.setUserId(userData.getUserId());
     record.setSiteId(siteId);
+    record.setDateAdopted(dateAdopted);
+    // what I'm trying to have added to AdoptedSitesRecord
+    // but don't know where to put it so it's added
+    //    public void setDateAdopted(LocalDate dateAdopted) {
+    //      set(2, dateAdopted);
+    //    }
     record.store();
   }
 
