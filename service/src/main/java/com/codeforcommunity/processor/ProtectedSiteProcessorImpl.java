@@ -71,11 +71,6 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     record.setUserId(userData.getUserId());
     record.setSiteId(siteId);
     record.setDateAdopted(dateAdopted);
-    // what I'm trying to have added to AdoptedSitesRecord
-    // but don't know where to put it so it's added
-    //    public void setDateAdopted(LocalDate dateAdopted) {
-    //      set(2, dateAdopted);
-    //    }
     record.store();
   }
 
