@@ -72,10 +72,10 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
 
   private UsersTeamsRecord getUsersLeadTeams(JWTData userData, int teamId) {
     return db.selectFrom(USERS_TEAMS)
-            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
-            .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))
-            .fetchOne();
+        .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
+        .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+        .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))
+        .fetchOne();
   }
 
   public TeamsProcessorImpl(DSLContext db) {
