@@ -4,10 +4,7 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.site.AddSiteRequest;
-import com.codeforcommunity.dto.site.AdoptedSitesResponse;
-import com.codeforcommunity.dto.site.RecordStewardshipRequest;
-import com.codeforcommunity.dto.site.UpdateSiteRequest;
+import com.codeforcommunity.dto.site.*;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
@@ -35,6 +32,7 @@ public class ProtectedSiteRouter implements IRouter {
     registerAddSite(router);
     registerUpdateSite(router);
     registerDeleteSite(router);
+    registerEditSite(router);
     registerDeleteStewardship(router);
 
     return router;
@@ -154,6 +152,22 @@ public class ProtectedSiteRouter implements IRouter {
     int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
 
     processor.deleteSite(userData, siteId);
+
+    end(ctx.response(), 200);
+  }
+
+  private void registerEditSite(Router router) {
+    Route editSiteRoute = router.post("/:site_id/edit");
+    editSiteRoute.handler(this::handleEditSiteRoute);
+  }
+
+  private void handleEditSiteRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
+
+    EditSiteRequest editSiteRequest = RestFunctions.getJsonBodyAsClass(ctx, EditSiteRequest.class);
+
+    processor.editSite(userData, siteId, editSiteRequest);
 
     end(ctx.response(), 200);
   }

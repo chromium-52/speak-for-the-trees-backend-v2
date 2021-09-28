@@ -1,10 +1,7 @@
 package com.codeforcommunity.api;
 
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.site.AddSiteRequest;
-import com.codeforcommunity.dto.site.AdoptedSitesResponse;
-import com.codeforcommunity.dto.site.RecordStewardshipRequest;
-import com.codeforcommunity.dto.site.UpdateSiteRequest;
+import com.codeforcommunity.dto.site.*;
 
 public interface IProtectedSiteProcessor {
 
@@ -26,6 +23,9 @@ public interface IProtectedSiteProcessor {
 
   /** Updates the latest state of the site and creates a new entry in the site_entries table */
   void updateSite(JWTData userData, int siteId, UpdateSiteRequest updateSiteRequest);
+
+  /** Edits features of the site */
+  void editSite(JWTData userData, int siteId, EditSiteRequest editSiteRequest);
 
   /** Removes the site */
   void deleteSite(JWTData userData, int siteId);

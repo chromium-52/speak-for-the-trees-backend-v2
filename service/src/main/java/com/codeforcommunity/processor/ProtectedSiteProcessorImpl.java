@@ -1,16 +1,10 @@
 package com.codeforcommunity.processor;
 
-import static org.jooq.generated.Tables.ADOPTED_SITES;
-import static org.jooq.generated.Tables.SITES;
-import static org.jooq.generated.Tables.SITE_ENTRIES;
-import static org.jooq.generated.Tables.STEWARDSHIP;
+import static org.jooq.generated.Tables.*;
 
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.site.AddSiteRequest;
-import com.codeforcommunity.dto.site.AdoptedSitesResponse;
-import com.codeforcommunity.dto.site.RecordStewardshipRequest;
-import com.codeforcommunity.dto.site.UpdateSiteRequest;
+import com.codeforcommunity.dto.site.*;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
@@ -18,10 +12,7 @@ import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import java.sql.Timestamp;
 import java.util.List;
 import org.jooq.DSLContext;
-import org.jooq.generated.tables.records.AdoptedSitesRecord;
-import org.jooq.generated.tables.records.SiteEntriesRecord;
-import org.jooq.generated.tables.records.SitesRecord;
-import org.jooq.generated.tables.records.StewardshipRecord;
+import org.jooq.generated.tables.records.*;
 
 public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
@@ -220,6 +211,25 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     record.setSiteNotes(updateSiteRequest.getSiteNotes());
 
     record.store();
+  }
+
+  @Override
+  public void editSite(JWTData userData, int siteId, EditSiteRequest editSiteRequest) {
+    isAdminCheck(userData.getPrivilegeLevel());
+    checkSiteExists(siteId);
+
+    SitesRecord site = db.selectFrom(SITES).where(SITES.ID.eq(siteId)).fetchOne();
+
+    site.setId(siteId);
+    site.setBlockId(editSiteRequest.getBlockId());
+    site.setAddress(editSiteRequest.getAddress());
+    site.setCity(editSiteRequest.getCity());
+    site.setZip(editSiteRequest.getZip());
+    site.setLat(editSiteRequest.getLat());
+    site.setLng(editSiteRequest.getLng());
+    site.setNeighborhoodId(editSiteRequest.getNeighborhoodId());
+
+    site.store();
   }
 
   @Override
