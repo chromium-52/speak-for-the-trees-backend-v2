@@ -8,6 +8,7 @@ import static org.jooq.generated.tables.SiteEntries.SITE_ENTRIES;
 import static org.jooq.generated.tables.Sites.SITES;
 import static org.jooq.impl.DSL.count;
 import static org.jooq.impl.DSL.max;
+import static org.jooq.impl.DSL.nvl;
 import static org.jooq.impl.DSL.table;
 
 import com.codeforcommunity.api.IMapProcessor;
@@ -32,7 +33,7 @@ import java.util.stream.Collectors;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Record2;
-import org.jooq.Record4;
+import org.jooq.Record5;
 import org.jooq.Record8;
 import org.jooq.Result;
 import org.jooq.Select;
@@ -193,10 +194,11 @@ public class MapProcessorImpl implements IMapProcessor {
                 .as("recentlyUpdated");
 
     Table<
-            Record4<
+            Record5<
                 Integer, // Site ID
                 Boolean, // Tree Present
                 String, // Common Name
+                String, // Species
                 Date // Planting Date
             >>
         newEntries =
@@ -206,17 +208,19 @@ public class MapProcessorImpl implements IMapProcessor {
                             SITE_ENTRIES.SITE_ID,
                             SITE_ENTRIES.TREE_PRESENT,
                             SITE_ENTRIES.COMMON_NAME,
+                            SITE_ENTRIES.SPECIES,
                             SITE_ENTRIES.PLANTING_DATE)
                         .from(SITE_ENTRIES)
                         .join(recentlyUpdated)
                         .on(SITE_ENTRIES.SITE_ID.eq(recentlyUpdated.field(SITE_ENTRIES.SITE_ID)))
                         .and(SITE_ENTRIES.UPDATED_AT.eq(recentlyUpdated.field(maxDate))))
                 .as("newEntries");
+
     Result<
             Record8<
                 Integer, // Site ID
                 Boolean, // Tree Present
-                String, // Common Name
+                String, // Name
                 Date, // Planting Date
                 Integer, // Adopter User ID
                 String, // Address
@@ -227,7 +231,9 @@ public class MapProcessorImpl implements IMapProcessor {
                 .select(
                     SITES.ID,
                     newEntries.field(SITE_ENTRIES.TREE_PRESENT),
-                    newEntries.field(SITE_ENTRIES.COMMON_NAME),
+                    nvl(
+                        newEntries.field(SITE_ENTRIES.COMMON_NAME),
+                        newEntries.field(SITE_ENTRIES.SPECIES)),
                     newEntries.field(SITE_ENTRIES.PLANTING_DATE),
                     ADOPTED_SITES.USER_ID,
                     SITES.ADDRESS,
