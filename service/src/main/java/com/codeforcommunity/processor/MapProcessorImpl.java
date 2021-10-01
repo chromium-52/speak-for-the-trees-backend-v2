@@ -6,10 +6,11 @@ import static org.jooq.generated.tables.Neighborhoods.NEIGHBORHOODS;
 import static org.jooq.generated.tables.Reservations.RESERVATIONS;
 import static org.jooq.generated.tables.SiteEntries.SITE_ENTRIES;
 import static org.jooq.generated.tables.Sites.SITES;
+import static org.jooq.impl.DSL.concat;
 import static org.jooq.impl.DSL.count;
 import static org.jooq.impl.DSL.max;
-import static org.jooq.impl.DSL.nvl;
 import static org.jooq.impl.DSL.table;
+import static org.jooq.impl.DSL.when;
 
 import com.codeforcommunity.api.IMapProcessor;
 import com.codeforcommunity.dto.map.BlockFeature;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
 import org.jooq.DSLContext;
 import org.jooq.Field;
 import org.jooq.Record2;
-import org.jooq.Record5;
+import org.jooq.Record6;
 import org.jooq.Record8;
 import org.jooq.Result;
 import org.jooq.Select;
@@ -194,10 +195,11 @@ public class MapProcessorImpl implements IMapProcessor {
                 .as("recentlyUpdated");
 
     Table<
-            Record5<
+            Record6<
                 Integer, // Site ID
                 Boolean, // Tree Present
                 String, // Common Name
+                String, // Genus
                 String, // Species
                 Date // Planting Date
             >>
@@ -208,6 +210,7 @@ public class MapProcessorImpl implements IMapProcessor {
                             SITE_ENTRIES.SITE_ID,
                             SITE_ENTRIES.TREE_PRESENT,
                             SITE_ENTRIES.COMMON_NAME,
+                            SITE_ENTRIES.GENUS,
                             SITE_ENTRIES.SPECIES,
                             SITE_ENTRIES.PLANTING_DATE)
                         .from(SITE_ENTRIES)
@@ -215,6 +218,29 @@ public class MapProcessorImpl implements IMapProcessor {
                         .on(SITE_ENTRIES.SITE_ID.eq(recentlyUpdated.field(SITE_ENTRIES.SITE_ID)))
                         .and(SITE_ENTRIES.UPDATED_AT.eq(recentlyUpdated.field(maxDate))))
                 .as("newEntries");
+
+    Field<String> treeName =
+        when( // common name is empty
+                newEntries.field(SITE_ENTRIES.COMMON_NAME).eq(""),
+                when( // all 3 are empty
+                        newEntries
+                            .field(SITE_ENTRIES.GENUS)
+                            .eq("")
+                            .and(newEntries.field(SITE_ENTRIES.SPECIES).eq("")),
+                        "Unknown Species")
+                    .otherwise(
+                        when( // common name and genus are empty
+                                newEntries.field(SITE_ENTRIES.GENUS).eq(""),
+                                newEntries.field(SITE_ENTRIES.SPECIES))
+                            .otherwise( // common name and species are empty
+                                when(
+                                        newEntries.field(SITE_ENTRIES.SPECIES).eq(""),
+                                        newEntries.field(SITE_ENTRIES.GENUS))
+                                    .otherwise( // just common name is empty
+                                        concat(
+                                            newEntries.field(SITE_ENTRIES.GENUS).concat(" "),
+                                            newEntries.field(SITE_ENTRIES.SPECIES))))))
+            .otherwise(newEntries.field(SITE_ENTRIES.COMMON_NAME)); // common name is not empty
 
     Result<
             Record8<
@@ -231,9 +257,7 @@ public class MapProcessorImpl implements IMapProcessor {
                 .select(
                     SITES.ID,
                     newEntries.field(SITE_ENTRIES.TREE_PRESENT),
-                    nvl(
-                        newEntries.field(SITE_ENTRIES.COMMON_NAME),
-                        newEntries.field(SITE_ENTRIES.SPECIES)),
+                    treeName,
                     newEntries.field(SITE_ENTRIES.PLANTING_DATE),
                     ADOPTED_SITES.USER_ID,
                     SITES.ADDRESS,
