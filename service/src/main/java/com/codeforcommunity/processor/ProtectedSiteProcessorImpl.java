@@ -122,6 +122,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     sitesRecord.setCity(addSiteRequest.getCity());
     sitesRecord.setZip(addSiteRequest.getZip());
     sitesRecord.setAddress(addSiteRequest.getAddress());
+    sitesRecord.setNeighborhoodId(addSiteRequest.getNeighborhoodId());
 
     sitesRecord.store();
 
