@@ -34,7 +34,7 @@ Following these steps, all that is left is to import data into the database. Thi
   }
   ```
   - Copy the "accessToken" returned by that call and add it as the _value_ of a header called 'X-Access-Token' for all seeding API calls
-- Import data is stored in the `SFTT.import.data` S3 bucket. Ask one of the team leads for the aws login 
+- Import data is stored in the `SFTT.import.data` S3 bucket. Ask one of the team leads for the .json files
     - Call `POST api/v1/protected/import/neighborhoods` with the contents of `neighborhoods.json` as the body
     - Call `POST api/v1/protected/import/blocks` with the contents of `blocks.json` as the body. At this point your database has been populated with neighborhood and block data. The following steps are only necessary if you need to test something related to reservations.
     - Request a SQL script that imports users in the SFTT Slack channel. This is not public due to the sensitivity of the information.
