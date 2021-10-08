@@ -16,6 +16,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class ProtectedSiteRouter implements IRouter {
 
@@ -51,7 +53,7 @@ public class ProtectedSiteRouter implements IRouter {
     JWTData userData = ctx.get("jwt_data");
     int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
 
-    processor.adoptSite(userData, siteId);
+    processor.adoptSite(userData, siteId, Date.valueOf(LocalDate.now()));
 
     end(ctx.response(), 200);
   }

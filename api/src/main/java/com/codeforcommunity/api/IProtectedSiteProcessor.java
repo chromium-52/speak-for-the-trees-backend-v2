@@ -6,11 +6,14 @@ import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.EditSiteRequest;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
+import java.sql.Date;
 
 public interface IProtectedSiteProcessor {
 
-  /** Creates a record in the adopted sites table linking the user and the site */
-  void adoptSite(JWTData userData, int siteId);
+  /**
+   * Creates a record in the adopted sites table linking the user, the site, and the date adopted
+   */
+  void adoptSite(JWTData userData, int siteId, Date dateAdopted);
 
   /** Removes the record in the adopted sites table linking the user and the site */
   void unadoptSite(JWTData userData, int siteId);
