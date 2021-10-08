@@ -3,9 +3,9 @@ package com.codeforcommunity.api;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.site.AddSiteRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
+import com.codeforcommunity.dto.site.EditSiteRequest;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
-import com.codeforcommunity.dto.site.EditSiteRequest;
 
 public interface IProtectedSiteProcessor {
 

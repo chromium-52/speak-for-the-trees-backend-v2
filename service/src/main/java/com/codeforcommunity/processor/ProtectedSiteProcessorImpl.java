@@ -1,10 +1,17 @@
 package com.codeforcommunity.processor;
 
-import static org.jooq.generated.Tables.*;
+import static org.jooq.generated.Tables.ADOPTED_SITES;
+import static org.jooq.generated.Tables.SITES;
+import static org.jooq.generated.Tables.SITE_ENTRIES;
+import static org.jooq.generated.Tables.STEWARDSHIP;
 
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.site.*;
+import com.codeforcommunity.dto.site.AddSiteRequest;
+import com.codeforcommunity.dto.site.AdoptedSitesResponse;
+import com.codeforcommunity.dto.site.EditSiteRequest;
+import com.codeforcommunity.dto.site.RecordStewardshipRequest;
+import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
@@ -12,7 +19,10 @@ import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import java.sql.Timestamp;
 import java.util.List;
 import org.jooq.DSLContext;
-import org.jooq.generated.tables.records.*;
+import org.jooq.generated.tables.records.AdoptedSitesRecord;
+import org.jooq.generated.tables.records.SiteEntriesRecord;
+import org.jooq.generated.tables.records.SitesRecord;
+import org.jooq.generated.tables.records.StewardshipRecord;
 
 public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
