@@ -4,6 +4,8 @@ import static org.jooq.generated.Tables.ADOPTED_SITES;
 import static org.jooq.generated.Tables.SITES;
 import static org.jooq.generated.Tables.SITE_ENTRIES;
 import static org.jooq.generated.Tables.STEWARDSHIP;
+import static org.jooq.generated.Tables.BLOCKS;
+import static org.jooq.generated.Tables.NEIGHBORHOODS;
 
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.auth.JWTData;
@@ -33,9 +35,36 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     this.db = db;
   }
 
+  /**
+   * Check if a site with the given site_id exists.
+   *
+   * @param siteId to check
+   */
   private void checkSiteExists(int siteId) {
     if (!db.fetchExists(db.selectFrom(SITES).where(SITES.ID.eq(siteId)))) {
       throw new ResourceDoesNotExistException(siteId, "Site");
+    }
+  }
+
+  /**
+   * Check if a block with the given block_id exists.
+   *
+   * @param blockId to check
+   */
+  private void checkBlockExists(int blockId) {
+    if (!db.fetchExists(db.selectFrom(BLOCKS).where(BLOCKS.ID.eq(blockId)))) {
+      throw new ResourceDoesNotExistException(blockId, "Block");
+    }
+  }
+
+  /**
+   * Check if a neighborhood with the given neighborhood_id exists.
+   *
+   * @param neighborhoodId to check
+   */
+  private void checkNeighborhoodExists(int neighborhoodId) {
+    if (!db.fetchExists(db.selectFrom(NEIGHBORHOODS).where(NEIGHBORHOODS.ID.eq(neighborhoodId)))) {
+      throw new ResourceDoesNotExistException(neighborhoodId, "Neighborhood");
     }
   }
 
@@ -229,6 +258,10 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   public void editSite(JWTData userData, int siteId, EditSiteRequest editSiteRequest) {
     isAdminCheck(userData.getPrivilegeLevel());
     checkSiteExists(siteId);
+    if (editSiteRequest.getBlockId() != null) {
+      checkBlockExists(editSiteRequest.getBlockId());
+    }
+    checkNeighborhoodExists(editSiteRequest.getNeighborhoodId());
 
     SitesRecord site = db.selectFrom(SITES).where(SITES.ID.eq(siteId)).fetchOne();
 
