@@ -92,9 +92,28 @@ public class EditSiteRequest extends ApiDto {
 
   @Override
   public List<String> validateFields(String fieldPrefix) throws HandledException {
+    String fieldName = fieldPrefix + "edit_site_request.";
     List<String> fields = new ArrayList<>();
 
-    // All fields are optional
+    if (address == null) {
+      fields.add(fieldName + "address");
+    }
+    if (city == null) {
+      fields.add(fieldName + "city");
+    }
+    if (zip == null) {
+      fields.add(fieldName + "zip");
+    }
+    if (lat == null) {
+      fields.add(fieldName + "lat");
+    }
+    if (lng == null) {
+      fields.add(fieldName + "lng");
+    }
+    if (neighborhoodId == null) {
+      fields.add(fieldName + "neighborhoodId");
+    }
+
     return fields;
   }
 }
