@@ -11,6 +11,7 @@ public class AddSiteRequest extends UpdateSiteRequest {
   private String city;
   private String zip;
   private String address;
+  private Integer neighborhoodId;
 
   public AddSiteRequest(
       Boolean treePresent,
@@ -56,7 +57,8 @@ public class AddSiteRequest extends UpdateSiteRequest {
       BigDecimal lng,
       String city,
       String zip,
-      String address) {
+      String address,
+      Integer neighborhoodId) {
     super(
         treePresent,
         status,
@@ -102,6 +104,7 @@ public class AddSiteRequest extends UpdateSiteRequest {
     this.city = city;
     this.zip = zip;
     this.address = address;
+    this.neighborhoodId = neighborhoodId;
   }
 
   public AddSiteRequest() {
@@ -156,6 +159,14 @@ public class AddSiteRequest extends UpdateSiteRequest {
     this.address = address;
   }
 
+  public Integer getNeighborhoodId() {
+    return neighborhoodId;
+  }
+
+  public void setNeighborhoodId(Integer neighborhoodId) {
+    this.neighborhoodId = neighborhoodId;
+  }
+
   @Override
   public List<String> validateFields(String fieldPrefix) throws HandledException {
     String fieldName = fieldPrefix + "add_site_request.";
@@ -178,6 +189,9 @@ public class AddSiteRequest extends UpdateSiteRequest {
     }
     if (address == null) {
       fields.add(fieldName + "address");
+    }
+    if (neighborhoodId == null) {
+      fields.add(fieldName + "neighborhood_id");
     }
 
     return fields;
