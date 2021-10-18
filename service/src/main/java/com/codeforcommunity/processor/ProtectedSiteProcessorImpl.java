@@ -1,15 +1,17 @@
 package com.codeforcommunity.processor;
 
 import static org.jooq.generated.Tables.ADOPTED_SITES;
+import static org.jooq.generated.Tables.BLOCKS;
+import static org.jooq.generated.Tables.NEIGHBORHOODS;
 import static org.jooq.generated.Tables.SITES;
 import static org.jooq.generated.Tables.SITE_ENTRIES;
 import static org.jooq.generated.Tables.STEWARDSHIP;
-import static org.jooq.generated.Tables.BLOCKS;
-import static org.jooq.generated.Tables.NEIGHBORHOODS;
+import static org.jooq.generated.Tables.USERS;
 
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.site.AddSiteRequest;
+import com.codeforcommunity.dto.site.AddSitesRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.EditSiteRequest;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
@@ -17,6 +19,7 @@ import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
+import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -146,6 +149,12 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
   @Override
   public void addSite(JWTData userData, AddSiteRequest addSiteRequest) {
+    if (addSiteRequest.getBlockId() != null) {
+      checkBlockExists(addSiteRequest.getBlockId());
+    }
+
+    checkNeighborhoodExists(addSiteRequest.getNeighborhoodId());
+
     SitesRecord sitesRecord = db.newRecord(SITES);
 
     sitesRecord.setBlockId(addSiteRequest.getBlockId());
@@ -276,6 +285,21 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     site.setNeighborhoodId(editSiteRequest.getNeighborhoodId());
 
     site.store();
+  }
+
+  @Override
+  public void addSites(JWTData userData, AddSitesRequest addSitesRequest) {
+    if ((!db.fetchExists(db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId()))))) {
+      throw new UserDoesNotExistException(userData.getUserId());
+    }
+    isAdminCheck(userData.getPrivilegeLevel());
+
+    addSitesRequest
+        .getSites()
+        .forEach(
+            newSite -> {
+              addSite(userData, newSite);
+            });
   }
 
   @Override
