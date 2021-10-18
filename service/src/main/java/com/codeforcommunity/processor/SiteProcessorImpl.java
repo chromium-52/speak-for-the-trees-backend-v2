@@ -137,7 +137,7 @@ public class SiteProcessorImpl implements ISiteProcessor {
     String neighborhood;
 
     if (sitesRecord.getNeighborhoodId() == null) {
-      neighborhood = "Unkown Neighborhood";
+      neighborhood = "Unknown Neighborhood";
     } else {
       neighborhood =
           db.selectFrom(NEIGHBORHOODS)
