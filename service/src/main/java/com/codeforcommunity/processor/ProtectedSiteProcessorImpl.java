@@ -1,11 +1,11 @@
 package com.codeforcommunity.processor;
 
 import static org.jooq.generated.Tables.ADOPTED_SITES;
+import static org.jooq.generated.Tables.BLOCKS;
+import static org.jooq.generated.Tables.NEIGHBORHOODS;
 import static org.jooq.generated.Tables.SITES;
 import static org.jooq.generated.Tables.SITE_ENTRIES;
 import static org.jooq.generated.Tables.STEWARDSHIP;
-import static org.jooq.generated.Tables.BLOCKS;
-import static org.jooq.generated.Tables.NEIGHBORHOODS;
 
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.auth.JWTData;
