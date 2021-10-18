@@ -116,6 +116,7 @@ public class MapProcessorImpl implements IMapProcessor {
             neighborhoodsRecord.getId(),
             neighborhoodsRecord.getNeighborhoodName(),
             neighborhoodCompletionPercentage,
+            neighborhoodsRecord.getCanopyCoverage(),
             neighborhoodsRecord.getLat(),
             neighborhoodsRecord.getLng());
     try {
