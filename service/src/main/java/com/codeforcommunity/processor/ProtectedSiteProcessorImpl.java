@@ -7,6 +7,7 @@ import static org.jooq.generated.Tables.SITES;
 import static org.jooq.generated.Tables.SITE_ENTRIES;
 import static org.jooq.generated.Tables.STEWARDSHIP;
 import static org.jooq.generated.Tables.USERS;
+import static org.jooq.impl.DSL.max;
 
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.auth.JWTData;
@@ -157,6 +158,9 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
     SitesRecord sitesRecord = db.newRecord(SITES);
 
+    int newId = db.select(max(SITES.ID)).from(SITES).fetchOne(0, Integer.class) + 1;
+
+    sitesRecord.setId(newId);
     sitesRecord.setBlockId(addSiteRequest.getBlockId());
     sitesRecord.setLat(addSiteRequest.getLat());
     sitesRecord.setLng(addSiteRequest.getLng());

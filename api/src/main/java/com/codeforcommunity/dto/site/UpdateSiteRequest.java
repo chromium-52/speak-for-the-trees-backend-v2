@@ -272,7 +272,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isStakesWithoutWires() {
-    return falseIfNull(isStakesWithoutWires());
+    return falseIfNull(stakesWithoutWires);
   }
 
   public void setStakesWithoutWires(Boolean stakesWithoutWires) {
@@ -304,7 +304,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isBagFilled() {
-    return falseIfNull(isBagFilled());
+    return falseIfNull(bagFilled);
   }
 
   public void setBagFilled(Boolean bagFilled) {
@@ -312,7 +312,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isTape() {
-    return falseIfNull(isTape());
+    return falseIfNull(tape);
   }
 
   public void setTape(Boolean tape) {
@@ -320,7 +320,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isSuckerGrowth() {
-    return falseIfNull(isSuckerGrowth());
+    return falseIfNull(suckerGrowth);
   }
 
   public void setSuckerGrowth(Boolean suckerGrowth) {
