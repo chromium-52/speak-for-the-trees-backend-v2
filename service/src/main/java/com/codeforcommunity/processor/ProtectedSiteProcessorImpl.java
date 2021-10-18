@@ -6,7 +6,6 @@ import static org.jooq.generated.Tables.NEIGHBORHOODS;
 import static org.jooq.generated.Tables.SITES;
 import static org.jooq.generated.Tables.SITE_ENTRIES;
 import static org.jooq.generated.Tables.STEWARDSHIP;
-import static org.jooq.generated.Tables.USERS;
 import static org.jooq.impl.DSL.max;
 
 import com.codeforcommunity.api.IProtectedSiteProcessor;
@@ -293,9 +292,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
   @Override
   public void addSites(JWTData userData, AddSitesRequest addSitesRequest) {
-    if ((!db.fetchExists(db.selectFrom(USERS).where(USERS.ID.eq(userData.getUserId()))))) {
-      throw new UserDoesNotExistException(userData.getUserId());
-    }
+
     isAdminCheck(userData.getPrivilegeLevel());
 
     addSitesRequest
