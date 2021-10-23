@@ -13,6 +13,7 @@ public class NeighborhoodImport extends ApiDto {
   private BigDecimal lat;
   private BigDecimal lng;
   private String geometry;
+  private Double canopyCoverage;
 
   public NeighborhoodImport(
       Integer neighborhoodId,
@@ -20,13 +21,15 @@ public class NeighborhoodImport extends ApiDto {
       BigDecimal sqmiles,
       BigDecimal lat,
       BigDecimal lng,
-      String geometry) {
+      String geometry,
+      Double canopyCoverage) {
     this.neighborhoodId = neighborhoodId;
     this.name = name;
     this.sqmiles = sqmiles;
     this.lat = lat;
     this.lng = lng;
     this.geometry = geometry;
+    this.canopyCoverage = canopyCoverage;
   }
 
   private NeighborhoodImport() {}
@@ -79,6 +82,14 @@ public class NeighborhoodImport extends ApiDto {
     this.geometry = geometry;
   }
 
+  public Double getCanopyCoverage() {
+    return canopyCoverage;
+  }
+
+  public void setCanopyCoverage(Double canopyCoverage) {
+    this.canopyCoverage = canopyCoverage;
+  }
+
   @Override
   public List<String> validateFields(String fieldPrefix) throws HandledException {
     String fieldName = fieldPrefix + "neighborhood.";
@@ -101,6 +112,9 @@ public class NeighborhoodImport extends ApiDto {
     }
     if (isEmpty(geometry)) {
       fields.add(fieldName + "geometry");
+    }
+    if (canopyCoverage == null || canopyCoverage < 0 || canopyCoverage > 1) {
+      fields.add(fieldName + "canopyCoverage");
     }
 
     return fields;
