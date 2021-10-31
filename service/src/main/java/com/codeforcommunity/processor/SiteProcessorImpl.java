@@ -134,11 +134,17 @@ public class SiteProcessorImpl implements ISiteProcessor {
       throw new ResourceDoesNotExistException(siteId, "site");
     }
 
-    String neighborhood =
-        db.selectFrom(NEIGHBORHOODS)
-            .where(NEIGHBORHOODS.ID.eq(sitesRecord.getNeighborhoodId()))
-            .fetchOne()
-            .getNeighborhoodName();
+    String neighborhood;
+
+    if (sitesRecord.getNeighborhoodId() == null) {
+      neighborhood = "Unknown Neighborhood";
+    } else {
+      neighborhood =
+          db.selectFrom(NEIGHBORHOODS)
+              .where(NEIGHBORHOODS.ID.eq(sitesRecord.getNeighborhoodId()))
+              .fetchOne()
+              .getNeighborhoodName();
+    }
 
     return new GetSiteResponse(
         sitesRecord.getId(),
