@@ -5,6 +5,7 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.site.AddSiteRequest;
+import com.codeforcommunity.dto.site.AddSitesRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.EditSiteRequest;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
@@ -39,6 +40,7 @@ public class ProtectedSiteRouter implements IRouter {
     registerUpdateSite(router);
     registerDeleteSite(router);
     registerEditSite(router);
+    registerAddSites(router);
     registerDeleteStewardship(router);
 
     return router;
@@ -144,6 +146,21 @@ public class ProtectedSiteRouter implements IRouter {
     AddSiteRequest addSiteRequest = RestFunctions.getJsonBodyAsClass(ctx, AddSiteRequest.class);
 
     processor.addSite(userData, addSiteRequest);
+
+    end(ctx.response(), 200);
+  }
+
+  private void registerAddSites(Router router) {
+    Route addSiteRoute = router.post("/add_sites");
+    addSiteRoute.handler(this::handleAddSitesRoute);
+  }
+
+  private void handleAddSitesRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+
+    AddSitesRequest addSitesRequest = RestFunctions.getJsonBodyAsClass(ctx, AddSitesRequest.class);
+
+    processor.addSites(userData, addSitesRequest);
 
     end(ctx.response(), 200);
   }
