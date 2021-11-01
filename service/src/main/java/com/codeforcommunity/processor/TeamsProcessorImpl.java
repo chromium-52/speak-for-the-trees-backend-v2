@@ -148,8 +148,8 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
       GoalsRecord goal = db.newRecord(GOALS);
       goal.setTeamId(teamId);
       goal.setGoal(addGoalRequest.getGoal());
-      goal.setStartAt(addGoalRequest.getStart_at());
-      goal.setCompleteBy(addGoalRequest.getComplete_by());
+      goal.setStartAt(addGoalRequest.getStartAt());
+      goal.setCompleteBy(addGoalRequest.getCompleteBy());
       goal.store();
     } else {
       throw new WrongTeamRoleException(teamId, usersTeamsRecord.getTeamRole());
