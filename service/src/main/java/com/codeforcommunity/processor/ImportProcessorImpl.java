@@ -76,6 +76,7 @@ public class ImportProcessorImpl implements IImportProcessor {
       neighborhood.setLat(neighborhoodImport.getLat());
       neighborhood.setLng(neighborhoodImport.getLng());
       neighborhood.setGeometry(neighborhoodImport.getGeometry());
+      neighborhood.setCanopyCoverage(neighborhoodImport.getCanopyCoverage());
 
       neighborhood.store();
     }
