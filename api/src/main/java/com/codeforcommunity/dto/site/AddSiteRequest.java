@@ -172,9 +172,6 @@ public class AddSiteRequest extends UpdateSiteRequest {
     String fieldName = fieldPrefix + "add_site_request.";
     List<String> fields = super.validateFields("");
 
-    if (blockId == null) {
-      fields.add(fieldName + "block_id");
-    }
     if (lat == null) {
       fields.add(fieldName + "lat");
     }
