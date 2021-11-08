@@ -25,10 +25,10 @@ public interface IProtectedSiteProcessor {
   void recordStewardship(
       JWTData userData, int siteId, RecordStewardshipRequest recordStewardshipRequest);
 
-  /** Creates a new site with entries in the sites and site_entries tables */
+  /** Creates a new site with entries in the sites and siteEntries tables */
   void addSite(JWTData userData, AddSiteRequest addSiteRequest);
 
-  /** Updates the latest state of the site and creates a new entry in the site_entries table */
+  /** Updates the latest state of the site and creates a new entry in the siteEntries table */
   void updateSite(JWTData userData, int siteId, UpdateSiteRequest updateSiteRequest);
 
   /** Edits features of the site */
