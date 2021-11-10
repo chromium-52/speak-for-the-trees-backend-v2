@@ -1,6 +1,14 @@
 package com.codeforcommunity;
 
-import com.codeforcommunity.api.*;
+import com.codeforcommunity.api.IAuthProcessor;
+import com.codeforcommunity.api.IImportProcessor;
+import com.codeforcommunity.api.ILeaderboardProcessor;
+import com.codeforcommunity.api.IMapProcessor;
+import com.codeforcommunity.api.IProtectedSiteProcessor;
+import com.codeforcommunity.api.IProtectedUserProcessor;
+import com.codeforcommunity.api.IReservationProcessor;
+import com.codeforcommunity.api.ISiteProcessor;
+import com.codeforcommunity.api.ITeamsProcessor;
 import com.codeforcommunity.auth.JWTAuthorizer;
 import com.codeforcommunity.auth.JWTCreator;
 import com.codeforcommunity.auth.JWTHandler;
