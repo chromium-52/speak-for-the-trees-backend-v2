@@ -2,6 +2,7 @@ package com.codeforcommunity.processor;
 
 import static org.jooq.generated.Tables.ADOPTED_SITES;
 import static org.jooq.generated.Tables.ENTRY_USERNAMES;
+import static org.jooq.generated.Tables.NEIGHBORHOODS;
 import static org.jooq.generated.Tables.SITES;
 import static org.jooq.generated.Tables.SITE_ENTRIES;
 import static org.jooq.generated.Tables.STEWARDSHIP;
@@ -133,6 +134,18 @@ public class SiteProcessorImpl implements ISiteProcessor {
       throw new ResourceDoesNotExistException(siteId, "site");
     }
 
+    String neighborhood;
+
+    if (sitesRecord.getNeighborhoodId() == null) {
+      neighborhood = "Unknown Neighborhood";
+    } else {
+      neighborhood =
+          db.selectFrom(NEIGHBORHOODS)
+              .where(NEIGHBORHOODS.ID.eq(sitesRecord.getNeighborhoodId()))
+              .fetchOne()
+              .getNeighborhoodName();
+    }
+
     return new GetSiteResponse(
         sitesRecord.getId(),
         sitesRecord.getBlockId(),
@@ -141,6 +154,7 @@ public class SiteProcessorImpl implements ISiteProcessor {
         sitesRecord.getCity(),
         sitesRecord.getZip(),
         sitesRecord.getAddress(),
+        neighborhood,
         getSiteEntries(siteId));
   }
 

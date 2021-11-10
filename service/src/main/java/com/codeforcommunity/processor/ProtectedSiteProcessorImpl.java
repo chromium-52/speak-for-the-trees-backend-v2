@@ -3,12 +3,15 @@ package com.codeforcommunity.processor;
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.site.AddSiteRequest;
+import com.codeforcommunity.dto.site.AddSitesRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
+import com.codeforcommunity.dto.site.EditSiteRequest;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
+import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 
 import java.sql.Date;
@@ -117,9 +120,36 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     }
   }
 
+  /**
+   * Check if a site with the given site_id exists.
+   *
+   * @param siteId to check
+   */
   private void checkSiteExists(int siteId) {
     if (!db.fetchExists(db.selectFrom(SITES).where(SITES.ID.eq(siteId)))) {
       throw new ResourceDoesNotExistException(siteId, "Site");
+    }
+  }
+
+  /**
+   * Check if a block with the given block_id exists.
+   *
+   * @param blockId to check
+   */
+  private void checkBlockExists(int blockId) {
+    if (!db.fetchExists(db.selectFrom(BLOCKS).where(BLOCKS.ID.eq(blockId)))) {
+      throw new ResourceDoesNotExistException(blockId, "Block");
+    }
+  }
+
+  /**
+   * Check if a neighborhood with the given neighborhood_id exists.
+   *
+   * @param neighborhoodId to check
+   */
+  private void checkNeighborhoodExists(int neighborhoodId) {
+    if (!db.fetchExists(db.selectFrom(NEIGHBORHOODS).where(NEIGHBORHOODS.ID.eq(neighborhoodId)))) {
+      throw new ResourceDoesNotExistException(neighborhoodId, "Neighborhood");
     }
   }
 
@@ -146,7 +176,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   }
 
   @Override
-  public void adoptSite(JWTData userData, int siteId) {
+  public void adoptSite(JWTData userData, int siteId, Date dateAdopted) {
     checkSiteExists(siteId);
     if (isAlreadyAdopted(siteId)) {
       throw new WrongAdoptionStatusException(true);
@@ -155,6 +185,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     AdoptedSitesRecord record = db.newRecord(ADOPTED_SITES);
     record.setUserId(userData.getUserId());
     record.setSiteId(siteId);
+    record.setDateAdopted(dateAdopted);
     record.store();
   }
 
@@ -200,14 +231,24 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
   @Override
   public void addSite(JWTData userData, AddSiteRequest addSiteRequest) {
+    if (addSiteRequest.getBlockId() != null) {
+      checkBlockExists(addSiteRequest.getBlockId());
+    }
+
+    checkNeighborhoodExists(addSiteRequest.getNeighborhoodId());
+
     SitesRecord sitesRecord = db.newRecord(SITES);
 
+    int newId = db.select(max(SITES.ID)).from(SITES).fetchOne(0, Integer.class) + 1;
+
+    sitesRecord.setId(newId);
     sitesRecord.setBlockId(addSiteRequest.getBlockId());
     sitesRecord.setLat(addSiteRequest.getLat());
     sitesRecord.setLng(addSiteRequest.getLng());
     sitesRecord.setCity(addSiteRequest.getCity());
     sitesRecord.setZip(addSiteRequest.getZip());
     sitesRecord.setAddress(addSiteRequest.getAddress());
+    sitesRecord.setNeighborhoodId(addSiteRequest.getNeighborhoodId());
 
     sitesRecord.store();
 
@@ -306,6 +347,42 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     record.setSiteNotes(updateSiteRequest.getSiteNotes());
 
     record.store();
+  }
+
+  @Override
+  public void editSite(JWTData userData, int siteId, EditSiteRequest editSiteRequest) {
+    isAdminCheck(userData.getPrivilegeLevel());
+    checkSiteExists(siteId);
+    if (editSiteRequest.getBlockId() != null) {
+      checkBlockExists(editSiteRequest.getBlockId());
+    }
+    checkNeighborhoodExists(editSiteRequest.getNeighborhoodId());
+
+    SitesRecord site = db.selectFrom(SITES).where(SITES.ID.eq(siteId)).fetchOne();
+
+    site.setId(siteId);
+    site.setBlockId(editSiteRequest.getBlockId());
+    site.setAddress(editSiteRequest.getAddress());
+    site.setCity(editSiteRequest.getCity());
+    site.setZip(editSiteRequest.getZip());
+    site.setLat(editSiteRequest.getLat());
+    site.setLng(editSiteRequest.getLng());
+    site.setNeighborhoodId(editSiteRequest.getNeighborhoodId());
+
+    site.store();
+  }
+
+  @Override
+  public void addSites(JWTData userData, AddSitesRequest addSitesRequest) {
+
+    isAdminCheck(userData.getPrivilegeLevel());
+
+    addSitesRequest
+        .getSites()
+        .forEach(
+            newSite -> {
+              addSite(userData, newSite);
+            });
   }
 
   @Override

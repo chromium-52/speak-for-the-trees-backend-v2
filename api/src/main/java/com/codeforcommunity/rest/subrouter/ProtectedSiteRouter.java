@@ -5,7 +5,9 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.site.AddSiteRequest;
+import com.codeforcommunity.dto.site.AddSitesRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
+import com.codeforcommunity.dto.site.EditSiteRequest;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.rest.IRouter;
@@ -15,6 +17,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
+import java.sql.Date;
+import java.time.LocalDate;
 
 public class ProtectedSiteRouter implements IRouter {
 
@@ -35,6 +39,8 @@ public class ProtectedSiteRouter implements IRouter {
     registerAddSite(router);
     registerUpdateSite(router);
     registerDeleteSite(router);
+    registerEditSite(router);
+    registerAddSites(router);
     registerDeleteStewardship(router);
 
     return router;
@@ -49,7 +55,7 @@ public class ProtectedSiteRouter implements IRouter {
     JWTData userData = ctx.get("jwt_data");
     int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
 
-    processor.adoptSite(userData, siteId);
+    processor.adoptSite(userData, siteId, Date.valueOf(LocalDate.now()));
 
     end(ctx.response(), 200);
   }
@@ -144,6 +150,21 @@ public class ProtectedSiteRouter implements IRouter {
     end(ctx.response(), 200);
   }
 
+  private void registerAddSites(Router router) {
+    Route addSiteRoute = router.post("/add_sites");
+    addSiteRoute.handler(this::handleAddSitesRoute);
+  }
+
+  private void handleAddSitesRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+
+    AddSitesRequest addSitesRequest = RestFunctions.getJsonBodyAsClass(ctx, AddSitesRequest.class);
+
+    processor.addSites(userData, addSitesRequest);
+
+    end(ctx.response(), 200);
+  }
+
   private void registerDeleteSite(Router router) {
     Route deleteSiteRoute = router.post("/:site_id/delete");
     deleteSiteRoute.handler(this::handleDeleteSiteRoute);
@@ -154,6 +175,22 @@ public class ProtectedSiteRouter implements IRouter {
     int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
 
     processor.deleteSite(userData, siteId);
+
+    end(ctx.response(), 200);
+  }
+
+  private void registerEditSite(Router router) {
+    Route editSiteRoute = router.post("/:site_id/edit");
+    editSiteRoute.handler(this::handleEditSiteRoute);
+  }
+
+  private void handleEditSiteRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
+
+    EditSiteRequest editSiteRequest = RestFunctions.getJsonBodyAsClass(ctx, EditSiteRequest.class);
+
+    processor.editSite(userData, siteId, editSiteRequest);
 
     end(ctx.response(), 200);
   }

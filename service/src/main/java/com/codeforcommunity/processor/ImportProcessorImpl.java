@@ -2,6 +2,7 @@ package com.codeforcommunity.processor;
 
 import static org.jooq.generated.Tables.BLOCKS;
 import static org.jooq.generated.Tables.ENTRY_USERNAMES;
+import static org.jooq.generated.Tables.NEIGHBORHOODS;
 import static org.jooq.generated.Tables.TEAMS;
 import static org.jooq.generated.Tables.USERS;
 
@@ -75,6 +76,7 @@ public class ImportProcessorImpl implements IImportProcessor {
       neighborhood.setLat(neighborhoodImport.getLat());
       neighborhood.setLng(neighborhoodImport.getLng());
       neighborhood.setGeometry(neighborhoodImport.getGeometry());
+      neighborhood.setCanopyCoverage(neighborhoodImport.getCanopyCoverage());
 
       neighborhood.store();
     }
@@ -172,6 +174,15 @@ public class ImportProcessorImpl implements IImportProcessor {
                 throw new ResourceDoesNotExistException(siteImport.getBlockId(), "block");
               }
 
+              if (siteImport.getNeighborhoodId() != null
+                  && !db.fetchExists(
+                      db.selectFrom(
+                          NEIGHBORHOODS.where(
+                              NEIGHBORHOODS.ID.eq(siteImport.getNeighborhoodId()))))) {
+                throw new ResourceDoesNotExistException(
+                    siteImport.getNeighborhoodId(), "neighborhood");
+              }
+
               // Set all values for the site record
               site.setId(siteImport.getSiteId());
               site.setBlockId(siteImport.getBlockId());
@@ -180,6 +191,7 @@ public class ImportProcessorImpl implements IImportProcessor {
               site.setCity(siteImport.getCity());
               site.setZip(siteImport.getZip());
               site.setAddress(siteImport.getAddress());
+              site.setNeighborhoodId(siteImport.getNeighborhoodId());
               if (siteImport.getDeletedAt() != null) {
                 site.setDeletedAt(siteImport.getDeletedAt());
               }

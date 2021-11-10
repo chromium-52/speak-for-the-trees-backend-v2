@@ -1,0 +1,2 @@
+ALTER TABLE site_entries
+    ALTER COLUMN species TYPE VARCHAR(50);
