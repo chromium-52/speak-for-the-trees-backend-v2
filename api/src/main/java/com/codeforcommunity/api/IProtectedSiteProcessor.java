@@ -8,6 +8,9 @@ import com.codeforcommunity.dto.site.UpdateSiteRequest;
 
 public interface IProtectedSiteProcessor {
 
+  /** Emails users who haven't recorded stewardship activity in 21 days */
+  void emailInactiveUsers();
+
   /** Creates a record in the adopted sites table linking the user and the site */
   void adoptSite(JWTData userData, int siteId);
 

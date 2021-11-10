@@ -5,7 +5,15 @@ import com.codeforcommunity.auth.JWTAuthorizer;
 import com.codeforcommunity.auth.JWTCreator;
 import com.codeforcommunity.auth.JWTHandler;
 import com.codeforcommunity.logger.SLogger;
-import com.codeforcommunity.processor.*;
+import com.codeforcommunity.processor.AuthProcessorImpl;
+import com.codeforcommunity.processor.ImportProcessorImpl;
+import com.codeforcommunity.processor.LeaderboardProcessorImpl;
+import com.codeforcommunity.processor.MapProcessorImpl;
+import com.codeforcommunity.processor.ProtectedSiteProcessorImpl;
+import com.codeforcommunity.processor.ProtectedUserProcessorImpl;
+import com.codeforcommunity.processor.ReservationProcessorImpl;
+import com.codeforcommunity.processor.SiteProcessorImpl;
+import com.codeforcommunity.processor.TeamsProcessorImpl;
 import com.codeforcommunity.propertiesLoader.PropertiesLoader;
 import com.codeforcommunity.requester.Emailer;
 import com.codeforcommunity.rest.ApiRouter;
@@ -85,9 +93,8 @@ public class ServiceMain {
     ILeaderboardProcessor leaderboardProc = new LeaderboardProcessorImpl(this.db);
     IMapProcessor mapProc = new MapProcessorImpl(this.db);
     ITeamsProcessor teamsProc = new TeamsProcessorImpl(this.db);
-    IProtectedSiteProcessor protectedSiteProc = new ProtectedSiteProcessorImpl(this.db);
+    IProtectedSiteProcessor protectedSiteProc = new ProtectedSiteProcessorImpl(this.db, emailer);
     ISiteProcessor siteProc = new SiteProcessorImpl(this.db);
-    IInactiveUserProcessor inactiveProc = new InactiveUserProcessorImpl(this.db, emailer);
 
     // Create the API router and start the HTTP server
     ApiRouter router =
