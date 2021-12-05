@@ -78,5 +78,7 @@ public class Stewardship {
         return weeded;
     }
 
-    public String getNeighborhood() { return neighborhood; }
+    public String getNeighborhood() {
+        return neighborhood;
+    }
 }
