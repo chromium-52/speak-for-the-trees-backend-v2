@@ -3,13 +3,13 @@ package com.codeforcommunity.dto.report;
 import java.util.List;
 
 public class GetAdoptionReportResponse {
-    public final List<AdoptedSite> adoption_report;
+    public final List<AdoptedSite> adoptedSites;
 
     public GetAdoptionReportResponse(List<AdoptedSite> adoptedSites) {
-        this.adoption_report = adoptedSites;
+        this.adoptedSites = adoptedSites;
     }
 
     public List<AdoptedSite> getAdoptedSites() {
-        return adoption_report;
+        return adoptedSites;
     }
 }

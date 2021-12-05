@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import java.sql.Timestamp;
 
 public class AdoptedSite {
-    private final int site_id;
+    private final int siteId;
     private final String address;
     private final String name;
     private final String email;
@@ -16,25 +16,15 @@ public class AdoptedSite {
     private final int activityCount;
     private final String neighborhood;
 
-    public AdoptedSite(Timestamp dateAdopted) {
-        this.site_id = 0;
-        this.address = "address";
-        this.name = "name";
-        this.email = "email";
-        this.dateAdopted = dateAdopted;
-        this.activityCount = 1;
-        this.neighborhood = "neighborhood";
-    }
-
     public AdoptedSite(
-            int site_id,
+            int siteId,
             String address,
             String name,
             String email,
             Timestamp dateAdopted,
             int activityCount,
             String neighborhood) {
-        this.site_id = site_id;
+        this.siteId = siteId;
         this.address = address;
         this.name = name;
         this.email = email;
@@ -43,8 +33,8 @@ public class AdoptedSite {
         this.neighborhood = neighborhood;
     }
 
-    public int getSite_id() {
-        return site_id;
+    public int getSiteId() {
+        return siteId;
     }
 
     public String getAddress() {
