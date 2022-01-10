@@ -6,10 +6,12 @@ import static org.jooq.generated.Tables.NEIGHBORHOODS;
 import static org.jooq.generated.Tables.SITES;
 import static org.jooq.generated.Tables.SITE_ENTRIES;
 import static org.jooq.generated.Tables.STEWARDSHIP;
+import static org.jooq.impl.DSL.max;
 
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.site.AddSiteRequest;
+import com.codeforcommunity.dto.site.AddSitesRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.EditSiteRequest;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
@@ -17,6 +19,7 @@ import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
+import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -146,8 +149,17 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
   @Override
   public void addSite(JWTData userData, AddSiteRequest addSiteRequest) {
+    if (addSiteRequest.getBlockId() != null) {
+      checkBlockExists(addSiteRequest.getBlockId());
+    }
+
+    checkNeighborhoodExists(addSiteRequest.getNeighborhoodId());
+
     SitesRecord sitesRecord = db.newRecord(SITES);
 
+    int newId = db.select(max(SITES.ID)).from(SITES).fetchOne(0, Integer.class) + 1;
+
+    sitesRecord.setId(newId);
     sitesRecord.setBlockId(addSiteRequest.getBlockId());
     sitesRecord.setLat(addSiteRequest.getLat());
     sitesRecord.setLng(addSiteRequest.getLng());
@@ -210,6 +222,9 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
     SiteEntriesRecord record = db.newRecord(SITE_ENTRIES);
 
+    int newId = db.select(max(SITE_ENTRIES.ID)).from(SITE_ENTRIES).fetchOne(0, Integer.class) + 1;
+
+    record.setId(newId);
     record.setUserId(userData.getUserId());
     record.setSiteId(siteId);
     record.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
@@ -276,6 +291,19 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     site.setNeighborhoodId(editSiteRequest.getNeighborhoodId());
 
     site.store();
+  }
+
+  @Override
+  public void addSites(JWTData userData, AddSitesRequest addSitesRequest) {
+
+    isAdminCheck(userData.getPrivilegeLevel());
+
+    addSitesRequest
+        .getSites()
+        .forEach(
+            newSite -> {
+              addSite(userData, newSite);
+            });
   }
 
   @Override
