@@ -39,7 +39,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   }
 
   /**
-   * Check if a site with the given site_id exists.
+   * Check if a site with the given siteId exists.
    *
    * @param siteId to check
    */
@@ -50,7 +50,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   }
 
   /**
-   * Check if a block with the given block_id exists.
+   * Check if a block with the given blockId exists.
    *
    * @param blockId to check
    */
@@ -61,7 +61,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   }
 
   /**
-   * Check if a neighborhood with the given neighborhood_id exists.
+   * Check if a neighborhood with the given neighborhoodId exists.
    *
    * @param neighborhoodId to check
    */

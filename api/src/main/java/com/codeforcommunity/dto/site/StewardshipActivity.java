@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class StewardshipActivity {
   private final int id;
-  private final int user_id;
+  private final int userId;
   private final Date date;
   private final Boolean watered;
   private final Boolean mulched;
@@ -13,14 +13,14 @@ public class StewardshipActivity {
 
   public StewardshipActivity(
       int id,
-      int user_id,
+      int userId,
       Date date,
       Boolean watered,
       Boolean mulched,
       Boolean cleaned,
       Boolean weeded) {
     this.id = id;
-    this.user_id = user_id;
+    this.userId = userId;
     this.date = date;
     this.watered = watered;
     this.mulched = mulched;
@@ -32,8 +32,8 @@ public class StewardshipActivity {
     return id;
   }
 
-  public int getUser_id() {
-    return user_id;
+  public int getUserId() {
+    return userId;
   }
 
   public Date getDate() {

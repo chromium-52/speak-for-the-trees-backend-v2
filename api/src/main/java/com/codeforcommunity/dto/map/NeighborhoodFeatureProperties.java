@@ -3,42 +3,42 @@ package com.codeforcommunity.dto.map;
 import java.math.BigDecimal;
 
 public class NeighborhoodFeatureProperties {
-  private final Integer neighborhood_id;
+  private final Integer neighborhoodId;
   private final String name;
-  private final Integer completion_perc;
-  private final Double canopy_coverage;
+  private final Integer completionPerc;
+  private final Double canopyCoverage;
   private final BigDecimal lat;
   private final BigDecimal lng;
 
   public NeighborhoodFeatureProperties(
-      Integer neighborhood_id,
+      Integer neighborhoodId,
       String name,
-      Integer completion_perc,
-      Double canopy_coverage,
+      Integer completionPerc,
+      Double canopyCoverage,
       BigDecimal lat,
       BigDecimal lng) {
-    this.neighborhood_id = neighborhood_id;
+    this.neighborhoodId = neighborhoodId;
     this.name = name;
-    this.completion_perc = completion_perc;
-    this.canopy_coverage = canopy_coverage;
+    this.completionPerc = completionPerc;
+    this.canopyCoverage = canopyCoverage;
     this.lat = lat;
     this.lng = lng;
   }
 
-  public Integer getNeighborhood_id() {
-    return neighborhood_id;
+  public Integer getNeighborhoodId() {
+    return neighborhoodId;
   }
 
   public String getName() {
     return name;
   }
 
-  public Integer getCompletion_perc() {
-    return completion_perc;
+  public Integer getCompletionPerc() {
+    return completionPerc;
   }
 
-  public Double getCanopy_coverage() {
-    return canopy_coverage;
+  public Double getCanopyCoverage() {
+    return canopyCoverage;
   }
 
   public BigDecimal getLat() {
