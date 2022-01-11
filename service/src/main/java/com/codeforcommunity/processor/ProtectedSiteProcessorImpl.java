@@ -222,6 +222,9 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
     SiteEntriesRecord record = db.newRecord(SITE_ENTRIES);
 
+    int newId = db.select(max(SITE_ENTRIES.ID)).from(SITE_ENTRIES).fetchOne(0, Integer.class) + 1;
+
+    record.setId(newId);
     record.setUserId(userData.getUserId());
     record.setSiteId(siteId);
     record.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
