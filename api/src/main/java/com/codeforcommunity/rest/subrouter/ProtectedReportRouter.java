@@ -13,15 +13,13 @@ import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
+import java.time.LocalDate;
 import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 import static com.codeforcommunity.rest.ApiRouter.end;
 
 public class ProtectedReportRouter implements IRouter {
     private static final String PREVIOUS_DAYS_QUERY_PARAM_NAME = "previousDays";
-    // default is to include all adopted sites or stewardship activities
-    private static final Integer DEFAULT_PREVIOUS_DAYS = -1;
 
     private final IProtectedReportProcessor processor;
 
@@ -62,7 +60,9 @@ public class ProtectedReportRouter implements IRouter {
     private void handleGetAdoptionReportCSVRoute(RoutingContext ctx) {
         JWTData userData = ctx.get("jwt_data");
 
-        Integer previousDays = getValidatedPreviousDaysParam(ctx);
+        Optional<Long> maybePreviousDays =
+                RestFunctions.getOptionalQueryParam(ctx, PREVIOUS_DAYS_QUERY_PARAM_NAME, Long::parseLong);
+        Long previousDays = maybePreviousDays.orElse(LocalDate.now().toEpochDay());
 
         GetReportCSVRequest getAdoptionReportCSVRequest = new GetReportCSVRequest(previousDays);
 
@@ -92,34 +92,14 @@ public class ProtectedReportRouter implements IRouter {
     private void handleGetStewardshipReportCSVRoute(RoutingContext ctx) {
         JWTData userData = ctx.get("jwt_data");
 
-        Integer previousDays = getValidatedPreviousDaysParam(ctx);
+        Optional<Long> maybePreviousDays =
+                RestFunctions.getOptionalQueryParam(ctx, PREVIOUS_DAYS_QUERY_PARAM_NAME, Long::parseLong);
+        Long previousDays = maybePreviousDays.orElse(LocalDate.now().toEpochDay());
 
         GetReportCSVRequest getStewardshipReportCSVRequest = new GetReportCSVRequest(previousDays);
 
         String stewardshipReportCSVResponse = processor.getStewardshipReportCSV(userData, getStewardshipReportCSVRequest);
 
         end(ctx.response(), 200, stewardshipReportCSVResponse);
-    }
-
-    /**
-     * Return the validated previousDays query parameter from the request URL. The parameter must be an integer greater
-     * than or equal to 0. If the parameter is not given, a value of DEFAULT_PREVIOUS_DAYS is returned.
-     *
-     * @param ctx routing context
-     * @return validated previousDays parameter
-     */
-    private Integer getValidatedPreviousDaysParam(RoutingContext ctx) {
-        Optional<Integer> maybePreviousDays =
-                RestFunctions.getOptionalQueryParam(ctx, PREVIOUS_DAYS_QUERY_PARAM_NAME, Integer::parseInt);
-        Integer previousDays = maybePreviousDays.orElse(null);
-
-        // validate user input
-        if (previousDays == null || System.currentTimeMillis() - TimeUnit.DAYS.toMillis(previousDays) < 0) {
-            previousDays = DEFAULT_PREVIOUS_DAYS;
-        } else if (previousDays < 0) {
-            previousDays = 0;
-        }
-
-        return previousDays;
     }
 }

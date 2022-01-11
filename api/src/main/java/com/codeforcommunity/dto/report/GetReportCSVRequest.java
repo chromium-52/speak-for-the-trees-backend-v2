@@ -6,19 +6,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GetReportCSVRequest extends ApiDto {
-    private Integer previousDays;
+    private Long previousDays;
 
-    public GetReportCSVRequest(Integer previousDays) {
+    public GetReportCSVRequest(Long previousDays) {
         this.previousDays = previousDays;
     }
 
     private GetReportCSVRequest() {}
 
-    public Integer getPreviousDays() {
+    public Long getPreviousDays() {
         return previousDays;
     }
 
-    public void setPreviousDays(Integer previousDays) {
+    public void setPreviousDays(Long previousDays) {
         this.previousDays = previousDays;
     }
 

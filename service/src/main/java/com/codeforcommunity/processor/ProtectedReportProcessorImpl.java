@@ -15,6 +15,7 @@ import java.sql.Date;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static org.jooq.generated.Tables.ADOPTED_SITES;
 import static org.jooq.generated.Tables.NEIGHBORHOODS;
@@ -26,8 +27,6 @@ import static org.jooq.impl.DSL.val;
 import static org.jooq.impl.DSL.count;
 
 public class ProtectedReportProcessorImpl implements IProtectedReportProcessor {
-    private static final Integer MISSING_PREVIOUS_DAYS = -1;
-
     private final DSLContext db;
 
     public ProtectedReportProcessorImpl(DSLContext db) {
@@ -46,12 +45,61 @@ public class ProtectedReportProcessorImpl implements IProtectedReportProcessor {
     }
 
     /**
+     * Converts the previousDays parameter into a Date object. The earliest possible date returned is January 1, 1970
+     * (Unix epoch).
+     *
+     * @param getReportCSVRequest CSV report route request DTO
+     * @return a Date object which is previousDays days before the current date
+     */
+    private Date getStartDate(GetReportCSVRequest getReportCSVRequest) {
+        Long previousDays = getReportCSVRequest.getPreviousDays();
+        java.util.Date startDate =
+                java.util.Date.from(LocalDate.now().minusDays(previousDays).atStartOfDay(ZoneId.systemDefault()).toInstant());
+
+        // ensure that the date is after the Unix epoch
+        if (startDate.getTime() < 0) {
+            startDate = new java.util.Date(0);
+        }
+
+        return new Date(startDate.getTime());
+    }
+
+    @Override
+    public GetAdoptionReportResponse getAdoptionReport(JWTData userData) {
+        isAdminCheck(userData.getPrivilegeLevel());
+
+        // get all adopted sites
+        List<AdoptedSite> adoptedSites = queryAdoptedSites(new Date(0));
+
+        return new GetAdoptionReportResponse(adoptedSites);
+    }
+
+    @Override
+    public String getAdoptionReportCSV(JWTData userData, GetReportCSVRequest getReportCSVRequest) {
+        isAdminCheck(userData.getPrivilegeLevel());
+
+        Date startDate = getStartDate(getReportCSVRequest);
+
+        List<AdoptedSite> adoptedSites = queryAdoptedSites(startDate);
+
+        StringBuilder builder = new StringBuilder();
+        builder.append("Site ID, Address, Name, Email, Date Adopted, Activity Count, Neighborhood\n");
+        for (AdoptedSite site : adoptedSites) {
+            builder.append(site.getSiteId()).append(", ").append(site.getAddress()).append(", ").append(site.getName())
+                    .append(", ").append(site.getEmail()).append(", ").append(site.getDateAdopted()).append(", ")
+                    .append(site.getActivityCount()).append(", ").append(site.getNeighborhood()).append("\n");
+        }
+
+        return builder.toString();
+    }
+
+    /**
      * Query sites that have been adopted at or after the given time.
      *
-     * @param startMilli sites adopted after this time, in milliseconds, are included in the returned list
+     * @param startDate sites adopted after this time, in milliseconds, are included in the returned list
      * @return list of sites that have been adopted at or after the given time
      */
-    private List<AdoptedSite> queryAdoptedSites(long startMilli) {
+    private List<AdoptedSite> queryAdoptedSites(Date startDate) {
         List<AdoptedSite> adoptedSites = db.select(SITES.ID, SITES.ADDRESS, concat(USERS.FIRST_NAME, val(" "), USERS.LAST_NAME),
                         USERS.EMAIL, ADOPTED_SITES.DATE_ADOPTED, count(STEWARDSHIP.ID), NEIGHBORHOODS.NEIGHBORHOOD_NAME)
                 .from(ADOPTED_SITES)
@@ -63,8 +111,8 @@ public class ProtectedReportProcessorImpl implements IProtectedReportProcessor {
                 .on(ADOPTED_SITES.SITE_ID.eq(STEWARDSHIP.SITE_ID))
                 .leftJoin(NEIGHBORHOODS)
                 .on(SITES.NEIGHBORHOOD_ID.eq(NEIGHBORHOODS.ID))
-                .where(ADOPTED_SITES.DATE_ADOPTED.ge(new Date(startMilli)))
-                .or(startMilli == 0)
+                .where(ADOPTED_SITES.DATE_ADOPTED.ge(startDate))
+                .or(TimeUnit.MILLISECONDS.toDays(startDate.getTime()) == 0)
                 .groupBy(SITES.ID, SITES.ADDRESS, USERS.FIRST_NAME, USERS.LAST_NAME, USERS.EMAIL, ADOPTED_SITES.DATE_ADOPTED,
                         NEIGHBORHOODS.NEIGHBORHOOD_NAME)
                 .orderBy(USERS.FIRST_NAME, USERS.LAST_NAME, ADOPTED_SITES.DATE_ADOPTED, SITES.ID)
@@ -74,32 +122,30 @@ public class ProtectedReportProcessorImpl implements IProtectedReportProcessor {
     }
 
     @Override
-    public GetAdoptionReportResponse getAdoptionReport(JWTData userData) {
+    public GetStewardshipReportResponse getStewardshipReport(JWTData userData) {
         isAdminCheck(userData.getPrivilegeLevel());
 
-        // get all adopted sites
-        List<AdoptedSite> adoptedSites = queryAdoptedSites(0);
+        // get all stewardships
+        List<Stewardship> stewardships = queryStewardships(new Date(0));
 
-        return new GetAdoptionReportResponse(adoptedSites);
+        return new GetStewardshipReportResponse(stewardships);
     }
 
     @Override
-    public String getAdoptionReportCSV(JWTData userData, GetReportCSVRequest getReportCSVRequest) {
+    public String getStewardshipReportCSV(JWTData userData, GetReportCSVRequest getReportCSVRequest) {
         isAdminCheck(userData.getPrivilegeLevel());
 
-        Integer previousDays = getReportCSVRequest.getPreviousDays();
-        // if previousDays parameter is not given, all adopted sites are returned
-        LocalDate startLocalDate = previousDays == MISSING_PREVIOUS_DAYS
-                ? LocalDate.ofEpochDay(0) : LocalDate.now().minusDays(previousDays);
-        long startMilli = startLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli();
+        Date startDate = getStartDate(getReportCSVRequest);
 
-        List<AdoptedSite> adoptedSites = queryAdoptedSites(startMilli);
+        List<Stewardship> stewardships = queryStewardships(startDate);
 
         StringBuilder builder = new StringBuilder();
-        builder.append("Site ID, Address, Name, Email, Date Adopted, Activity Count, Neighborhood\n");
-        for (AdoptedSite site : adoptedSites) {
-            builder.append(site.getSiteId() + ", " + site.getAddress() + ", " + site.getName() + ", " + site.getEmail() +
-                    ", " + site.getDateAdopted() + ", " + site.getActivityCount() + ", " + site.getNeighborhood() + "\n");
+        builder.append("Site ID, Address, Name, Email, Date Performed, Watered, Mulched, Cleaned, Weeded, Neighborhood\n");
+        for (Stewardship site : stewardships) {
+            builder.append(site.getSiteId()).append(", ").append(site.getAddress()).append(", ").append(site.getName())
+                    .append(", ").append(site.getEmail()).append(", ").append(site.getDatePerformed()).append(", ")
+                    .append(site.getWatered()).append(", ").append(site.getMulched()).append(", ").append(site.getCleaned())
+                    .append(", ").append(site.getWeeded()).append(", ").append(site.getNeighborhood()).append("\n");
         }
 
         return builder.toString();
@@ -127,38 +173,5 @@ public class ProtectedReportProcessorImpl implements IProtectedReportProcessor {
                 .fetchInto(Stewardship.class);
 
         return stewardships;
-    }
-
-    @Override
-    public GetStewardshipReportResponse getStewardshipReport(JWTData userData) {
-        isAdminCheck(userData.getPrivilegeLevel());
-
-        // get all stewardships
-        List<Stewardship> stewardships = queryStewardships(new Date(0));
-
-        return new GetStewardshipReportResponse(stewardships);
-    }
-
-    @Override
-    public String getStewardshipReportCSV(JWTData userData, GetReportCSVRequest getReportCSVRequest) {
-        isAdminCheck(userData.getPrivilegeLevel());
-
-        Integer previousDays = getReportCSVRequest.getPreviousDays();
-        // if previousDays parameter is not given, all adopted sites are returned
-        LocalDate startLocalDate = previousDays == MISSING_PREVIOUS_DAYS
-                ? LocalDate.ofEpochDay(0) : LocalDate.now().minusDays(previousDays);
-        Date startDate = new Date(startLocalDate.atStartOfDay(ZoneId.systemDefault()).toInstant().toEpochMilli());
-
-        List<Stewardship> stewardships = queryStewardships(startDate);
-
-        StringBuilder builder = new StringBuilder();
-        builder.append("Site ID, Address, Name, Email, Date Performed, Watered, Mulched, Cleaned, Weeded, Neighborhood\n");
-        for (Stewardship site : stewardships) {
-            builder.append(site.getSiteId() + ", " + site.getAddress() + ", " + site.getName() + ", " + site.getEmail() +
-                    ", " + site.getDatePerformed() + ", " + site.getWatered() + ", " + site.getMulched() + ", " +
-                    site.getCleaned() + ", " + site.getWeeded() + ", " + site.getNeighborhood() + "\n");
-        }
-
-        return builder.toString();
     }
 }
