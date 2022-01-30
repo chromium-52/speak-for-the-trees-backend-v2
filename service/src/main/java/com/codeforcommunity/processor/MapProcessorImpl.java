@@ -185,7 +185,7 @@ public class MapProcessorImpl implements IMapProcessor {
     Table<
             Record2<
                 Integer, // Site Entry ID
-                Timestamp // Updated_At
+                Timestamp // Updated At
             >>
         recentlyUpdated =
             table(
