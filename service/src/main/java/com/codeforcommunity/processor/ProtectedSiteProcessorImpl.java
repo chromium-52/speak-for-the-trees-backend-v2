@@ -19,7 +19,6 @@ import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
-import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -134,6 +133,9 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   public void recordStewardship(
       JWTData userData, int siteId, RecordStewardshipRequest recordStewardshipRequest) {
     checkSiteExists(siteId);
+    if (!isAlreadyAdoptedByUser(userData.getUserId(), siteId)) {
+      throw new WrongAdoptionStatusException(false);
+    }
 
     StewardshipRecord record = db.newRecord(STEWARDSHIP);
     record.setUserId(userData.getUserId());
