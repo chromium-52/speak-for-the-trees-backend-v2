@@ -174,7 +174,7 @@ public class AuthDatabaseOperations {
   }
 
   /**
-   * Given a userId and token, stores the token in the verification_keys table for the user and
+   * Given a userId and token, stores the token in the verificationKeys table for the user and
    * invalidates all other keys of this type for this user.
    */
   public String createSecretKey(int userId, VerificationKeyType type) {

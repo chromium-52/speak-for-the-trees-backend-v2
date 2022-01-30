@@ -19,7 +19,6 @@ import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
-import com.codeforcommunity.exceptions.UserDoesNotExistException;
 import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -39,7 +38,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   }
 
   /**
-   * Check if a site with the given site_id exists.
+   * Check if a site with the given siteId exists.
    *
    * @param siteId to check
    */
@@ -50,7 +49,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   }
 
   /**
-   * Check if a block with the given block_id exists.
+   * Check if a block with the given blockId exists.
    *
    * @param blockId to check
    */
@@ -61,7 +60,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   }
 
   /**
-   * Check if a neighborhood with the given neighborhood_id exists.
+   * Check if a neighborhood with the given neighborhoodId exists.
    *
    * @param neighborhoodId to check
    */
@@ -134,6 +133,9 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   public void recordStewardship(
       JWTData userData, int siteId, RecordStewardshipRequest recordStewardshipRequest) {
     checkSiteExists(siteId);
+    if (!isAlreadyAdoptedByUser(userData.getUserId(), siteId)) {
+      throw new WrongAdoptionStatusException(false);
+    }
 
     StewardshipRecord record = db.newRecord(STEWARDSHIP);
     record.setUserId(userData.getUserId());
