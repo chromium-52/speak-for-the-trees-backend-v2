@@ -120,6 +120,19 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   }
 
   @Override
+  public void forceUnadoptSite(JWTData userData, int siteId) {
+    isAdminCheck(userData.getPrivilegeLevel());
+    checkSiteExists(siteId);
+    if (!isAlreadyAdopted(siteId)) {
+      throw new WrongAdoptionStatusException(false); // wrong error?
+    }
+
+    db.deleteFrom(ADOPTED_SITES)
+            .where(ADOPTED_SITES.SITE_ID.eq(siteId))
+            .execute();
+  }
+
+  @Override
   public AdoptedSitesResponse getAdoptedSites(JWTData userData) {
     List<Integer> favoriteSites =
         db.selectFrom(ADOPTED_SITES)

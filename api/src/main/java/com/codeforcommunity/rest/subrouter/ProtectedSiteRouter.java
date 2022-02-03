@@ -34,6 +34,7 @@ public class ProtectedSiteRouter implements IRouter {
 
     registerAdoptSite(router);
     registerUnadoptSite(router);
+    registerForceUnadoptSite(router);
     registerGetAdoptedSitesRoute(router);
     registerRecordStewardship(router);
     registerAddSite(router);
@@ -70,6 +71,20 @@ public class ProtectedSiteRouter implements IRouter {
     int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
 
     processor.unadoptSite(userData, siteId);
+
+    end(ctx.response(), 200);
+  }
+
+  private void registerForceUnadoptSite(Router router) {
+    Route forceUnadoptSiteRoute = router.post("/:site_id/force_unadopt");
+    forceUnadoptSiteRoute.handler(this::handleForceUnadoptSiteRoute);
+  }
+
+  private void handleForceUnadoptSiteRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
+
+    processor.forceUnadoptSite(userData, siteId);
 
     end(ctx.response(), 200);
   }
