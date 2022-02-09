@@ -1,6 +1,12 @@
 package com.codeforcommunity.processor;
 
-import static org.jooq.generated.Tables.*;
+import static org.jooq.generated.Tables.ADOPTED_SITES;
+import static org.jooq.generated.Tables.BLOCKS;
+import static org.jooq.generated.Tables.NEIGHBORHOODS;
+import static org.jooq.generated.Tables.SITES;
+import static org.jooq.generated.Tables.USERS;
+import static org.jooq.generated.Tables.SITE_ENTRIES;
+import static org.jooq.generated.Tables.STEWARDSHIP;
 import static org.jooq.impl.DSL.max;
 
 import com.codeforcommunity.api.IProtectedSiteProcessor;
@@ -19,9 +25,11 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 import org.jooq.DSLContext;
-import org.jooq.Record1;
-import org.jooq.Result;
-import org.jooq.generated.tables.records.*;
+import org.jooq.generated.tables.records.AdoptedSitesRecord;
+import org.jooq.generated.tables.records.SiteEntriesRecord;
+import org.jooq.generated.tables.records.SitesRecord;
+import org.jooq.generated.tables.records.UsersRecord;
+import org.jooq.generated.tables.records.StewardshipRecord;
 
 public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
