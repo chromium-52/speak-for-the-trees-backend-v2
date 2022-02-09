@@ -131,12 +131,12 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
       throw new WrongAdoptionStatusException(false); // wrong error?
     }
 
-    AdoptedSitesRecord result = db.selectFrom(ADOPTED_SITES)
+    AdoptedSitesRecord adoptedSite = db.selectFrom(ADOPTED_SITES)
             .where(ADOPTED_SITES.SITE_ID.eq(siteId))
             .fetchInto(AdoptedSitesRecord.class)
             .get(0);
 
-    Integer adopterId = result.getUserId();
+    Integer adopterId = adoptedSite.getUserId();
 
     UsersRecord adopter = db.selectFrom(USERS)
             .where(USERS.ID.eq(adopterId))

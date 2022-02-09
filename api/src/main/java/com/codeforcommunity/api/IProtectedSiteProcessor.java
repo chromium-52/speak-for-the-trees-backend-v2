@@ -19,7 +19,7 @@ public interface IProtectedSiteProcessor {
   /** Removes the record in the adopted sites table linking the user and the site */
   void unadoptSite(JWTData userData, int siteId);
 
-  /** Removes the record in the adopted sites table the site to its current adopter */
+  /** Removes the record in the adopted sites table linking the site to its current adopter */
   void forceUnadoptSite(JWTData userData, int siteId);
 
   /** Get users adopted sites */
