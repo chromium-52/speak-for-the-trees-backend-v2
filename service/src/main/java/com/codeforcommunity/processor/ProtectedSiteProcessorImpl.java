@@ -136,7 +136,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     isAdminCheck(userData.getPrivilegeLevel());
     checkSiteExists(siteId);
     if (!isAlreadyAdopted(siteId)) {
-      throw new WrongAdoptionStatusException(false); // wrong error?
+      throw new WrongAdoptionStatusException(false);
     }
 
     AdoptedSitesRecord adoptedSite = db.selectFrom(ADOPTED_SITES)
@@ -150,7 +150,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
             .where(USERS.ID.eq(adopterId))
             .fetchOne();
 
-    if(isAdmin(adopter.getPrivilegeLevel()) && !(userData.getPrivilegeLevel() == (PrivilegeLevel.SUPER_ADMIN))) {
+    if(isAdmin(adopter.getPrivilegeLevel()) && !(userData.getPrivilegeLevel().equals(PrivilegeLevel.SUPER_ADMIN))) {
       throw new AuthException("User does not have the required privilege level.");
     }
 
