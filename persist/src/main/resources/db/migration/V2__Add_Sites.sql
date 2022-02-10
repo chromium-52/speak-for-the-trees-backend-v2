@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS site_entries (
     melnea_cass_trees       VARCHAR(30),
     mcb_number              INTEGER,
     tree_dedicated_to       VARCHAR(100),
+    tree_name               VARCHAR(60),
 
     CONSTRAINT site_entries_site_id_fk FOREIGN KEY (site_id) REFERENCES sites (id),
     CONSTRAINT site_entries_user_id_fk FOREIGN KEY (user_id) REFERENCES users (id)
