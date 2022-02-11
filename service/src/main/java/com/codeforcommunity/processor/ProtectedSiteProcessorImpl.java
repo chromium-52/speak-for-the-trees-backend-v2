@@ -4,6 +4,7 @@ import static org.jooq.generated.Tables.ADOPTED_SITES;
 import static org.jooq.generated.Tables.BLOCKS;
 import static org.jooq.generated.Tables.NEIGHBORHOODS;
 import static org.jooq.generated.Tables.SITES;
+import static org.jooq.generated.Tables.USERS;
 import static org.jooq.generated.Tables.SITE_ENTRIES;
 import static org.jooq.generated.Tables.STEWARDSHIP;
 import static org.jooq.impl.DSL.max;
@@ -27,6 +28,7 @@ import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.AdoptedSitesRecord;
 import org.jooq.generated.tables.records.SiteEntriesRecord;
 import org.jooq.generated.tables.records.SitesRecord;
+import org.jooq.generated.tables.records.UsersRecord;
 import org.jooq.generated.tables.records.StewardshipRecord;
 
 public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
@@ -87,9 +89,19 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
    * @param level the privilege level of the user calling the route
    */
   void isAdminCheck(PrivilegeLevel level) {
-    if (!(level.equals(PrivilegeLevel.ADMIN) || level.equals(PrivilegeLevel.SUPER_ADMIN))) {
+    if (!isAdmin(level)) {
       throw new AuthException("User does not have the required privilege level.");
     }
+  }
+
+  /**
+   * Is the user an admin or super admin.
+   *
+   * @param level the privilege level of the user calling the route
+   * @return true if user is ADMIN or SUPER_ADMIN, else false
+   */
+  boolean isAdmin(PrivilegeLevel level) {
+    return level.equals(PrivilegeLevel.ADMIN) || level.equals(PrivilegeLevel.SUPER_ADMIN);
   }
 
   @Override
@@ -117,6 +129,34 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
         .where(ADOPTED_SITES.USER_ID.eq(userData.getUserId()))
         .and(ADOPTED_SITES.SITE_ID.eq(siteId))
         .execute();
+  }
+
+  @Override
+  public void forceUnadoptSite(JWTData userData, int siteId) {
+    isAdminCheck(userData.getPrivilegeLevel());
+    checkSiteExists(siteId);
+    if (!isAlreadyAdopted(siteId)) {
+      throw new WrongAdoptionStatusException(false);
+    }
+
+    AdoptedSitesRecord adoptedSite = db.selectFrom(ADOPTED_SITES)
+            .where(ADOPTED_SITES.SITE_ID.eq(siteId))
+            .fetchInto(AdoptedSitesRecord.class)
+            .get(0);
+
+    Integer adopterId = adoptedSite.getUserId();
+
+    UsersRecord adopter = db.selectFrom(USERS)
+            .where(USERS.ID.eq(adopterId))
+            .fetchOne();
+
+    if(isAdmin(adopter.getPrivilegeLevel()) && !(userData.getPrivilegeLevel().equals(PrivilegeLevel.SUPER_ADMIN))) {
+      throw new AuthException("User does not have the required privilege level.");
+    }
+
+    db.deleteFrom(ADOPTED_SITES)
+            .where(ADOPTED_SITES.SITE_ID.eq(siteId))
+            .execute();
   }
 
   @Override
