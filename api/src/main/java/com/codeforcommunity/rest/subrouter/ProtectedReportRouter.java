@@ -19,87 +19,87 @@ import java.util.Optional;
 import static com.codeforcommunity.rest.ApiRouter.end;
 
 public class ProtectedReportRouter implements IRouter {
-    private static final String PREVIOUS_DAYS_QUERY_PARAM_NAME = "previousDays";
+  private static final String PREVIOUS_DAYS_QUERY_PARAM_NAME = "previousDays";
 
-    private final IProtectedReportProcessor processor;
+  private final IProtectedReportProcessor processor;
 
-    public ProtectedReportRouter(IProtectedReportProcessor processor) {
-        this.processor = processor;
-    }
+  public ProtectedReportRouter(IProtectedReportProcessor processor) {
+    this.processor = processor;
+  }
 
-    @Override
-    public Router initializeRouter(Vertx vertx) {
-        Router router = Router.router(vertx);
+  @Override
+  public Router initializeRouter(Vertx vertx) {
+    Router router = Router.router(vertx);
 
-        registerGetAdoptionReport(router);
-        registerGetAdoptionReportCSV(router);
-        registerGetStewardshipReport(router);
-        registerGetStewardshipReportCSV(router);
+    registerGetAdoptionReport(router);
+    registerGetAdoptionReportCSV(router);
+    registerGetStewardshipReport(router);
+    registerGetStewardshipReportCSV(router);
 
-        return router;
-    }
+    return router;
+  }
 
-    private void registerGetAdoptionReport(Router router) {
-        Route getAdoptionReportRoute = router.get("/adoption");
-        getAdoptionReportRoute.handler(this::handleGetAdoptionReportRoute);
-    }
+  private void registerGetAdoptionReport(Router router) {
+    Route getAdoptionReportRoute = router.get("/adoption");
+    getAdoptionReportRoute.handler(this::handleGetAdoptionReportRoute);
+  }
 
-    private void handleGetAdoptionReportRoute(RoutingContext ctx) {
-        JWTData userData = ctx.get("jwt_data");
+  private void handleGetAdoptionReportRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
 
-        GetAdoptionReportResponse adoptionReportResponse = processor.getAdoptionReport(userData);
+    GetAdoptionReportResponse adoptionReportResponse = processor.getAdoptionReport(userData);
 
-        end(ctx.response(), 200, JsonObject.mapFrom(adoptionReportResponse).toString());
-    }
+    end(ctx.response(), 200, JsonObject.mapFrom(adoptionReportResponse).toString());
+  }
 
-    private void registerGetAdoptionReportCSV(Router router) {
-        Route getAdoptionReportCSVRoute = router.get("/csv/adoption");
-        getAdoptionReportCSVRoute.handler(this::handleGetAdoptionReportCSVRoute);
-    }
+  private void registerGetAdoptionReportCSV(Router router) {
+    Route getAdoptionReportCSVRoute = router.get("/csv/adoption");
+    getAdoptionReportCSVRoute.handler(this::handleGetAdoptionReportCSVRoute);
+  }
 
-    private void handleGetAdoptionReportCSVRoute(RoutingContext ctx) {
-        JWTData userData = ctx.get("jwt_data");
+  private void handleGetAdoptionReportCSVRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
 
-        Optional<Long> maybePreviousDays =
-                RestFunctions.getOptionalQueryParam(ctx, PREVIOUS_DAYS_QUERY_PARAM_NAME, Long::parseLong);
-        Long previousDays = maybePreviousDays.orElse(LocalDate.now().toEpochDay());
+    Optional<Long> maybePreviousDays =
+        RestFunctions.getOptionalQueryParam(ctx, PREVIOUS_DAYS_QUERY_PARAM_NAME, Long::parseLong);
+    Long previousDays = maybePreviousDays.orElse(LocalDate.now().toEpochDay());
 
-        GetReportCSVRequest getAdoptionReportCSVRequest = new GetReportCSVRequest(previousDays);
+    GetReportCSVRequest getAdoptionReportCSVRequest = new GetReportCSVRequest(previousDays);
 
-        String adoptionReportCSVResponse = processor.getAdoptionReportCSV(userData, getAdoptionReportCSVRequest);
+    String adoptionReportCSVResponse = processor.getAdoptionReportCSV(userData, getAdoptionReportCSVRequest);
 
-        end(ctx.response(), 200, adoptionReportCSVResponse);
-    }
+    end(ctx.response(), 200, adoptionReportCSVResponse);
+  }
 
-    private void registerGetStewardshipReport(Router router) {
-        Route getStewardshipReportRoute = router.get("/stewardship");
-        getStewardshipReportRoute.handler(this::handleGetStewardshipReportRoute);
-    }
+  private void registerGetStewardshipReport(Router router) {
+    Route getStewardshipReportRoute = router.get("/stewardship");
+    getStewardshipReportRoute.handler(this::handleGetStewardshipReportRoute);
+  }
 
-    private void handleGetStewardshipReportRoute(RoutingContext ctx) {
-        JWTData userData = ctx.get("jwt_data");
+  private void handleGetStewardshipReportRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
 
-        GetStewardshipReportResponse stewardshipReportResponse = processor.getStewardshipReport(userData);
+    GetStewardshipReportResponse stewardshipReportResponse = processor.getStewardshipReport(userData);
 
-        end(ctx.response(), 200, JsonObject.mapFrom(stewardshipReportResponse).toString());
-    }
+    end(ctx.response(), 200, JsonObject.mapFrom(stewardshipReportResponse).toString());
+  }
 
-    private void registerGetStewardshipReportCSV(Router router) {
-        Route getStewardshipReportCSVRoute = router.get("/csv/stewardship");
-        getStewardshipReportCSVRoute.handler(this::handleGetStewardshipReportCSVRoute);
-    }
+  private void registerGetStewardshipReportCSV(Router router) {
+    Route getStewardshipReportCSVRoute = router.get("/csv/stewardship");
+    getStewardshipReportCSVRoute.handler(this::handleGetStewardshipReportCSVRoute);
+  }
 
-    private void handleGetStewardshipReportCSVRoute(RoutingContext ctx) {
-        JWTData userData = ctx.get("jwt_data");
+  private void handleGetStewardshipReportCSVRoute(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
 
-        Optional<Long> maybePreviousDays =
-                RestFunctions.getOptionalQueryParam(ctx, PREVIOUS_DAYS_QUERY_PARAM_NAME, Long::parseLong);
-        Long previousDays = maybePreviousDays.orElse(LocalDate.now().toEpochDay());
+    Optional<Long> maybePreviousDays =
+        RestFunctions.getOptionalQueryParam(ctx, PREVIOUS_DAYS_QUERY_PARAM_NAME, Long::parseLong);
+    Long previousDays = maybePreviousDays.orElse(LocalDate.now().toEpochDay());
 
-        GetReportCSVRequest getStewardshipReportCSVRequest = new GetReportCSVRequest(previousDays);
+    GetReportCSVRequest getStewardshipReportCSVRequest = new GetReportCSVRequest(previousDays);
 
-        String stewardshipReportCSVResponse = processor.getStewardshipReportCSV(userData, getStewardshipReportCSVRequest);
+    String stewardshipReportCSVResponse = processor.getStewardshipReportCSV(userData, getStewardshipReportCSVRequest);
 
-        end(ctx.response(), 200, stewardshipReportCSVResponse);
-    }
+    end(ctx.response(), 200, stewardshipReportCSVResponse);
+  }
 }
