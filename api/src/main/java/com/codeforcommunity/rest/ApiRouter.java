@@ -7,6 +7,7 @@ import com.codeforcommunity.api.IMapProcessor;
 import com.codeforcommunity.api.IProtectedReportProcessor;
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.api.IProtectedUserProcessor;
+import com.codeforcommunity.api.IReportProcessor;
 import com.codeforcommunity.api.IReservationProcessor;
 import com.codeforcommunity.api.ISiteProcessor;
 import com.codeforcommunity.api.ITeamsProcessor;
@@ -19,6 +20,7 @@ import com.codeforcommunity.rest.subrouter.MapRouter;
 import com.codeforcommunity.rest.subrouter.ProtectedReportRouter;
 import com.codeforcommunity.rest.subrouter.ProtectedSiteRouter;
 import com.codeforcommunity.rest.subrouter.ProtectedUserRouter;
+import com.codeforcommunity.rest.subrouter.ReportRouter;
 import com.codeforcommunity.rest.subrouter.ReservationRouter;
 import com.codeforcommunity.rest.subrouter.SiteRouter;
 import com.codeforcommunity.rest.subrouter.TeamsRouter;
@@ -38,6 +40,7 @@ public class ApiRouter implements IRouter {
   private final ProtectedSiteRouter protectedSiteRouter;
   private final SiteRouter siteRouter;
   private final ProtectedReportRouter protectedReportRouter;
+  private final ReportRouter reportRouter;
 
   public ApiRouter(
       IAuthProcessor authProcessor,
@@ -50,6 +53,7 @@ public class ApiRouter implements IRouter {
       IProtectedSiteProcessor protectedSiteProcessor,
       ISiteProcessor siteProcessor,
       IProtectedReportProcessor protectedReportProcessor,
+      IReportProcessor reportProcessor,
       JWTAuthorizer jwtAuthorizer) {
     this.commonRouter = new CommonRouter(jwtAuthorizer);
     this.authRouter = new AuthRouter(authProcessor);
@@ -62,6 +66,7 @@ public class ApiRouter implements IRouter {
     this.protectedSiteRouter = new ProtectedSiteRouter(protectedSiteProcessor);
     this.siteRouter = new SiteRouter(siteProcessor);
     this.protectedReportRouter = new ProtectedReportRouter(protectedReportProcessor);
+    this.reportRouter = new ReportRouter(reportProcessor);
   }
 
   /** Initialize a router and register all route handlers on it. */
@@ -73,6 +78,7 @@ public class ApiRouter implements IRouter {
     router.mountSubRouter("/leaderboard", leaderboardRouter.initializeRouter(vertx));
     router.mountSubRouter("/map", mapRouter.initializeRouter(vertx));
     router.mountSubRouter("/sites", siteRouter.initializeRouter(vertx));
+    router.mountSubRouter("/report", reportRouter.initializeRouter(vertx));
 
     return router;
   }
