@@ -22,12 +22,10 @@ public class ReportProcessorImpl implements IReportProcessor {
   @Override
   public GetCommunityStatsResponse getCommunityStats() {
     CommunityStats communityStats = db.select(
-        countDistinct(USERS.ID),
+        countDistinct(ADOPTED_SITES.USER_ID),
         countDistinct(ADOPTED_SITES.SITE_ID),
         countDistinct(STEWARDSHIP.ID))
         .from(ADOPTED_SITES)
-        .fullJoin(USERS)
-        .on(ADOPTED_SITES.USER_ID.eq(USERS.ID))
         .fullJoin(STEWARDSHIP)
         .on(ADOPTED_SITES.SITE_ID.eq(STEWARDSHIP.SITE_ID))
         .fetchInto(CommunityStats.class).get(0);
