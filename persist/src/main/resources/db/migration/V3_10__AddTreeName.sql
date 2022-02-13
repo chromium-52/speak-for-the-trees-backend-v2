@@ -1,0 +1,1 @@
+ALTER TABLE site_entries ADD COLUMN tree_name VARCHAR(60) DEFAULT NULL;
