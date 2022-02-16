@@ -6,6 +6,7 @@ import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
 import com.codeforcommunity.dto.user.ChangeUsernameRequest;
 import com.codeforcommunity.dto.user.DeleteUserRequest;
+import com.codeforcommunity.dto.user.NewChildRequest;
 import com.codeforcommunity.dto.user.UserDataResponse;
 import com.codeforcommunity.dto.user.UserTeamsResponse;
 
@@ -35,4 +36,9 @@ public interface IProtectedUserProcessor {
   /** Change the given user's privilege level to the provided one */
   void changePrivilegeLevel(
       JWTData userData, ChangePrivilegeLevelRequest changePrivilegeLevelRequest);
+
+  /**
+   *  Add new child user to users table and link child to calling admin through parent_accounts table
+   */
+  void createChildUser(JWTData userData, NewChildRequest newChildRequest);
 }

@@ -9,14 +9,7 @@ import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.auth.Passwords;
 import com.codeforcommunity.dataaccess.AuthDatabaseOperations;
-import com.codeforcommunity.dto.user.ChangeEmailRequest;
-import com.codeforcommunity.dto.user.ChangePasswordRequest;
-import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
-import com.codeforcommunity.dto.user.ChangeUsernameRequest;
-import com.codeforcommunity.dto.user.DeleteUserRequest;
-import com.codeforcommunity.dto.user.Team;
-import com.codeforcommunity.dto.user.UserDataResponse;
-import com.codeforcommunity.dto.user.UserTeamsResponse;
+import com.codeforcommunity.dto.user.*;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.enums.TeamRole;
 import com.codeforcommunity.exceptions.AuthException;
@@ -41,10 +34,12 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
 
   private final DSLContext db;
   private final Emailer emailer;
+  private final AuthDatabaseOperations authDatabaseOperations;
 
   public ProtectedUserProcessorImpl(DSLContext db, Emailer emailer) {
     this.db = db;
     this.emailer = emailer;
+    this.authDatabaseOperations = new AuthDatabaseOperations(db);
   }
 
   private UsersRecord userExistsCheck(JWTData userData) {
@@ -61,6 +56,17 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
       throw new UserDeletedException(user.getId());
     }
     return user;
+  }
+
+  /**
+   * Throws an exception if the user is not an admin or super admin.
+   *
+   * @param level the privilege level of the user calling the route
+   */
+  private void isAdminCheck(PrivilegeLevel level) {
+    if (!(level.equals(PrivilegeLevel.ADMIN) || level.equals(PrivilegeLevel.SUPER_ADMIN))) {
+      throw new AuthException("User does not have the required privilege level.");
+    }
   }
 
   @Override
@@ -210,5 +216,21 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
     } else {
       throw new WrongPasswordException();
     }
+  }
+
+  @Override
+  public void createChildUser(JWTData userData, NewChildRequest newChildRequest) {
+    isAdminCheck(userData.getPrivilegeLevel());
+
+    UsersRecord user =
+      authDatabaseOperations.createNewUser(
+          newChildRequest.getChildUsername(),
+          newChildRequest.getChildEmail(),
+          newChildRequest.getChildPassword(),
+          newChildRequest.getChildFirstName(),
+          newChildRequest.getChildLastName());
+
+    emailer.sendWelcomeEmail(
+        newChildRequest.getChildEmail(), AuthDatabaseOperations.getFullName(user.into(Users.class)));
   }
 }

@@ -4,13 +4,7 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.user.ChangeEmailRequest;
-import com.codeforcommunity.dto.user.ChangePasswordRequest;
-import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
-import com.codeforcommunity.dto.user.ChangeUsernameRequest;
-import com.codeforcommunity.dto.user.DeleteUserRequest;
-import com.codeforcommunity.dto.user.UserDataResponse;
-import com.codeforcommunity.dto.user.UserTeamsResponse;
+import com.codeforcommunity.dto.user.*;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
@@ -38,6 +32,7 @@ public class ProtectedUserRouter implements IRouter {
     registerChangeEmail(router);
     registerChangeUsername(router);
     registerChangePrivilegeLevel(router);
+    registerCreateChildUser(router);
 
     return router;
   }
@@ -142,5 +137,20 @@ public class ProtectedUserRouter implements IRouter {
     processor.changePrivilegeLevel(userData, changePrivilegeLevelRequest);
 
     end(ctx.response(), 200);
+  }
+
+  private void registerCreateChildUser(Router router) {
+    Route createChildUser = router.post("/:site_id/create_child");
+    createChildUser.handler(this::handleCreateChildUser);
+  }
+
+  private void handleCreateChildUser(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    NewChildRequest newChildRequest =
+            RestFunctions.getJsonBodyAsClass(ctx, NewChildRequest.class);
+
+    processor.createChildUser(userData, newChildRequest);
+
+    end(ctx.response(), 201);
   }
 }
