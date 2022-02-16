@@ -4,7 +4,14 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.user.*;
+import com.codeforcommunity.dto.user.ChangeEmailRequest;
+import com.codeforcommunity.dto.user.ChangePasswordRequest;
+import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
+import com.codeforcommunity.dto.user.ChangeUsernameRequest;
+import com.codeforcommunity.dto.user.DeleteUserRequest;
+import com.codeforcommunity.dto.user.NewChildRequest;
+import com.codeforcommunity.dto.user.UserDataResponse;
+import com.codeforcommunity.dto.user.UserTeamsResponse;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
