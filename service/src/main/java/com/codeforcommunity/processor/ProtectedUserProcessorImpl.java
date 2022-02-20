@@ -1,5 +1,7 @@
 package com.codeforcommunity.processor;
 
+import static org.jooq.generated.Tables.ADOPTED_SITES;
+import static org.jooq.generated.Tables.PARENT_ACCOUNTS;
 import static org.jooq.generated.Tables.TEAMS;
 import static org.jooq.generated.Tables.USERS;
 import static org.jooq.generated.Tables.USERS_TEAMS;
@@ -36,6 +38,8 @@ import org.jooq.DSLContext;
 import org.jooq.Record2;
 import org.jooq.Result;
 import org.jooq.generated.tables.pojos.Users;
+import org.jooq.generated.tables.records.AdoptedSitesRecord;
+import org.jooq.generated.tables.records.ParentAccountsRecord;
 import org.jooq.generated.tables.records.UsersRecord;
 
 public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
@@ -240,5 +244,10 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
 
     emailer.sendWelcomeEmail(
         newChildRequest.getChildEmail(), AuthDatabaseOperations.getFullName(user.into(Users.class)));
+
+    ParentAccountsRecord record = db.newRecord(PARENT_ACCOUNTS);
+    record.setParentId(userData.getUserId());
+    record.setChildId(user.getId());
+    record.store();
   }
 }
