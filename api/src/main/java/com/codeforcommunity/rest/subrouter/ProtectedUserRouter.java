@@ -147,7 +147,7 @@ public class ProtectedUserRouter implements IRouter {
   }
 
   private void registerCreateChildUser(Router router) {
-    Route createChildUser = router.post("/:site_id/create_child");
+    Route createChildUser = router.post("/create_child");
     createChildUser.handler(this::handleCreateChildUser);
   }
 
