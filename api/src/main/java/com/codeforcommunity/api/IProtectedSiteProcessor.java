@@ -5,6 +5,7 @@ import com.codeforcommunity.dto.site.AddSiteRequest;
 import com.codeforcommunity.dto.site.AddSitesRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.EditSiteRequest;
+import com.codeforcommunity.dto.site.NameSiteEntryRequest;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import java.sql.Date;
@@ -46,4 +47,7 @@ public interface IProtectedSiteProcessor {
 
   /** Removes the given stewardship activity */
   void deleteStewardship(JWTData userData, int activityId);
+
+  /** Removes the record in the adopted sites table linking the site to its current adopter */
+  void nameSiteEntry(JWTData userData, int siteId, NameSiteEntryRequest nameSiteEntryRequest);
 }

@@ -8,6 +8,7 @@ import com.codeforcommunity.dto.site.AddSiteRequest;
 import com.codeforcommunity.dto.site.AddSitesRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.EditSiteRequest;
+import com.codeforcommunity.dto.site.NameSiteEntryRequest;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.rest.IRouter;
@@ -43,6 +44,7 @@ public class ProtectedSiteRouter implements IRouter {
     registerEditSite(router);
     registerAddSites(router);
     registerDeleteStewardship(router);
+    registerNameSiteEntry(router);
 
     return router;
   }
@@ -206,6 +208,23 @@ public class ProtectedSiteRouter implements IRouter {
     EditSiteRequest editSiteRequest = RestFunctions.getJsonBodyAsClass(ctx, EditSiteRequest.class);
 
     processor.editSite(userData, siteId, editSiteRequest);
+
+    end(ctx.response(), 200);
+  }
+
+  private void registerNameSiteEntry(Router router) {
+    Route nameSiteEntry = router.post("/:site_id/name_entry");
+    nameSiteEntry.handler(this::handleNameSiteEntry);
+  }
+
+  private void handleNameSiteEntry(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
+
+    NameSiteEntryRequest nameSiteEntryRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, NameSiteEntryRequest.class);
+
+    processor.nameSiteEntry(userData, siteId, nameSiteEntryRequest);
 
     end(ctx.response(), 200);
   }
