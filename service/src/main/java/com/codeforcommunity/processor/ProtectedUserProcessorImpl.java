@@ -41,6 +41,7 @@ import org.jooq.generated.tables.pojos.Users;
 import org.jooq.generated.tables.records.AdoptedSitesRecord;
 import org.jooq.generated.tables.records.ParentAccountsRecord;
 import org.jooq.generated.tables.records.UsersRecord;
+import org.jooq.impl.DSL;
 
 public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
 
@@ -234,20 +235,22 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   public void createChildUser(JWTData userData, NewChildRequest newChildRequest) {
     isAdminCheck(userData.getPrivilegeLevel());
 
-    UsersRecord user =
-      authDatabaseOperations.createNewUser(
-          newChildRequest.getChildUsername(),
-          newChildRequest.getChildEmail(),
-          newChildRequest.getChildPassword(),
-          newChildRequest.getChildFirstName(),
-          newChildRequest.getChildLastName());
+    db.transaction(configuration -> {
+      UsersRecord user =
+          authDatabaseOperations.createNewUser(
+              newChildRequest.getChildUsername(),
+              newChildRequest.getChildEmail(),
+              newChildRequest.getChildPassword(),
+              newChildRequest.getChildFirstName(),
+              newChildRequest.getChildLastName());
 
-    emailer.sendWelcomeEmail(
-        newChildRequest.getChildEmail(), AuthDatabaseOperations.getFullName(user.into(Users.class)));
+      DSL.using(configuration)
+          .insertInto(PARENT_ACCOUNTS, PARENT_ACCOUNTS.PARENT_ID, PARENT_ACCOUNTS.CHILD_ID)
+          .values(userData.getUserId(), user.getId())
+          .execute();
 
-    ParentAccountsRecord record = db.newRecord(PARENT_ACCOUNTS);
-    record.setParentId(userData.getUserId());
-    record.setChildId(user.getId());
-    record.store();
+      emailer.sendWelcomeEmail(
+          newChildRequest.getChildEmail(), AuthDatabaseOperations.getFullName(user.into(Users.class)));
+    });
   }
 }
