@@ -20,6 +20,7 @@ import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
+import com.codeforcommunity.exceptions.LinkedResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import java.sql.Date;
@@ -391,7 +392,11 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
         .fetchOne();
 
     if (siteEntry == null) {
-      throw new ResourceDoesNotExistException(siteId, "Site Entry");
+      throw new LinkedResourceDoesNotExistException("Site Entry",
+                                                    userData.getUserId(),
+                                                    "User",
+                                                    siteId,
+                                                    "Site");
     }
 
     siteEntry.setTreeName(nameSiteEntryRequest.getName());

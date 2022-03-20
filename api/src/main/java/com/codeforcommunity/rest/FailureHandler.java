@@ -7,6 +7,7 @@ import com.codeforcommunity.exceptions.HandledException;
 import com.codeforcommunity.exceptions.IncorrectBlockStatusException;
 import com.codeforcommunity.exceptions.InvalidSecretKeyException;
 import com.codeforcommunity.exceptions.LeaderCannotLeaveTeamException;
+import com.codeforcommunity.exceptions.LinkedResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.MalformedParameterException;
 import com.codeforcommunity.exceptions.MemberApplicationException;
 import com.codeforcommunity.exceptions.MemberStatusException;
@@ -98,6 +99,17 @@ public class FailureHandler {
   public void handleResourceDoesNotExist(RoutingContext ctx, ResourceDoesNotExistException e) {
     String message =
         String.format("No <%s> with id <%d> exists", e.getResourceType(), e.getResourceId());
+    end(ctx, message, 400);
+  }
+
+  public void handleLinkedResourceDoesNotExist(RoutingContext ctx, LinkedResourceDoesNotExistException e) {
+    String message =
+        String.format("No linked resource <%s> with resource <%s> of id <%d> and resource <%s> of id <%d> exists",
+                      e.getlinkedResourceType(),
+                      e.getResource1Type(),
+                      e.getResource1Id(),
+                      e.getResource2Type(),
+                      e.getResource2Id());
     end(ctx, message, 400);
   }
 
