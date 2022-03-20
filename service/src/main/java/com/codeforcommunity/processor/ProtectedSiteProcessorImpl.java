@@ -26,6 +26,8 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 import org.jooq.DSLContext;
+import org.jooq.Field;
+import org.jooq.Record1;
 import org.jooq.generated.tables.records.AdoptedSitesRecord;
 import org.jooq.generated.tables.records.SiteEntriesRecord;
 import org.jooq.generated.tables.records.SitesRecord;
@@ -384,7 +386,14 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
     SiteEntriesRecord siteEntry = db.selectFrom(SITE_ENTRIES)
         .where(SITE_ENTRIES.SITE_ID.eq(siteId))
+        .orderBy(SITE_ENTRIES.UPDATED_AT)
+        .limit(1)
         .fetchOne();
+
+    if (siteEntry == null) {
+      throw new ResourceDoesNotExistException(siteId, "Site Entry");
+    }
+
     siteEntry.setTreeName(nameSiteEntryRequest.getName());
     siteEntry.store();
   }
