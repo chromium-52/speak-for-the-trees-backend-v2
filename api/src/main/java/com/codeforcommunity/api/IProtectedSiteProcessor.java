@@ -48,6 +48,9 @@ public interface IProtectedSiteProcessor {
   /** Removes the given stewardship activity */
   void deleteStewardship(JWTData userData, int activityId);
 
-  /** Removes the record in the adopted sites table linking the site to its current adopter */
+  /**
+   * Renames the latest site entry of the site with the given siteId
+   * using the new name specified in the nameSiteEntryRequest
+   */
   void nameSiteEntry(JWTData userData, int siteId, NameSiteEntryRequest nameSiteEntryRequest);
 }
