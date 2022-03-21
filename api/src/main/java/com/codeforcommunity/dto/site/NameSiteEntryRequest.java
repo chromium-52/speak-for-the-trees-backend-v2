@@ -17,7 +17,6 @@ public class NameSiteEntryRequest extends ApiDto {
     this.name = name;
   }
 
-
   @Override
   public List<String> validateFields(String fieldPrefix) throws HandledException {
     String fieldName = fieldPrefix + "new_site_entry_name_request.";
