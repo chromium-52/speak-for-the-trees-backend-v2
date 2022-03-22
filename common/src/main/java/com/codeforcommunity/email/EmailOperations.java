@@ -185,7 +185,5 @@ public class EmailOperations {
         .buildEmail();
 
     this.sendEmail(email, subject);
-    // TODO come up with a better name for email_subject_neighborhood_notification value
-    // TODO update value in the server.properties.example file
   }
 }

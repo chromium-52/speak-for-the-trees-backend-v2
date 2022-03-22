@@ -110,7 +110,7 @@ public class Emailer {
   }
 
   public void sendNeighborhoodsEmail(HashSet<String> sendToEmails, String body) {
-    String filePath = "/emails/SendEmail.html";
+    String filePath = "/emails/NeighborhoodEmail.html";
 
     Map<String, String> templateValues = new HashMap<>();
     templateValues.put("body", body);
