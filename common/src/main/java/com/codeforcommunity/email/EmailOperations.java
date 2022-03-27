@@ -9,6 +9,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+import javax.mail.SendFailedException;
 import org.simplejavamail.MailException;
 import org.simplejavamail.api.email.Email;
 import org.simplejavamail.api.mailer.AsyncResponse;
@@ -116,6 +118,8 @@ public class EmailOperations {
 
   /**
    * Send the given email with the given subject.
+   *
+   * @throws RuntimeException if the email could not be sent.
    */
   private void sendEmail(Email email, String subject) {
     try {
@@ -131,6 +135,7 @@ public class EmailOperations {
             logger.error(
                 String.format("Exception thrown while sending email with subject `%s`", subject),
                 e);
+            throw new RuntimeException("Something went wrong and the email could not be sent");
           });
 
       mailResponse.onSuccess(
@@ -142,6 +147,7 @@ public class EmailOperations {
       logger.error(
           String.format("`MailException` thrown while sending email with subject `%s`", subject),
           e);
+      throw new RuntimeException("Something went wrong and the email could not be sent");
     }
   }
 
