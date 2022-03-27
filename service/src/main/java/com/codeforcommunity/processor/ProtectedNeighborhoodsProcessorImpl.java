@@ -46,6 +46,7 @@ public class ProtectedNeighborhoodsProcessorImpl implements IProtectedNeighborho
 
     String emailBody = sendEmailRequest.getEmailBody();
 
+    // retrieve all emails of users in the specified neighborhoods
     List<String> userEmailRecords = db.select(USERS.EMAIL)
         .from(USERS)
         .leftJoin(ADOPTED_SITES)
