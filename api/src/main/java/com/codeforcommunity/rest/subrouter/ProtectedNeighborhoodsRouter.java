@@ -24,21 +24,21 @@ public class ProtectedNeighborhoodsRouter implements IRouter {
   public Router initializeRouter(Vertx vertx) {
     Router router = Router.router(vertx);
 
-    registerSendEmail(router);
+    registerSendEmailToNeighborhoods(router);
 
     return router;
   }
 
-  private void registerSendEmail(Router router) {
+  private void registerSendEmailToNeighborhoods(Router router) {
     Route adoptSiteRoute = router.get("/send_email");
-    adoptSiteRoute.handler(this::handleSendEmail);
+    adoptSiteRoute.handler(this::handleSendEmailToNeighborhoods);
   }
 
-  private void handleSendEmail(RoutingContext ctx) {
+  private void handleSendEmailToNeighborhoods(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
     SendEmailRequest sendEmailRequest = RestFunctions.getJsonBodyAsClass(ctx, SendEmailRequest.class);
 
-    processor.sendEmail(userData, sendEmailRequest);
+    processor.sendEmailToNeighborhoods(userData, sendEmailRequest);
 
     end(ctx.response(), 200);
   }

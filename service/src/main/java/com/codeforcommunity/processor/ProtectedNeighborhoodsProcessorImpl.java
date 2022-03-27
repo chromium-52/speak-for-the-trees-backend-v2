@@ -29,15 +29,15 @@ public class ProtectedNeighborhoodsProcessorImpl implements IProtectedNeighborho
    *
    * @param level the privilege level of the user calling the route
    */
-  private void isAdminCheck(PrivilegeLevel level) {
+  public void assertAdminOrSuperAdmin(PrivilegeLevel level) {
     if (!(level.equals(PrivilegeLevel.ADMIN) || level.equals(PrivilegeLevel.SUPER_ADMIN))) {
       throw new AuthException("User does not have the required privilege level.");
     }
   }
 
   @Override
-  public void sendEmail(JWTData userData, SendEmailRequest sendEmailRequest) {
-    isAdminCheck(userData.getPrivilegeLevel());
+  public void sendEmailToNeighborhoods(JWTData userData, SendEmailRequest sendEmailRequest) {
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
 
     List<Integer> neighborhoodIDs = sendEmailRequest.getNeighborhoodIDs();
     if (neighborhoodIDs.size() == 0) {

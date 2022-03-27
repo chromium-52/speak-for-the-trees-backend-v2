@@ -6,7 +6,8 @@ import com.codeforcommunity.dto.neighborhoods.SendEmailRequest;
 public interface IProtectedNeighborhoodsProcessor {
 
   /**
-   * Sends an email with the given message to users in the specified neighborhoods.
+   * Sends an email with the given message to users in the specified neighborhoods. If no
+   * neighborhoods are specified, send the email to users in all neighborhoods.
    */
-  void sendEmail(JWTData userData, SendEmailRequest sendEmailRequest);
+  void sendEmailToNeighborhoods(JWTData userData, SendEmailRequest sendEmailRequest);
 }

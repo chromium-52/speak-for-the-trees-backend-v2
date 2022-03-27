@@ -9,8 +9,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 
-import javax.mail.MessagingException;
-import javax.mail.SendFailedException;
 import org.simplejavamail.MailException;
 import org.simplejavamail.api.email.Email;
 import org.simplejavamail.api.mailer.AsyncResponse;
