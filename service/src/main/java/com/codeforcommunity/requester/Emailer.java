@@ -20,6 +20,8 @@ public class Emailer {
       PropertiesLoader.loadProperty("email_subject_password_reset_confirm");
   private final String subjectAccountDeleted =
       PropertiesLoader.loadProperty("email_subject_account_deleted");
+  private final String subjectInactive =
+          PropertiesLoader.loadProperty("email_subject_inactive");
 
   public Emailer() {
     String senderName = PropertiesLoader.loadProperty("email_sender_name");
@@ -104,5 +106,18 @@ public class Emailer {
     emailBody.ifPresent(
         s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectAccountDeleted, s));
     // TODO implement this
+  }
+
+  public void sendInactiveEmail(String sendToEmail, String sendToName, String address, String siteId) {
+    String filePath = "/emails/InactiveEmailFile.html";
+
+    Map<String, String> templateValues = new HashMap<>();
+    templateValues.put("address", address);
+    templateValues.put("siteID", siteId);
+    templateValues.put("name", sendToName);
+
+    Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
+    emailBody.ifPresent(
+            s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectInactive, s));
   }
 }

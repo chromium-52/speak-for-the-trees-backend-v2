@@ -12,10 +12,14 @@ import java.sql.Date;
 
 public interface IProtectedSiteProcessor {
 
+  /** Emails users who haven't recorded stewardship activity in 21 days */
+  void emailInactiveUsers();
+
   /**
    * Creates a record in the adopted sites table linking the user, the site, and the date adopted
    */
   void adoptSite(JWTData userData, int siteId, Date dateAdopted);
+
 
   /** Removes the record in the adopted sites table linking the user and the site */
   void unadoptSite(JWTData userData, int siteId);
