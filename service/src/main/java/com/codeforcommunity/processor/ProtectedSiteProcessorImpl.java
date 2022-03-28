@@ -15,16 +15,20 @@ import com.codeforcommunity.dto.site.AddSiteRequest;
 import com.codeforcommunity.dto.site.AddSitesRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.EditSiteRequest;
+import com.codeforcommunity.dto.site.NameSiteEntryRequest;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
+import com.codeforcommunity.exceptions.LinkedResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 import org.jooq.DSLContext;
+import org.jooq.Field;
+import org.jooq.Record1;
 import org.jooq.generated.tables.records.AdoptedSitesRecord;
 import org.jooq.generated.tables.records.SiteEntriesRecord;
 import org.jooq.generated.tables.records.SitesRecord;
@@ -373,5 +377,29 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     }
 
     db.deleteFrom(STEWARDSHIP).where(STEWARDSHIP.ID.eq(activityId)).execute();
+  }
+
+  public void nameSiteEntry(JWTData userData, int siteId, NameSiteEntryRequest nameSiteEntryRequest) {
+    checkSiteExists(siteId);
+    if (!isAlreadyAdoptedByUser(userData.getUserId(), siteId)) {
+      throw new AuthException("User is not the site's adopter.");
+    }
+
+    SiteEntriesRecord siteEntry = db.selectFrom(SITE_ENTRIES)
+        .where(SITE_ENTRIES.SITE_ID.eq(siteId))
+        .orderBy(SITE_ENTRIES.UPDATED_AT)
+        .limit(1)
+        .fetchOne();
+
+    if (siteEntry == null) {
+      throw new LinkedResourceDoesNotExistException("Site Entry",
+                                                    userData.getUserId(),
+                                                    "User",
+                                                    siteId,
+                                                    "Site");
+    }
+
+    siteEntry.setTreeName(nameSiteEntryRequest.getName());
+    siteEntry.store();
   }
 }
