@@ -1,12 +1,12 @@
 package com.codeforcommunity.api;
 
 import com.codeforcommunity.auth.JWTData;
+import com.codeforcommunity.dto.auth.NewUserRequest;
 import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
 import com.codeforcommunity.dto.user.ChangeUsernameRequest;
 import com.codeforcommunity.dto.user.DeleteUserRequest;
-import com.codeforcommunity.dto.user.NewChildRequest;
 import com.codeforcommunity.dto.user.UserDataResponse;
 import com.codeforcommunity.dto.user.UserTeamsResponse;
 
@@ -40,5 +40,5 @@ public interface IProtectedUserProcessor {
   /**
    *  Add new child user to users table and link child to calling admin through parent_accounts table
    */
-  void createChildUser(JWTData userData, NewChildRequest newChildRequest);
+  void createChildUser(JWTData userData, NewUserRequest newUserRequest);
 }

@@ -1,6 +1,5 @@
 package com.codeforcommunity.processor;
 
-import static org.jooq.generated.Tables.ADOPTED_SITES;
 import static org.jooq.generated.Tables.PARENT_ACCOUNTS;
 import static org.jooq.generated.Tables.TEAMS;
 import static org.jooq.generated.Tables.USERS;
@@ -11,12 +10,12 @@ import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.auth.Passwords;
 import com.codeforcommunity.dataaccess.AuthDatabaseOperations;
+import com.codeforcommunity.dto.auth.NewUserRequest;
 import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
 import com.codeforcommunity.dto.user.ChangeUsernameRequest;
 import com.codeforcommunity.dto.user.DeleteUserRequest;
-import com.codeforcommunity.dto.user.NewChildRequest;
 import com.codeforcommunity.dto.user.Team;
 import com.codeforcommunity.dto.user.UserDataResponse;
 import com.codeforcommunity.dto.user.UserTeamsResponse;
@@ -38,8 +37,6 @@ import org.jooq.DSLContext;
 import org.jooq.Record2;
 import org.jooq.Result;
 import org.jooq.generated.tables.pojos.Users;
-import org.jooq.generated.tables.records.AdoptedSitesRecord;
-import org.jooq.generated.tables.records.ParentAccountsRecord;
 import org.jooq.generated.tables.records.UsersRecord;
 import org.jooq.impl.DSL;
 
@@ -232,17 +229,17 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   }
 
   @Override
-  public void createChildUser(JWTData userData, NewChildRequest newChildRequest) {
+  public void createChildUser(JWTData userData, NewUserRequest newUserRequest) {
     isAdminCheck(userData.getPrivilegeLevel());
 
     db.transaction(configuration -> {
       UsersRecord user =
           authDatabaseOperations.createNewUser(
-              newChildRequest.getChildUsername(),
-              newChildRequest.getChildEmail(),
-              newChildRequest.getChildPassword(),
-              newChildRequest.getChildFirstName(),
-              newChildRequest.getChildLastName());
+              newUserRequest.getUsername(),
+              newUserRequest.getEmail(),
+              newUserRequest.getPassword(),
+              newUserRequest.getFirstName(),
+              newUserRequest.getLastName());
 
       DSL.using(configuration)
           .insertInto(PARENT_ACCOUNTS, PARENT_ACCOUNTS.PARENT_ID, PARENT_ACCOUNTS.CHILD_ID)
@@ -250,7 +247,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
           .execute();
 
       emailer.sendWelcomeEmail(
-          newChildRequest.getChildEmail(), AuthDatabaseOperations.getFullName(user.into(Users.class)));
+          newUserRequest.getEmail(), AuthDatabaseOperations.getFullName(user.into(Users.class)));
     });
   }
 }

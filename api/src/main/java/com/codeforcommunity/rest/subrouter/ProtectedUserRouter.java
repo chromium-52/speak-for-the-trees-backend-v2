@@ -4,12 +4,12 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.auth.JWTData;
+import com.codeforcommunity.dto.auth.NewUserRequest;
 import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
 import com.codeforcommunity.dto.user.ChangeUsernameRequest;
 import com.codeforcommunity.dto.user.DeleteUserRequest;
-import com.codeforcommunity.dto.user.NewChildRequest;
 import com.codeforcommunity.dto.user.UserDataResponse;
 import com.codeforcommunity.dto.user.UserTeamsResponse;
 import com.codeforcommunity.rest.IRouter;
@@ -153,10 +153,10 @@ public class ProtectedUserRouter implements IRouter {
 
   private void handleCreateChildUser(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
-    NewChildRequest newChildRequest =
-            RestFunctions.getJsonBodyAsClass(ctx, NewChildRequest.class);
+    NewUserRequest newUserRequest =
+            RestFunctions.getJsonBodyAsClass(ctx, NewUserRequest.class);
 
-    processor.createChildUser(userData, newChildRequest);
+    processor.createChildUser(userData, newUserRequest);
 
     end(ctx.response(), 201);
   }
