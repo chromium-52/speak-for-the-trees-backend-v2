@@ -44,8 +44,8 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
   private final DSLContext db;
   private final Emailer emailer;
-  // TODO verify if this is actually right
-  // for a site, maps its site ID to the number of days its adopter hasn't taken care of it
+  // for an adopted site, maps its site ID to the number of days ago that the last inactive email
+  // was sent to its adopter for not recording stewardship activities for the site
   private final Map<Integer, Integer> inactiveSiteEmailTracker;
   private static final int INACTIVITY_PERIOD = 21;
 
@@ -60,7 +60,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
         vertx.setPeriodic(
             TimeUnit.DAYS.toMillis(1),
             id -> {
-              this.updateEmailedIds();
+              this.updateLastEmailedDays();
               this.emailInactiveUsers();
             });
   }
@@ -425,21 +425,24 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     siteEntry.store();
   }
 
-  // TODO -----------------------------------------------------------------------------------------
   @Override
   public void emailInactiveUsers() {
-    Map<SitesRecord, UsersRecord> sitesMap = getInactiveSitesAndUsers(INACTIVITY_PERIOD);
-    for (SitesRecord site : sitesMap.keySet()) {
-      UsersRecord user = sitesMap.get(site);
-      Integer siteId = site.getId();
+    Map<AdoptedSitesRecord, UsersRecord> adoptedSitesMap = getInactiveSitesAndUsers(INACTIVITY_PERIOD);
+    for (AdoptedSitesRecord adoptedSite : adoptedSitesMap.keySet()) {
+      UsersRecord user = adoptedSitesMap.get(adoptedSite);
+      Integer adoptedSiteId = adoptedSite.getSiteId();
       emailer.sendInactiveEmail(
-          user.getEmail(), user.getFirstName(), getSiteAddress(siteId), siteId.toString());
-      inactiveSiteEmailTracker.put(siteId, 0);
+          user.getEmail(), user.getFirstName(), getSiteAddress(adoptedSiteId), adoptedSiteId.toString());
+      inactiveSiteEmailTracker.put(adoptedSiteId, 0);
     }
   }
 
-  /** Increments the tracked IDs' day counters, removing them once the period expires. */
-  private void updateEmailedIds() {
+  /**
+   * Increments the tracked IDs' day counters, removing them once the period expires so that an
+   * inactive email can be sent again for the adopted site if it continued to be inactive since the
+   * last email was sent.
+   */
+  private void updateLastEmailedDays() {
     for (Integer siteId : inactiveSiteEmailTracker.keySet()) {
       inactiveSiteEmailTracker.put(siteId, inactiveSiteEmailTracker.get(siteId) + 1);
       if (inactiveSiteEmailTracker.get(siteId) >= INACTIVITY_PERIOD) {
@@ -448,41 +451,37 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
     }
   }
 
-  /** Query users who haven't performed activity within the last _range_ number of days ago. */
-  private Map<SitesRecord, UsersRecord> getInactiveSitesAndUsers(int range) {
+  /** Query users who haven't performed activity within the last _range_ number of days. */
+  private Map<AdoptedSitesRecord, UsersRecord> getInactiveSitesAndUsers(int range) {
     Calendar cal = new GregorianCalendar();
     cal.setTime(new Timestamp(System.currentTimeMillis()));
     cal.add(Calendar.DAY_OF_MONTH, -1 * range); // _range_ days ago
     java.sql.Date inactiveCutoffDate = new Date(cal.getTime().getTime());
-    java.sql.Date currentDate = new java.sql.Date(cal.getTime().getTime());
+    java.sql.Date currentDate = new Date(cal.getTime().getTime());
 
-    Map<SitesRecord, UsersRecord> siteMap = new HashMap<>();
-    List<SitesRecord> sites = db.selectFrom(SITES).fetchInto(SitesRecord.class);
-    for (SitesRecord site : sites) {
-      if (!inactiveSiteEmailTracker.containsKey(site.getId())) { // email hasn't been sent for this site
-        List<StewardshipRecord> records =
+    Map<AdoptedSitesRecord, UsersRecord> siteMap = new HashMap<>();
+    List<AdoptedSitesRecord> adoptedSites = db.selectFrom(ADOPTED_SITES).fetchInto(AdoptedSitesRecord.class);
+    // for every adopted site, check if it has a stewardship activity recorded in the last _range_
+    // days and if not, add it to _siteMap_ to mark it as inactive
+    for (AdoptedSitesRecord adoptedSite : adoptedSites) {
+      if (!inactiveSiteEmailTracker.containsKey(adoptedSite.getSiteId())) {
+        List<StewardshipRecord> stewardshipRecords =
             db.selectFrom(STEWARDSHIP)
-                .where(STEWARDSHIP.SITE_ID.equal(site.getId()))
-                .and(STEWARDSHIP.PERFORMED_ON.betweenSymmetric(inactiveCutoffDate, currentDate))
+                .where(STEWARDSHIP.SITE_ID.eq(adoptedSite.getSiteId()))
+                .and(STEWARDSHIP.PERFORMED_ON.between(inactiveCutoffDate, currentDate))
                 .fetchInto(StewardshipRecord.class);
-        if (records.isEmpty()) { // the site is inactive
-          AdoptedSitesRecord adoptedSite =
-              db.selectFrom(ADOPTED_SITES)
-                  .where(ADOPTED_SITES.SITE_ID.equal(site.getId()))
-                  .fetch()
-                  .get(0);
+        if (stewardshipRecords.isEmpty()) { // adopted site is inactive
           UsersRecord user =
-              db.selectFrom(USERS).where(USERS.ID.equal(adoptedSite.getUserId())).fetch().get(0);
-          siteMap.put(site, user);
+              db.selectFrom(USERS).where(USERS.ID.eq(adoptedSite.getUserId())).fetch().get(0);
+          siteMap.put(adoptedSite, user);
         }
       }
     }
     return siteMap;
   }
-  // TODO -----------------------------------------------------------------------------------------
 
   /** Gets address string of the site from its ID. */
   private String getSiteAddress(Integer siteId) {
-    return db.selectFrom(SITES).where(SITES.ID.equal(siteId)).fetch().get(0).getAddress();
+    return db.selectFrom(SITES).where(SITES.ID.eq(siteId)).fetch().get(0).getAddress();
   }
 }
