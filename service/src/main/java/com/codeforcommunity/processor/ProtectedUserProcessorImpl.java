@@ -1,5 +1,6 @@
 package com.codeforcommunity.processor;
 
+import static org.jooq.generated.Tables.PARENT_ACCOUNTS;
 import static org.jooq.generated.Tables.TEAMS;
 import static org.jooq.generated.Tables.USERS;
 import static org.jooq.generated.Tables.USERS_TEAMS;
@@ -9,6 +10,7 @@ import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.auth.Passwords;
 import com.codeforcommunity.dataaccess.AuthDatabaseOperations;
+import com.codeforcommunity.dto.auth.NewUserRequest;
 import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
@@ -36,15 +38,18 @@ import org.jooq.Record2;
 import org.jooq.Result;
 import org.jooq.generated.tables.pojos.Users;
 import org.jooq.generated.tables.records.UsersRecord;
+import org.jooq.impl.DSL;
 
 public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
 
   private final DSLContext db;
   private final Emailer emailer;
+  private final AuthDatabaseOperations authDatabaseOperations;
 
   public ProtectedUserProcessorImpl(DSLContext db, Emailer emailer) {
     this.db = db;
     this.emailer = emailer;
+    this.authDatabaseOperations = new AuthDatabaseOperations(db);
   }
 
   private UsersRecord userExistsCheck(JWTData userData) {
@@ -61,6 +66,17 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
       throw new UserDeletedException(user.getId());
     }
     return user;
+  }
+
+  /**
+   * Throws an exception if the user is not an admin or super admin.
+   *
+   * @param level the privilege level of the user calling the route
+   */
+  private void isAdminCheck(PrivilegeLevel level) {
+    if (!(level.equals(PrivilegeLevel.ADMIN) || level.equals(PrivilegeLevel.SUPER_ADMIN))) {
+      throw new AuthException("User does not have the required privilege level.");
+    }
   }
 
   @Override
@@ -210,5 +226,28 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
     } else {
       throw new WrongPasswordException();
     }
+  }
+
+  @Override
+  public void createChildUser(JWTData userData, NewUserRequest newUserRequest) {
+    isAdminCheck(userData.getPrivilegeLevel());
+
+    db.transaction(configuration -> {
+      UsersRecord user =
+          authDatabaseOperations.createNewUser(
+              newUserRequest.getUsername(),
+              newUserRequest.getEmail(),
+              newUserRequest.getPassword(),
+              newUserRequest.getFirstName(),
+              newUserRequest.getLastName());
+
+      DSL.using(configuration)
+          .insertInto(PARENT_ACCOUNTS, PARENT_ACCOUNTS.PARENT_ID, PARENT_ACCOUNTS.CHILD_ID)
+          .values(userData.getUserId(), user.getId())
+          .execute();
+
+      emailer.sendWelcomeEmail(
+          newUserRequest.getEmail(), AuthDatabaseOperations.getFullName(user.into(Users.class)));
+    });
   }
 }

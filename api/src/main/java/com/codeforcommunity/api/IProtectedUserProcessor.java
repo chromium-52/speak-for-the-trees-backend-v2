@@ -1,6 +1,7 @@
 package com.codeforcommunity.api;
 
 import com.codeforcommunity.auth.JWTData;
+import com.codeforcommunity.dto.auth.NewUserRequest;
 import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
@@ -35,4 +36,9 @@ public interface IProtectedUserProcessor {
   /** Change the given user's privilege level to the provided one */
   void changePrivilegeLevel(
       JWTData userData, ChangePrivilegeLevelRequest changePrivilegeLevelRequest);
+
+  /**
+   *  Add new child user to users table and link child to calling admin through parent_accounts table
+   */
+  void createChildUser(JWTData userData, NewUserRequest newUserRequest);
 }
