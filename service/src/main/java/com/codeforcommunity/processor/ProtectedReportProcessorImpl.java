@@ -26,22 +26,11 @@ import static org.jooq.impl.DSL.concat;
 import static org.jooq.impl.DSL.val;
 import static org.jooq.impl.DSL.count;
 
-public class ProtectedReportProcessorImpl implements IProtectedReportProcessor {
+public class ProtectedReportProcessorImpl extends AbstractProcessor implements IProtectedReportProcessor {
   private final DSLContext db;
 
   public ProtectedReportProcessorImpl(DSLContext db) {
     this.db = db;
-  }
-
-  /**
-   * Throws an exception if the user is not an admin or super admin.
-   *
-   * @param level the privilege level of the user calling the route
-   */
-  private void isAdminCheck(PrivilegeLevel level) {
-    if (!(level.equals(PrivilegeLevel.ADMIN) || level.equals(PrivilegeLevel.SUPER_ADMIN))) {
-      throw new AuthException("User does not have the required privilege level.");
-    }
   }
 
   /**
@@ -66,7 +55,7 @@ public class ProtectedReportProcessorImpl implements IProtectedReportProcessor {
 
   @Override
   public GetAdoptionReportResponse getAdoptionReport(JWTData userData) {
-    isAdminCheck(userData.getPrivilegeLevel());
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
 
     // get all adopted sites
     List<AdoptedSite> adoptedSites = queryAdoptedSites(new Date(0));
@@ -76,7 +65,7 @@ public class ProtectedReportProcessorImpl implements IProtectedReportProcessor {
 
   @Override
   public String getAdoptionReportCSV(JWTData userData, GetReportCSVRequest getReportCSVRequest) {
-    isAdminCheck(userData.getPrivilegeLevel());
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
 
     Date startDate = getStartDate(getReportCSVRequest);
 
@@ -123,7 +112,7 @@ public class ProtectedReportProcessorImpl implements IProtectedReportProcessor {
 
   @Override
   public GetStewardshipReportResponse getStewardshipReport(JWTData userData) {
-    isAdminCheck(userData.getPrivilegeLevel());
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
 
     // get all stewardships
     List<Stewardship> stewardships = queryStewardships(new Date(0));
@@ -133,7 +122,7 @@ public class ProtectedReportProcessorImpl implements IProtectedReportProcessor {
 
   @Override
   public String getStewardshipReportCSV(JWTData userData, GetReportCSVRequest getReportCSVRequest) {
-    isAdminCheck(userData.getPrivilegeLevel());
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
 
     Date startDate = getStartDate(getReportCSVRequest);
 

@@ -33,7 +33,7 @@ import org.jooq.generated.tables.records.SitesRecord;
 import org.jooq.generated.tables.records.UsersRecord;
 import org.jooq.generated.tables.records.StewardshipRecord;
 
-public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
+public class ProtectedSiteProcessorImpl extends AbstractProcessor implements IProtectedSiteProcessor {
 
   private final DSLContext db;
 
@@ -86,17 +86,6 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
   }
 
   /**
-   * Throws an exception if the user is not an admin or super admin.
-   *
-   * @param level the privilege level of the user calling the route
-   */
-  void isAdminCheck(PrivilegeLevel level) {
-    if (!isAdmin(level)) {
-      throw new AuthException("User does not have the required privilege level.");
-    }
-  }
-
-  /**
    * Is the user an admin or super admin.
    *
    * @param level the privilege level of the user calling the route
@@ -135,7 +124,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
   @Override
   public void forceUnadoptSite(JWTData userData, int siteId) {
-    isAdminCheck(userData.getPrivilegeLevel());
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
     checkSiteExists(siteId);
     if (!isAlreadyAdopted(siteId)) {
       throw new WrongAdoptionStatusException(false);
@@ -316,7 +305,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
   @Override
   public void editSite(JWTData userData, int siteId, EditSiteRequest editSiteRequest) {
-    isAdminCheck(userData.getPrivilegeLevel());
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
     checkSiteExists(siteId);
     if (editSiteRequest.getBlockId() != null) {
       checkBlockExists(editSiteRequest.getBlockId());
@@ -339,8 +328,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
   @Override
   public void addSites(JWTData userData, AddSitesRequest addSitesRequest) {
-
-    isAdminCheck(userData.getPrivilegeLevel());
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
 
     addSitesRequest
         .getSites()
@@ -352,7 +340,7 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
   @Override
   public void deleteSite(JWTData userData, int siteId) {
-    isAdminCheck(userData.getPrivilegeLevel());
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
     checkSiteExists(siteId);
 
     SitesRecord site = db.selectFrom(SITES).where(SITES.ID.eq(siteId)).fetchOne();
