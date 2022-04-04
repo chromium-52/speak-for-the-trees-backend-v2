@@ -1,0 +1,89 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #f8f8f8;
+    font-family: Montserrat, Trebuchet MS, Lucida Grande, Lucida Sans Unicode, Lucida Sans, sans-serif;
+    text-align: center;
+}
+
+header {
+    background-color: #80ac1c;
+    padding-top: 0.3rem;
+}
+
+hr {
+    height: 0.06rem;
+    background-color: gray;
+    border: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+footer {
+    background-color: #80ac1c;
+    padding-bottom: 0.625rem;
+}
+
+.main-container {
+    vertical-align: top;
+    margin: auto;
+    width: 100%;
+    max-width: 40rem;
+}
+
+.sftt-logo {
+    background-color: #1aa19c;
+    height: 100%;
+}
+
+.horizontal-rule-container {
+    background-color: #f8f8f8;
+    padding: 0.625rem 0;
+}
+
+.email-container {
+    background-color: white;
+    padding-top: 4rem;
+    padding-bottom: 5rem;
+}
+
+.email-title {
+    margin: 3rem 1rem 0 1rem;
+    color: #2b303a;
+    font-size: 1.875rem;
+    line-height: 1.2;
+    font-weight: bold;
+}
+
+.email-body {
+    margin: 3rem 1rem 0 1rem;
+    color: #555555;
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.footer-container {
+    background-color: white;
+    height: 100%;
+}
+
+.social-media-container {
+    padding-top: 2rem;
+}
+
+.social-media-link {
+    margin: 0.25rem;
+    text-display: none;
+}
+
+.footer-text {
+    margin: 2rem 1rem 1rem 1rem;
+    color: #555555;
+    font-size: 0.9rem;
+}
+
+.footer-rule-container {
+    padding: 1rem 4rem;
+}
