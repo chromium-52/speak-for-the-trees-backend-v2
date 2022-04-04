@@ -4,6 +4,7 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.auth.JWTData;
+import com.codeforcommunity.dto.auth.NewUserRequest;
 import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
@@ -38,6 +39,7 @@ public class ProtectedUserRouter implements IRouter {
     registerChangeEmail(router);
     registerChangeUsername(router);
     registerChangePrivilegeLevel(router);
+    registerCreateChildUser(router);
 
     return router;
   }
@@ -142,5 +144,20 @@ public class ProtectedUserRouter implements IRouter {
     processor.changePrivilegeLevel(userData, changePrivilegeLevelRequest);
 
     end(ctx.response(), 200);
+  }
+
+  private void registerCreateChildUser(Router router) {
+    Route createChildUser = router.post("/create_child");
+    createChildUser.handler(this::handleCreateChildUser);
+  }
+
+  private void handleCreateChildUser(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    NewUserRequest newUserRequest =
+            RestFunctions.getJsonBodyAsClass(ctx, NewUserRequest.class);
+
+    processor.createChildUser(userData, newUserRequest);
+
+    end(ctx.response(), 201);
   }
 }
