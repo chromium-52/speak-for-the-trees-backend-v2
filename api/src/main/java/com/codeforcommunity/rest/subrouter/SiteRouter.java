@@ -26,7 +26,7 @@ public class SiteRouter implements IRouter {
     Router router = Router.router(vertx);
 
     registerGetSite(router);
-    registerGetStewardshipActivites(router);
+    registerGetStewardshipActivities(router);
 
     return router;
   }
@@ -44,12 +44,12 @@ public class SiteRouter implements IRouter {
     end(ctx.response(), 200, JsonObject.mapFrom(getSiteResponse).toString());
   }
 
-  private void registerGetStewardshipActivites(Router router) {
+  private void registerGetStewardshipActivities(Router router) {
     Route getStewardshipActivities = router.get("/:site_id/stewardship_activities");
-    getStewardshipActivities.handler(this::handleGetStewardshipActivites);
+    getStewardshipActivities.handler(this::handleGetStewardshipActivities);
   }
 
-  private void handleGetStewardshipActivites(RoutingContext ctx) {
+  private void handleGetStewardshipActivities(RoutingContext ctx) {
     int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
 
     StewardshipActivitiesResponse stewardshipActivitiesResponse =

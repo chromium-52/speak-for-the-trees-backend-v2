@@ -2,7 +2,6 @@ package com.codeforcommunity.processor;
 
 import static org.jooq.generated.tables.AdoptedSites.ADOPTED_SITES;
 import static org.jooq.generated.tables.Stewardship.STEWARDSHIP;
-import static org.jooq.generated.tables.Users.USERS;
 
 import com.codeforcommunity.api.IReportProcessor;
 import com.codeforcommunity.dto.report.CommunityStats;

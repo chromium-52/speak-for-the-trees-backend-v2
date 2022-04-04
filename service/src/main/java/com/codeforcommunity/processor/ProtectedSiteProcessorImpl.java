@@ -27,8 +27,6 @@ import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.List;
 import org.jooq.DSLContext;
-import org.jooq.Field;
-import org.jooq.Record1;
 import org.jooq.generated.tables.records.AdoptedSitesRecord;
 import org.jooq.generated.tables.records.SiteEntriesRecord;
 import org.jooq.generated.tables.records.SitesRecord;
