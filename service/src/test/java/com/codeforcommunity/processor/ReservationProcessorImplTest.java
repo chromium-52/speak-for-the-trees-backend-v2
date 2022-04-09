@@ -135,7 +135,7 @@ public class ReservationProcessorImplTest {
     for (PrivilegeLevel p : PrivilegeLevel.values()) {
       boolean isAdmin = adminLevels.contains(p);
       try {
-        this.proc.isAdminCheck(p);
+        this.proc.assertAdminOrSuperAdmin(p);
         if (!isAdmin) {
           fail("Method should've thrown an AuthException with privilege level " + p.getName());
         }
@@ -149,7 +149,7 @@ public class ReservationProcessorImplTest {
 
     for (PrivilegeLevel p : adminLevels) {
       try {
-        this.proc.isAdminCheck(p);
+        this.proc.assertAdminOrSuperAdmin(p);
       } catch (AuthException e) {
         fail("Method should not have thrown an exception for privilege level " + p.getName());
       }
