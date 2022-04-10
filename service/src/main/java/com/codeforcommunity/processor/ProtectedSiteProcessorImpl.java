@@ -11,6 +11,7 @@ import static org.jooq.impl.DSL.max;
 
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.auth.JWTData;
+import com.codeforcommunity.dto.auth.User;
 import com.codeforcommunity.dto.site.AddSiteRequest;
 import com.codeforcommunity.dto.site.AddSitesRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
@@ -27,12 +28,16 @@ import com.codeforcommunity.requester.Emailer;
 import io.vertx.core.Vertx;
 import java.sql.Date;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.AdoptedSitesRecord;
 import org.jooq.generated.tables.records.SiteEntriesRecord;
@@ -44,25 +49,17 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
   private final DSLContext db;
   private final Emailer emailer;
-  // for an adopted site, maps its site ID to the number of days ago that the last inactive email
-  // was sent to its adopter for not recording stewardship activities for the site
-  private final Map<Integer, Integer> inactiveSiteEmailTracker;
   private static final int INACTIVITY_PERIOD = 21;
 
   public ProtectedSiteProcessorImpl(DSLContext db, Emailer emailer) {
     this.db = db;
     this.emailer = emailer;
-    this.inactiveSiteEmailTracker = new HashMap<>();
 
     Vertx vertx = Vertx.vertx();
-    // First check is 24 hours after starting
     long timerId =
         vertx.setPeriodic(
-            TimeUnit.DAYS.toMillis(1),
-            id -> {
-              this.updateLastEmailedDays();
-              this.emailInactiveUsers();
-            });
+            TimeUnit.DAYS.toMillis(INACTIVITY_PERIOD),
+            id -> this.emailInactiveUsers());
   }
 
   /**
@@ -427,53 +424,54 @@ public class ProtectedSiteProcessorImpl implements IProtectedSiteProcessor {
 
   @Override
   public void emailInactiveUsers() {
-    Map<AdoptedSitesRecord, UsersRecord> adoptedSitesMap = getInactiveSitesAndUsers(INACTIVITY_PERIOD);
-    for (AdoptedSitesRecord adoptedSite : adoptedSitesMap.keySet()) {
-      UsersRecord user = adoptedSitesMap.get(adoptedSite);
-      Integer adoptedSiteId = adoptedSite.getSiteId();
+    Map<User, List<AdoptedSitesRecord>> inactiveSitesMap = getInactiveSitesAndUsers(INACTIVITY_PERIOD);
+    for (User user : inactiveSitesMap.keySet()) {
+      List<AdoptedSitesRecord> inactiveSites = inactiveSitesMap.get(user);
+      StringBuilder inactiveSitesBuilder = new StringBuilder();
+      inactiveSites.forEach(inactiveSite -> {
+        String siteAddress = getSiteAddress(inactiveSite.getSiteId());
+        inactiveSitesBuilder.append(String
+            .format("<a href='https://map.treeboston.org/tree/%s'>%s</a><br>",
+                inactiveSite.getSiteId().toString(),
+                siteAddress.equals("") ? "(Unknown Address)" : siteAddress));
+      });
+
       emailer.sendInactiveEmail(
-          user.getEmail(), user.getFirstName(), getSiteAddress(adoptedSiteId), adoptedSiteId.toString());
-      inactiveSiteEmailTracker.put(adoptedSiteId, 0);
+          user.getEmail(), user.getFirstName(), inactiveSitesBuilder.toString());
     }
   }
 
   /**
-   * Increments the tracked IDs' day counters, removing them once the period expires so that an
-   * inactive email can be sent again for the adopted site if it continued to be inactive since the
-   * last email was sent.
+   * Query users who haven't performed activity within the last _range_ number of days.
    */
-  private void updateLastEmailedDays() {
-    for (Integer siteId : inactiveSiteEmailTracker.keySet()) {
-      inactiveSiteEmailTracker.put(siteId, inactiveSiteEmailTracker.get(siteId) + 1);
-      if (inactiveSiteEmailTracker.get(siteId) >= INACTIVITY_PERIOD) {
-        inactiveSiteEmailTracker.remove(siteId);
-      }
-    }
-  }
-
-  /** Query users who haven't performed activity within the last _range_ number of days. */
-  private Map<AdoptedSitesRecord, UsersRecord> getInactiveSitesAndUsers(int range) {
+  private Map<User, List<AdoptedSitesRecord>> getInactiveSitesAndUsers(int range) {
     Calendar cal = new GregorianCalendar();
     cal.setTime(new Timestamp(System.currentTimeMillis()));
     cal.add(Calendar.DAY_OF_MONTH, -1 * range); // _range_ days ago
     java.sql.Date inactiveCutoffDate = new Date(cal.getTime().getTime());
     java.sql.Date currentDate = new Date(cal.getTime().getTime());
 
-    Map<AdoptedSitesRecord, UsersRecord> siteMap = new HashMap<>();
-    List<AdoptedSitesRecord> adoptedSites = db.selectFrom(ADOPTED_SITES).fetchInto(AdoptedSitesRecord.class);
+    Map<User, List<AdoptedSitesRecord>> siteMap = new HashMap<>();
+    List<AdoptedSitesRecord> adoptedSites = db.selectFrom(ADOPTED_SITES)
+        .fetchInto(AdoptedSitesRecord.class);
     // for every adopted site, check if it has a stewardship activity recorded in the last _range_
-    // days and if not, add it to _siteMap_ to mark it as inactive
+    // days and if not, add it to _siteMap_ to send an email for it being inactive
     for (AdoptedSitesRecord adoptedSite : adoptedSites) {
-      if (!inactiveSiteEmailTracker.containsKey(adoptedSite.getSiteId())) {
-        List<StewardshipRecord> stewardshipRecords =
-            db.selectFrom(STEWARDSHIP)
-                .where(STEWARDSHIP.SITE_ID.eq(adoptedSite.getSiteId()))
-                .and(STEWARDSHIP.PERFORMED_ON.between(inactiveCutoffDate, currentDate))
-                .fetchInto(StewardshipRecord.class);
-        if (stewardshipRecords.isEmpty()) { // adopted site is inactive
-          UsersRecord user =
-              db.selectFrom(USERS).where(USERS.ID.eq(adoptedSite.getUserId())).fetch().get(0);
-          siteMap.put(adoptedSite, user);
+      List<StewardshipRecord> stewardshipRecords =
+          db.selectFrom(STEWARDSHIP)
+              .where(STEWARDSHIP.SITE_ID.eq(adoptedSite.getSiteId()))
+              .and(STEWARDSHIP.PERFORMED_ON.between(inactiveCutoffDate, currentDate))
+              .fetchInto(StewardshipRecord.class);
+      if (stewardshipRecords.isEmpty()) { // adopted site is inactive
+        User user =
+            db.select(USERS.USERNAME, USERS.EMAIL, USERS.FIRST_NAME, USERS.LAST_NAME)
+                .from(USERS)
+                .where(USERS.ID.eq(adoptedSite.getUserId()))
+                .fetchInto(User.class).get(0);
+        if (siteMap.containsKey(user)) {
+          siteMap.get(user).add(adoptedSite);
+        } else {
+          siteMap.put(user, new ArrayList<>(Arrays.asList(adoptedSite)));
         }
       }
     }

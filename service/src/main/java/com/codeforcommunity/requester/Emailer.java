@@ -3,8 +3,11 @@ package com.codeforcommunity.requester;
 import com.codeforcommunity.email.EmailOperations;
 import com.codeforcommunity.propertiesLoader.PropertiesLoader;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import org.jooq.generated.tables.records.AdoptedSitesRecord;
 
 public class Emailer {
   private final EmailOperations emailOperations;
@@ -108,16 +111,15 @@ public class Emailer {
     // TODO implement this
   }
 
-  public void sendInactiveEmail(String sendToEmail, String sendToName, String address, String siteId) {
+  public void sendInactiveEmail(String sendToEmail, String sendToName, String inactiveSites) {
     String filePath = "/emails/InactiveUserEmail.html";
 
     Map<String, String> templateValues = new HashMap<>();
-    templateValues.put("address", address);
-    templateValues.put("siteID", siteId);
+    templateValues.put("inactiveSites", inactiveSites);
     templateValues.put("name", sendToName);
 
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
     emailBody.ifPresent(
-            s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectInactiveUser, s));
+        s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectInactiveUser, s));
   }
 }
