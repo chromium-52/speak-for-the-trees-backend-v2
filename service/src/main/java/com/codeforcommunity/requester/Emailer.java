@@ -134,6 +134,6 @@ public class Emailer {
 
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
     emailBody.ifPresent(
-        s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectInactiveUser, s));
+        s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectInactiveUser, s));
   }
 }
