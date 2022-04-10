@@ -3,6 +3,7 @@ package com.codeforcommunity.requester;
 import com.codeforcommunity.email.EmailOperations;
 import com.codeforcommunity.propertiesLoader.PropertiesLoader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -23,6 +24,8 @@ public class Emailer {
       PropertiesLoader.loadProperty("email_subject_password_reset_confirm");
   private final String subjectAccountDeleted =
       PropertiesLoader.loadProperty("email_subject_account_deleted");
+  private final String subjectEmailNeighborhoods =
+      PropertiesLoader.loadProperty("email_subject_neighborhood_notification");
   private final String subjectInactiveUser =
           PropertiesLoader.loadProperty("email_subject_inactive_user");
 
@@ -52,7 +55,7 @@ public class Emailer {
     templateValues.put("link", loginUrl);
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
-    emailBody.ifPresent(s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectWelcome, s));
+    emailBody.ifPresent(s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectWelcome, s));
   }
 
   public void sendEmailChangeConfirmationEmail(
@@ -64,7 +67,7 @@ public class Emailer {
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
     emailBody.ifPresent(
-        s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectEmailChange, s));
+        s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectEmailChange, s));
   }
 
   public void sendPasswordChangeRequestEmail(
@@ -76,7 +79,7 @@ public class Emailer {
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
     emailBody.ifPresent(
-        s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectPasswordResetRequest, s));
+        s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectPasswordResetRequest, s));
   }
 
   public void sendPasswordChangeConfirmationEmail(String sendToEmail, String sendToName) {
@@ -86,7 +89,7 @@ public class Emailer {
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
     emailBody.ifPresent(
-        s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectPasswordResetConfirm, s));
+        s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectPasswordResetConfirm, s));
   }
 
   public void sendAccountDeactivatedEmail(String sendToEmail, String sendToName) {
@@ -96,7 +99,7 @@ public class Emailer {
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
     emailBody.ifPresent(
-        s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectAccountDeleted, s));
+        s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectAccountDeleted, s));
   }
 
   public void sendInviteTeamEmail(String sendToEmail, String sendToName, String teamName) {
@@ -107,8 +110,19 @@ public class Emailer {
     templateValues.put("team_name", teamName);
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
     emailBody.ifPresent(
-        s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectAccountDeleted, s));
+        s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectAccountDeleted, s));
     // TODO implement this
+  }
+
+  public void sendNeighborhoodsEmail(HashSet<String> sendToEmails, String body) {
+    String filePath = "/emails/NeighborhoodEmail.html";
+
+    Map<String, String> templateValues = new HashMap<>();
+    templateValues.put("body", body);
+    Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
+
+    emailBody.ifPresent(
+        s -> emailOperations.sendEmailToMultipleRecipients(sendToEmails, subjectEmailNeighborhoods, s));
   }
 
   public void sendInactiveEmail(String sendToEmail, String sendToName, String inactiveSites) {

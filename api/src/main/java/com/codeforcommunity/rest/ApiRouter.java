@@ -4,6 +4,7 @@ import com.codeforcommunity.api.IAuthProcessor;
 import com.codeforcommunity.api.IImportProcessor;
 import com.codeforcommunity.api.ILeaderboardProcessor;
 import com.codeforcommunity.api.IMapProcessor;
+import com.codeforcommunity.api.IProtectedNeighborhoodsProcessor;
 import com.codeforcommunity.api.IProtectedReportProcessor;
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.api.IProtectedUserProcessor;
@@ -17,6 +18,7 @@ import com.codeforcommunity.rest.subrouter.CommonRouter;
 import com.codeforcommunity.rest.subrouter.ImportRouter;
 import com.codeforcommunity.rest.subrouter.LeaderboardRouter;
 import com.codeforcommunity.rest.subrouter.MapRouter;
+import com.codeforcommunity.rest.subrouter.ProtectedNeighborhoodsRouter;
 import com.codeforcommunity.rest.subrouter.ProtectedReportRouter;
 import com.codeforcommunity.rest.subrouter.ProtectedSiteRouter;
 import com.codeforcommunity.rest.subrouter.ProtectedUserRouter;
@@ -41,6 +43,7 @@ public class ApiRouter implements IRouter {
   private final SiteRouter siteRouter;
   private final ProtectedReportRouter protectedReportRouter;
   private final ReportRouter reportRouter;
+  private final ProtectedNeighborhoodsRouter protectedNeighborhoodsRouter;
 
   public ApiRouter(
       IAuthProcessor authProcessor,
@@ -54,6 +57,7 @@ public class ApiRouter implements IRouter {
       ISiteProcessor siteProcessor,
       IProtectedReportProcessor protectedReportProcessor,
       IReportProcessor reportProcessor,
+      IProtectedNeighborhoodsProcessor protectedNeighborhoodsProcessor,
       JWTAuthorizer jwtAuthorizer) {
     this.commonRouter = new CommonRouter(jwtAuthorizer);
     this.authRouter = new AuthRouter(authProcessor);
@@ -67,6 +71,7 @@ public class ApiRouter implements IRouter {
     this.siteRouter = new SiteRouter(siteProcessor);
     this.protectedReportRouter = new ProtectedReportRouter(protectedReportProcessor);
     this.reportRouter = new ReportRouter(reportProcessor);
+    this.protectedNeighborhoodsRouter = new ProtectedNeighborhoodsRouter(protectedNeighborhoodsProcessor);
   }
 
   /** Initialize a router and register all route handlers on it. */
@@ -96,6 +101,7 @@ public class ApiRouter implements IRouter {
     router.mountSubRouter("/teams", teamsRouter.initializeRouter(vertx));
     router.mountSubRouter("/sites", protectedSiteRouter.initializeRouter(vertx));
     router.mountSubRouter("/report", protectedReportRouter.initializeRouter(vertx));
+    router.mountSubRouter("/neighborhoods", protectedNeighborhoodsRouter.initializeRouter(vertx));
 
     return router;
   }
