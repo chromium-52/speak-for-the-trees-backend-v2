@@ -1,21 +1,17 @@
 package com.codeforcommunity.processor;
 
-import static org.jooq.generated.Tables.ADOPTED_SITES;
 import static org.jooq.generated.Tables.NEIGHBORHOODS;
-import static org.jooq.generated.Tables.SITES;
-import static org.jooq.generated.tables.Users.USERS;
 
 import com.codeforcommunity.api.IProtectedNeighborhoodsProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.neighborhoods.EditCanopyCoverageRequest;
 import com.codeforcommunity.dto.neighborhoods.SendEmailRequest;
-import com.codeforcommunity.dto.neighborhoods.UserEmailRecord;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.MalformedParameterException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.requester.Emailer;
-import java.util.List;
+
 import org.jooq.DSLContext;
 
 import org.jooq.generated.tables.records.NeighborhoodsRecord;
@@ -40,33 +36,8 @@ public class ProtectedNeighborhoodsProcessorImpl implements IProtectedNeighborho
     }
   }
 
-  @Override
-  public void sendEmail(JWTData userData, SendEmailRequest sendEmailRequest) {
-    isAdminCheck(userData.getPrivilegeLevel());
 
-    List<Integer> neighborhoodIDs = sendEmailRequest.getNeighborhoodIDs();
-    if (neighborhoodIDs.size() == 0) {
-      neighborhoodIDs = db.select(NEIGHBORHOODS.ID).from(NEIGHBORHOODS).fetchInto(Integer.class);
-    }
 
-    String emailBody = sendEmailRequest.getEmailBody();
-
-    List<UserEmailRecord> userEmailRecords =
-            db.select(USERS.EMAIL, USERS.FIRST_NAME, SITES.ADDRESS)
-                    .from(USERS)
-                    .leftJoin(ADOPTED_SITES)
-                    .on(USERS.ID.eq(ADOPTED_SITES.USER_ID))
-                    .leftJoin(SITES)
-                    .on(ADOPTED_SITES.SITE_ID.eq(SITES.ID))
-                    .leftJoin(NEIGHBORHOODS)
-                    .on(SITES.NEIGHBORHOOD_ID.eq(NEIGHBORHOODS.ID))
-                    .where(NEIGHBORHOODS.ID.in(neighborhoodIDs))
-                    .fetchInto(UserEmailRecord.class);
-
-    userEmailRecords.forEach(
-            record -> emailer.sendNeighborhoodsEmail(
-                    record.getEmail(), record.getFirstName(), record.getAddress(), emailBody));
-  }
 
   public void editCanopyCoverage(
           JWTData userData, int neighborhoodID, EditCanopyCoverageRequest editCanopyCoverageRequest) {
