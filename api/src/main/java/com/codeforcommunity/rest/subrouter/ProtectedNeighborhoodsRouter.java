@@ -5,7 +5,6 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 import com.codeforcommunity.api.IProtectedNeighborhoodsProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.neighborhoods.EditCanopyCoverageRequest;
-import com.codeforcommunity.dto.neighborhoods.SendEmailRequest;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;

@@ -5,12 +5,10 @@ import static org.jooq.generated.Tables.NEIGHBORHOODS;
 import com.codeforcommunity.api.IProtectedNeighborhoodsProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.neighborhoods.EditCanopyCoverageRequest;
-import com.codeforcommunity.dto.neighborhoods.SendEmailRequest;
 import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.MalformedParameterException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
-import com.codeforcommunity.requester.Emailer;
 
 import org.jooq.DSLContext;
 
@@ -18,11 +16,9 @@ import org.jooq.generated.tables.records.NeighborhoodsRecord;
 
 public class ProtectedNeighborhoodsProcessorImpl implements IProtectedNeighborhoodsProcessor {
   private final DSLContext db;
-  private final Emailer emailer;
 
-  public ProtectedNeighborhoodsProcessorImpl(DSLContext db, Emailer emailer) {
+  public ProtectedNeighborhoodsProcessorImpl(DSLContext db) {
     this.db = db;
-    this.emailer = emailer;
   }
 
   /**

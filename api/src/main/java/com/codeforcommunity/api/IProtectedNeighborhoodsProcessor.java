@@ -3,7 +3,6 @@ package com.codeforcommunity.api;
 
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.neighborhoods.EditCanopyCoverageRequest;
-import com.codeforcommunity.dto.neighborhoods.SendEmailRequest;
 
 public interface IProtectedNeighborhoodsProcessor {
 
