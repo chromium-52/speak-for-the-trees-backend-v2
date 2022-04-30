@@ -7,6 +7,7 @@ import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.neighborhoods.EditCanopyCoverageRequest;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
+import com.codeforcommunity.dto.neighborhoods.SendEmailRequest;
 import io.vertx.core.Vertx;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
@@ -24,13 +25,26 @@ public class ProtectedNeighborhoodsRouter implements IRouter {
   public Router initializeRouter(Vertx vertx) {
     Router router = Router.router(vertx);
 
+    registerSendEmail(router);
     registerEditCanopyCoverage(router);
 
     return router;
   }
 
 
+  private void registerSendEmail(Router router) {
+    Route adoptSiteRoute = router.get("/send_email");
+    adoptSiteRoute.handler(this::handleSendEmail);
+  }
 
+  private void handleSendEmail(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    SendEmailRequest sendEmailRequest = RestFunctions.getJsonBodyAsClass(ctx, SendEmailRequest.class);
+
+    processor.sendEmail(userData, sendEmailRequest);
+
+    end(ctx.response(), 200);
+  }
 
 
   private void registerEditCanopyCoverage(Router router) {
