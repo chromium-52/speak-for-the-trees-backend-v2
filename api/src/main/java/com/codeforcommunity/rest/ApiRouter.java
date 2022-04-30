@@ -46,19 +46,19 @@ public class ApiRouter implements IRouter {
   private final ProtectedNeighborhoodsRouter protectedNeighborhoodsRouter;
 
   public ApiRouter(
-      IAuthProcessor authProcessor,
-      IProtectedUserProcessor protectedUserProcessor,
-      IImportProcessor importProcessor,
-      IReservationProcessor reservationProcessor,
-      ILeaderboardProcessor leaderboardProcessor,
-      IMapProcessor mapProcessor,
-      ITeamsProcessor teamsProcessor,
-      IProtectedSiteProcessor protectedSiteProcessor,
-      ISiteProcessor siteProcessor,
-      IProtectedReportProcessor protectedReportProcessor,
-      IReportProcessor reportProcessor,
-      IProtectedNeighborhoodsProcessor protectedNeighborhoodsProcessor,
-      JWTAuthorizer jwtAuthorizer) {
+          IAuthProcessor authProcessor,
+          IProtectedUserProcessor protectedUserProcessor,
+          IImportProcessor importProcessor,
+          IReservationProcessor reservationProcessor,
+          ILeaderboardProcessor leaderboardProcessor,
+          IMapProcessor mapProcessor,
+          ITeamsProcessor teamsProcessor,
+          IProtectedSiteProcessor protectedSiteProcessor,
+          ISiteProcessor siteProcessor,
+          IProtectedReportProcessor protectedReportProcessor,
+          IReportProcessor reportProcessor,
+          IProtectedNeighborhoodsProcessor protectedNeighborhoodsProcessor,
+          JWTAuthorizer jwtAuthorizer) {
     this.commonRouter = new CommonRouter(jwtAuthorizer);
     this.authRouter = new AuthRouter(authProcessor);
     this.protectedUserRouter = new ProtectedUserRouter(protectedUserProcessor);
@@ -71,7 +71,8 @@ public class ApiRouter implements IRouter {
     this.siteRouter = new SiteRouter(siteProcessor);
     this.protectedReportRouter = new ProtectedReportRouter(protectedReportProcessor);
     this.reportRouter = new ReportRouter(reportProcessor);
-    this.protectedNeighborhoodsRouter = new ProtectedNeighborhoodsRouter(protectedNeighborhoodsProcessor);
+    this.protectedNeighborhoodsRouter =
+            new ProtectedNeighborhoodsRouter(protectedNeighborhoodsProcessor);
   }
 
   /** Initialize a router and register all route handlers on it. */
@@ -115,15 +116,15 @@ public class ApiRouter implements IRouter {
   }
 
   public static void end(
-      HttpServerResponse response, int statusCode, String jsonBody, String contentType) {
+          HttpServerResponse response, int statusCode, String jsonBody, String contentType) {
     response
-        .setStatusCode(statusCode)
-        .putHeader("Content-Type", contentType)
-        .putHeader("Access-Control-Allow-Origin", "*")
-        .putHeader("Access-Control-Allow-Methods", "DELETE, POST, GET, OPTIONS")
-        .putHeader(
-            "Access-Control-Allow-Headers",
-            "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
+            .setStatusCode(statusCode)
+            .putHeader("Content-Type", contentType)
+            .putHeader("Access-Control-Allow-Origin", "*")
+            .putHeader("Access-Control-Allow-Methods", "DELETE, POST, GET, OPTIONS")
+            .putHeader(
+                    "Access-Control-Allow-Headers",
+                    "Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
     if (jsonBody == null || jsonBody.equals("")) {
       response.end();
     } else {
