@@ -4,9 +4,9 @@ import static org.jooq.generated.Tables.ADOPTED_SITES;
 import static org.jooq.generated.Tables.BLOCKS;
 import static org.jooq.generated.Tables.NEIGHBORHOODS;
 import static org.jooq.generated.Tables.SITES;
-import static org.jooq.generated.Tables.USERS;
 import static org.jooq.generated.Tables.SITE_ENTRIES;
 import static org.jooq.generated.Tables.STEWARDSHIP;
+import static org.jooq.generated.Tables.USERS;
 import static org.jooq.impl.DSL.max;
 
 import com.codeforcommunity.api.IProtectedSiteProcessor;
@@ -30,10 +30,11 @@ import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.AdoptedSitesRecord;
 import org.jooq.generated.tables.records.SiteEntriesRecord;
 import org.jooq.generated.tables.records.SitesRecord;
-import org.jooq.generated.tables.records.UsersRecord;
 import org.jooq.generated.tables.records.StewardshipRecord;
+import org.jooq.generated.tables.records.UsersRecord;
 
-public class ProtectedSiteProcessorImpl extends AbstractProcessor implements IProtectedSiteProcessor {
+public class ProtectedSiteProcessorImpl extends AbstractProcessor
+    implements IProtectedSiteProcessor {
 
   private final DSLContext db;
 
@@ -130,24 +131,22 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor implements IPr
       throw new WrongAdoptionStatusException(false);
     }
 
-    AdoptedSitesRecord adoptedSite = db.selectFrom(ADOPTED_SITES)
+    AdoptedSitesRecord adoptedSite =
+        db.selectFrom(ADOPTED_SITES)
             .where(ADOPTED_SITES.SITE_ID.eq(siteId))
             .fetchInto(AdoptedSitesRecord.class)
             .get(0);
 
     Integer adopterId = adoptedSite.getUserId();
 
-    UsersRecord adopter = db.selectFrom(USERS)
-            .where(USERS.ID.eq(adopterId))
-            .fetchOne();
+    UsersRecord adopter = db.selectFrom(USERS).where(USERS.ID.eq(adopterId)).fetchOne();
 
-    if(isAdmin(adopter.getPrivilegeLevel()) && !(userData.getPrivilegeLevel().equals(PrivilegeLevel.SUPER_ADMIN))) {
+    if (isAdmin(adopter.getPrivilegeLevel())
+        && !(userData.getPrivilegeLevel().equals(PrivilegeLevel.SUPER_ADMIN))) {
       throw new AuthException("User does not have the required privilege level.");
     }
 
-    db.deleteFrom(ADOPTED_SITES)
-            .where(ADOPTED_SITES.SITE_ID.eq(siteId))
-            .execute();
+    db.deleteFrom(ADOPTED_SITES).where(ADOPTED_SITES.SITE_ID.eq(siteId)).execute();
   }
 
   @Override
@@ -205,7 +204,8 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor implements IPr
 
     SiteEntriesRecord siteEntriesRecord = db.newRecord(SITE_ENTRIES);
 
-    int newSiteEntriesId = db.select(max(SITE_ENTRIES.ID)).from(SITE_ENTRIES).fetchOne(0, Integer.class) + 1;
+    int newSiteEntriesId =
+        db.select(max(SITE_ENTRIES.ID)).from(SITE_ENTRIES).fetchOne(0, Integer.class) + 1;
 
     siteEntriesRecord.setId(newSiteEntriesId);
     siteEntriesRecord.setUserId(userData.getUserId());
@@ -368,24 +368,23 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor implements IPr
     db.deleteFrom(STEWARDSHIP).where(STEWARDSHIP.ID.eq(activityId)).execute();
   }
 
-  public void nameSiteEntry(JWTData userData, int siteId, NameSiteEntryRequest nameSiteEntryRequest) {
+  public void nameSiteEntry(
+      JWTData userData, int siteId, NameSiteEntryRequest nameSiteEntryRequest) {
     checkSiteExists(siteId);
     if (!isAlreadyAdoptedByUser(userData.getUserId(), siteId)) {
       throw new AuthException("User is not the site's adopter.");
     }
 
-    SiteEntriesRecord siteEntry = db.selectFrom(SITE_ENTRIES)
-        .where(SITE_ENTRIES.SITE_ID.eq(siteId))
-        .orderBy(SITE_ENTRIES.UPDATED_AT)
-        .limit(1)
-        .fetchOne();
+    SiteEntriesRecord siteEntry =
+        db.selectFrom(SITE_ENTRIES)
+            .where(SITE_ENTRIES.SITE_ID.eq(siteId))
+            .orderBy(SITE_ENTRIES.UPDATED_AT)
+            .limit(1)
+            .fetchOne();
 
     if (siteEntry == null) {
-      throw new LinkedResourceDoesNotExistException("Site Entry",
-                                                    userData.getUserId(),
-                                                    "User",
-                                                    siteId,
-                                                    "Site");
+      throw new LinkedResourceDoesNotExistException(
+          "Site Entry", userData.getUserId(), "User", siteId, "Site");
     }
 
     siteEntry.setTreeName(nameSiteEntryRequest.getName());

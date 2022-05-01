@@ -40,7 +40,8 @@ import org.jooq.generated.tables.pojos.Users;
 import org.jooq.generated.tables.records.UsersRecord;
 import org.jooq.impl.DSL;
 
-public class ProtectedUserProcessorImpl extends AbstractProcessor implements IProtectedUserProcessor {
+public class ProtectedUserProcessorImpl extends AbstractProcessor
+    implements IProtectedUserProcessor {
 
   private final DSLContext db;
   private final Emailer emailer;
@@ -221,22 +222,24 @@ public class ProtectedUserProcessorImpl extends AbstractProcessor implements IPr
   public void createChildUser(JWTData userData, NewUserRequest newUserRequest) {
     assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
 
-    db.transaction(configuration -> {
-      UsersRecord user =
-          authDatabaseOperations.createNewUser(
-              newUserRequest.getUsername(),
+    db.transaction(
+        configuration -> {
+          UsersRecord user =
+              authDatabaseOperations.createNewUser(
+                  newUserRequest.getUsername(),
+                  newUserRequest.getEmail(),
+                  newUserRequest.getPassword(),
+                  newUserRequest.getFirstName(),
+                  newUserRequest.getLastName());
+
+          DSL.using(configuration)
+              .insertInto(PARENT_ACCOUNTS, PARENT_ACCOUNTS.PARENT_ID, PARENT_ACCOUNTS.CHILD_ID)
+              .values(userData.getUserId(), user.getId())
+              .execute();
+
+          emailer.sendWelcomeEmail(
               newUserRequest.getEmail(),
-              newUserRequest.getPassword(),
-              newUserRequest.getFirstName(),
-              newUserRequest.getLastName());
-
-      DSL.using(configuration)
-          .insertInto(PARENT_ACCOUNTS, PARENT_ACCOUNTS.PARENT_ID, PARENT_ACCOUNTS.CHILD_ID)
-          .values(userData.getUserId(), user.getId())
-          .execute();
-
-      emailer.sendWelcomeEmail(
-          newUserRequest.getEmail(), AuthDatabaseOperations.getFullName(user.into(Users.class)));
-    });
+              AuthDatabaseOperations.getFullName(user.into(Users.class)));
+        });
   }
 }

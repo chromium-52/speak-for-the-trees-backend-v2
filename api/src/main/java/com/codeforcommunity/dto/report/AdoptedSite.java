@@ -1,7 +1,6 @@
 package com.codeforcommunity.dto.report;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-
 import java.sql.Timestamp;
 
 public class AdoptedSite {
