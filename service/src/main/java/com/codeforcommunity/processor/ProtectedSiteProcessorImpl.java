@@ -205,6 +205,9 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor implements IPr
 
     SiteEntriesRecord siteEntriesRecord = db.newRecord(SITE_ENTRIES);
 
+    int newSiteEntriesId = db.select(max(SITE_ENTRIES.ID)).from(SITE_ENTRIES).fetchOne(0, Integer.class) + 1;
+
+    siteEntriesRecord.setId(newSiteEntriesId);
     siteEntriesRecord.setUserId(userData.getUserId());
     siteEntriesRecord.setSiteId(sitesRecord.getId());
     siteEntriesRecord.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
