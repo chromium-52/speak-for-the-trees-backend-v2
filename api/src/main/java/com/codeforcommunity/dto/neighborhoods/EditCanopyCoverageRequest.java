@@ -6,27 +6,27 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EditCanopyCoverageRequest extends ApiDto {
-    private Double canopyCoverage;
+  private Double canopyCoverage;
 
-    public EditCanopyCoverageRequest(Double canopyCoverage) {
-        this.canopyCoverage = canopyCoverage;
+  public EditCanopyCoverageRequest(Double canopyCoverage) {
+    this.canopyCoverage = canopyCoverage;
+  }
+
+  private EditCanopyCoverageRequest() {}
+
+  @Override
+  public List<String> validateFields(String fieldPrefix) throws HandledException {
+    String fieldName = fieldPrefix + "edit_canopy";
+    List<String> fields = new ArrayList<>();
+
+    if (this.canopyCoverage == null) {
+      fields.add(fieldName + "canopyCoverage");
     }
 
-    private EditCanopyCoverageRequest() {}
+    return fields;
+  }
 
-    @Override
-    public List<String> validateFields(String fieldPrefix) throws HandledException {
-        String fieldName = fieldPrefix + "edit_canopy";
-        List<String> fields = new ArrayList<>();
-
-        if (this.canopyCoverage == null) {
-            fields.add(fieldName + "canopyCoverage");
-        }
-
-        return fields;
-    }
-
-    public Double getCanopyCoverage() {
-        return this.canopyCoverage;
-    }
+  public Double getCanopyCoverage() {
+    return this.canopyCoverage;
+  }
 }

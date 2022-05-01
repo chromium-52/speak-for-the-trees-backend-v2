@@ -50,7 +50,8 @@ public class Emailer {
     templateValues.put("link", loginUrl);
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
-    emailBody.ifPresent(s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectWelcome, s));
+    emailBody.ifPresent(
+        s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectWelcome, s));
   }
 
   public void sendEmailChangeConfirmationEmail(
@@ -62,7 +63,9 @@ public class Emailer {
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
     emailBody.ifPresent(
-        s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectEmailChange, s));
+        s ->
+            emailOperations.sendEmailToOneRecipient(
+                sendToName, sendToEmail, subjectEmailChange, s));
   }
 
   public void sendPasswordChangeRequestEmail(
@@ -74,7 +77,9 @@ public class Emailer {
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
     emailBody.ifPresent(
-        s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectPasswordResetRequest, s));
+        s ->
+            emailOperations.sendEmailToOneRecipient(
+                sendToName, sendToEmail, subjectPasswordResetRequest, s));
   }
 
   public void sendPasswordChangeConfirmationEmail(String sendToEmail, String sendToName) {
@@ -84,7 +89,9 @@ public class Emailer {
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
     emailBody.ifPresent(
-        s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectPasswordResetConfirm, s));
+        s ->
+            emailOperations.sendEmailToOneRecipient(
+                sendToName, sendToEmail, subjectPasswordResetConfirm, s));
   }
 
   public void sendAccountDeactivatedEmail(String sendToEmail, String sendToName) {
@@ -94,7 +101,9 @@ public class Emailer {
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
     emailBody.ifPresent(
-        s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectAccountDeleted, s));
+        s ->
+            emailOperations.sendEmailToOneRecipient(
+                sendToName, sendToEmail, subjectAccountDeleted, s));
   }
 
   public void sendInviteTeamEmail(String sendToEmail, String sendToName, String teamName) {
@@ -105,7 +114,9 @@ public class Emailer {
     templateValues.put("team_name", teamName);
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
     emailBody.ifPresent(
-        s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectAccountDeleted, s));
+        s ->
+            emailOperations.sendEmailToOneRecipient(
+                sendToName, sendToEmail, subjectAccountDeleted, s));
     // TODO implement this
   }
 
@@ -117,6 +128,8 @@ public class Emailer {
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
     emailBody.ifPresent(
-        s -> emailOperations.sendEmailToMultipleRecipients(sendToEmails, subjectEmailNeighborhoods, s));
+        s ->
+            emailOperations.sendEmailToMultipleRecipients(
+                sendToEmails, subjectEmailNeighborhoods, s));
   }
 }

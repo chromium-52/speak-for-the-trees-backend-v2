@@ -153,8 +153,7 @@ public class ProtectedUserRouter implements IRouter {
 
   private void handleCreateChildUser(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
-    NewUserRequest newUserRequest =
-            RestFunctions.getJsonBodyAsClass(ctx, NewUserRequest.class);
+    NewUserRequest newUserRequest = RestFunctions.getJsonBodyAsClass(ctx, NewUserRequest.class);
 
     processor.createChildUser(userData, newUserRequest);
 

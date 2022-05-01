@@ -96,8 +96,7 @@ public class AuthDatabaseOperations {
   }
 
   /**
-   * TODO: Refactor this method to take in a DTO / POJO instance Creates a new row in the USER table
-   * with the given values.
+   * Creates a new row in the USER table with the given values.
    *
    * @throws EmailAlreadyInUseException if the given username and email are already used in the USER
    *     table.

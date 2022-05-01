@@ -38,7 +38,7 @@ public interface IProtectedUserProcessor {
       JWTData userData, ChangePrivilegeLevelRequest changePrivilegeLevelRequest);
 
   /**
-   *  Add new child user to users table and link child to calling admin through parent_accounts table
+   * Add new child user to users table and link child to calling admin through parent_accounts table
    */
   void createChildUser(JWTData userData, NewUserRequest newUserRequest);
 }

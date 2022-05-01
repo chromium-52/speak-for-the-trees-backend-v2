@@ -1,9 +1,11 @@
 package com.codeforcommunity.rest.subrouter;
 
+import static com.codeforcommunity.rest.ApiRouter.end;
+
 import com.codeforcommunity.api.IProtectedReportProcessor;
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.report.GetReportCSVRequest;
 import com.codeforcommunity.dto.report.GetAdoptionReportResponse;
+import com.codeforcommunity.dto.report.GetReportCSVRequest;
 import com.codeforcommunity.dto.report.GetStewardshipReportResponse;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
@@ -12,11 +14,8 @@ import io.vertx.core.json.JsonObject;
 import io.vertx.ext.web.Route;
 import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
-
 import java.time.LocalDate;
 import java.util.Optional;
-
-import static com.codeforcommunity.rest.ApiRouter.end;
 
 public class ProtectedReportRouter implements IRouter {
   private static final String PREVIOUS_DAYS_QUERY_PARAM_NAME = "previousDays";
@@ -66,7 +65,8 @@ public class ProtectedReportRouter implements IRouter {
 
     GetReportCSVRequest getAdoptionReportCSVRequest = new GetReportCSVRequest(previousDays);
 
-    String adoptionReportCSVResponse = processor.getAdoptionReportCSV(userData, getAdoptionReportCSVRequest);
+    String adoptionReportCSVResponse =
+        processor.getAdoptionReportCSV(userData, getAdoptionReportCSVRequest);
 
     end(ctx.response(), 200, adoptionReportCSVResponse);
   }
@@ -79,7 +79,8 @@ public class ProtectedReportRouter implements IRouter {
   private void handleGetStewardshipReportRoute(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
 
-    GetStewardshipReportResponse stewardshipReportResponse = processor.getStewardshipReport(userData);
+    GetStewardshipReportResponse stewardshipReportResponse =
+        processor.getStewardshipReport(userData);
 
     end(ctx.response(), 200, JsonObject.mapFrom(stewardshipReportResponse).toString());
   }
@@ -98,7 +99,8 @@ public class ProtectedReportRouter implements IRouter {
 
     GetReportCSVRequest getStewardshipReportCSVRequest = new GetReportCSVRequest(previousDays);
 
-    String stewardshipReportCSVResponse = processor.getStewardshipReportCSV(userData, getStewardshipReportCSVRequest);
+    String stewardshipReportCSVResponse =
+        processor.getStewardshipReportCSV(userData, getStewardshipReportCSVRequest);
 
     end(ctx.response(), 200, stewardshipReportCSVResponse);
   }

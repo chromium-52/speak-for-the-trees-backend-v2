@@ -40,7 +40,8 @@ import org.jooq.generated.tables.pojos.Users;
 import org.jooq.generated.tables.records.UsersRecord;
 import org.jooq.impl.DSL;
 
-public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
+public class ProtectedUserProcessorImpl extends AbstractProcessor
+    implements IProtectedUserProcessor {
 
   private final DSLContext db;
   private final Emailer emailer;
@@ -66,17 +67,6 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
       throw new UserDeletedException(user.getId());
     }
     return user;
-  }
-
-  /**
-   * Throws an exception if the user is not an admin or super admin.
-   *
-   * @param level the privilege level of the user calling the route
-   */
-  private void isAdminCheck(PrivilegeLevel level) {
-    if (!(level.equals(PrivilegeLevel.ADMIN) || level.equals(PrivilegeLevel.SUPER_ADMIN))) {
-      throw new AuthException("User does not have the required privilege level.");
-    }
   }
 
   @Override
@@ -230,24 +220,26 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
 
   @Override
   public void createChildUser(JWTData userData, NewUserRequest newUserRequest) {
-    isAdminCheck(userData.getPrivilegeLevel());
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
 
-    db.transaction(configuration -> {
-      UsersRecord user =
-          authDatabaseOperations.createNewUser(
-              newUserRequest.getUsername(),
+    db.transaction(
+        configuration -> {
+          UsersRecord user =
+              authDatabaseOperations.createNewUser(
+                  newUserRequest.getUsername(),
+                  newUserRequest.getEmail(),
+                  newUserRequest.getPassword(),
+                  newUserRequest.getFirstName(),
+                  newUserRequest.getLastName());
+
+          DSL.using(configuration)
+              .insertInto(PARENT_ACCOUNTS, PARENT_ACCOUNTS.PARENT_ID, PARENT_ACCOUNTS.CHILD_ID)
+              .values(userData.getUserId(), user.getId())
+              .execute();
+
+          emailer.sendWelcomeEmail(
               newUserRequest.getEmail(),
-              newUserRequest.getPassword(),
-              newUserRequest.getFirstName(),
-              newUserRequest.getLastName());
-
-      DSL.using(configuration)
-          .insertInto(PARENT_ACCOUNTS, PARENT_ACCOUNTS.PARENT_ID, PARENT_ACCOUNTS.CHILD_ID)
-          .values(userData.getUserId(), user.getId())
-          .execute();
-
-      emailer.sendWelcomeEmail(
-          newUserRequest.getEmail(), AuthDatabaseOperations.getFullName(user.into(Users.class)));
-    });
+              AuthDatabaseOperations.getFullName(user.into(Users.class)));
+        });
   }
 }

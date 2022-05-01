@@ -1,8 +1,8 @@
 package com.codeforcommunity.api;
 
 import com.codeforcommunity.auth.JWTData;
-import com.codeforcommunity.dto.report.GetReportCSVRequest;
 import com.codeforcommunity.dto.report.GetAdoptionReportResponse;
+import com.codeforcommunity.dto.report.GetReportCSVRequest;
 import com.codeforcommunity.dto.report.GetStewardshipReportResponse;
 
 public interface IProtectedReportProcessor {
@@ -32,5 +32,5 @@ public interface IProtectedReportProcessor {
    * first), as a CSV-formatted string.
    */
   String getStewardshipReportCSV(
-          JWTData userData, GetReportCSVRequest getStewardshipReportCSVRequest);
+      JWTData userData, GetReportCSVRequest getStewardshipReportCSVRequest);
 }

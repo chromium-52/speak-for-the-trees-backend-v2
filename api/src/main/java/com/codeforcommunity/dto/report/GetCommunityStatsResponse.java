@@ -7,5 +7,7 @@ public class GetCommunityStatsResponse {
     this.communityStats = communityStats;
   }
 
-  public CommunityStats getCommunityStats() { return this.communityStats; }
+  public CommunityStats getCommunityStats() {
+    return this.communityStats;
+  }
 }
