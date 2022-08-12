@@ -4,6 +4,7 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.IProtectedNeighborhoodsProcessor;
 import com.codeforcommunity.auth.JWTData;
+import com.codeforcommunity.dto.neighborhoods.EditCanopyCoverageRequest;
 import com.codeforcommunity.dto.neighborhoods.SendEmailRequest;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
@@ -24,21 +25,39 @@ public class ProtectedNeighborhoodsRouter implements IRouter {
   public Router initializeRouter(Vertx vertx) {
     Router router = Router.router(vertx);
 
-    registerSendEmailToNeighborhoods(router);
+    registerSendEmail(router);
+    registerEditCanopyCoverage(router);
 
     return router;
   }
 
-  private void registerSendEmailToNeighborhoods(Router router) {
+  private void registerSendEmail(Router router) {
     Route adoptSiteRoute = router.get("/send_email");
-    adoptSiteRoute.handler(this::handleSendEmailToNeighborhoods);
+    adoptSiteRoute.handler(this::handleSendEmail);
   }
 
-  private void handleSendEmailToNeighborhoods(RoutingContext ctx) {
+  private void handleSendEmail(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
-    SendEmailRequest sendEmailRequest = RestFunctions.getJsonBodyAsClass(ctx, SendEmailRequest.class);
+    SendEmailRequest sendEmailRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, SendEmailRequest.class);
 
-    processor.sendEmailToNeighborhoods(userData, sendEmailRequest);
+    processor.sendEmail(userData, sendEmailRequest);
+
+    end(ctx.response(), 200);
+  }
+
+  private void registerEditCanopyCoverage(Router router) {
+    Route editCanopyCoverageRoute = router.post("/:neighborhood_id/edit_canopy");
+    editCanopyCoverageRoute.handler(this::handleEditCanopyCoverage);
+  }
+
+  private void handleEditCanopyCoverage(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    EditCanopyCoverageRequest editCanopyCoverageRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, EditCanopyCoverageRequest.class);
+    int neighborhoodId = RestFunctions.getRequestParameterAsInt(ctx.request(), "neighborhood_id");
+
+    processor.editCanopyCoverage(userData, neighborhoodId, editCanopyCoverageRequest);
 
     end(ctx.response(), 200);
   }

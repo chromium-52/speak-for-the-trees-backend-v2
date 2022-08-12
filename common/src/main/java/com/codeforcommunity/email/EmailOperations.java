@@ -1,14 +1,12 @@
 package com.codeforcommunity.email;
 
 import com.codeforcommunity.logger.SLogger;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
-
 import org.simplejavamail.MailException;
 import org.simplejavamail.api.email.Email;
 import org.simplejavamail.api.mailer.AsyncResponse;
@@ -153,7 +151,8 @@ public class EmailOperations {
    * Send an email with the given subject and body to the user with the given name at the given
    * email.
    */
-  public void sendEmailToOneRecipient(String sendToName, String sendToEmail, String subject, String emailBody) {
+  public void sendEmailToOneRecipient(
+      String sendToName, String sendToEmail, String subject, String emailBody) {
     if (!shouldSendEmails) {
       return;
     }
@@ -171,22 +170,22 @@ public class EmailOperations {
     this.sendEmail(email, subject);
   }
 
-  /**
-   * Send an email with the given subject and body to the users with the given email addresses.
-   */
-  public void sendEmailToMultipleRecipients(HashSet<String> sendToEmails, String subject, String emailBody) {
+  /** Send an email with the given subject and body to the users with the given email addresses. */
+  public void sendEmailToMultipleRecipients(
+      HashSet<String> sendToEmails, String subject, String emailBody) {
     if (!shouldSendEmails) {
       return;
     }
 
     logger.info(String.format("Sending emails with subject `%s`", subject));
 
-    Email email = EmailBuilder.startingBlank()
-        .from(senderName, sendEmail)
-        .bccMultiple(sendToEmails.toArray(new String[0]))
-        .withSubject(subject)
-        .withHTMLText(emailBody)
-        .buildEmail();
+    Email email =
+        EmailBuilder.startingBlank()
+            .from(senderName, sendEmail)
+            .bccMultiple(sendToEmails.toArray(new String[0]))
+            .withSubject(subject)
+            .withHTMLText(emailBody)
+            .buildEmail();
 
     this.sendEmail(email, subject);
   }

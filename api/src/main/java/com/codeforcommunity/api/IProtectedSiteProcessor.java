@@ -48,8 +48,8 @@ public interface IProtectedSiteProcessor {
   void deleteStewardship(JWTData userData, int activityId);
 
   /**
-   * Renames the latest site entry of the site with the given siteId
-   * using the new name specified in the nameSiteEntryRequest
+   * Renames the latest site entry of the site with the given siteId using the new name specified in
+   * the nameSiteEntryRequest
    */
   void nameSiteEntry(JWTData userData, int siteId, NameSiteEntryRequest nameSiteEntryRequest);
 

@@ -111,7 +111,8 @@ public class ServiceMain {
     ISiteProcessor siteProc = new SiteProcessorImpl(this.db);
     IProtectedReportProcessor protectedReportProc = new ProtectedReportProcessorImpl(this.db);
     IReportProcessor reportProc = new ReportProcessorImpl(this.db);
-    IProtectedNeighborhoodsProcessor protectedNeighborhoodsProc = new ProtectedNeighborhoodsProcessorImpl(this.db, emailer);
+    IProtectedNeighborhoodsProcessor protectedNeighborhoodsProc =
+        new ProtectedNeighborhoodsProcessorImpl(this.db, emailer);
 
     // Create the API router and start the HTTP server
     ApiRouter router =

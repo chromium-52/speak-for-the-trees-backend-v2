@@ -71,7 +71,8 @@ public class ApiRouter implements IRouter {
     this.siteRouter = new SiteRouter(siteProcessor);
     this.protectedReportRouter = new ProtectedReportRouter(protectedReportProcessor);
     this.reportRouter = new ReportRouter(reportProcessor);
-    this.protectedNeighborhoodsRouter = new ProtectedNeighborhoodsRouter(protectedNeighborhoodsProcessor);
+    this.protectedNeighborhoodsRouter =
+        new ProtectedNeighborhoodsRouter(protectedNeighborhoodsProcessor);
   }
 
   /** Initialize a router and register all route handlers on it. */

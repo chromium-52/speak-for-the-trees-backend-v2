@@ -23,6 +23,7 @@ import com.codeforcommunity.exceptions.MemberStatusException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.UserDeletedException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
+import com.codeforcommunity.exceptions.UserNotOnTeamException;
 import com.codeforcommunity.exceptions.WrongTeamRoleException;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -361,15 +362,15 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
                     .and(USERS_TEAMS.TEAM_ID.eq(teamId)))
             .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.MEMBER))
             .fetchOne();
-    if (oldLeaderTeamsRecord != null && newLeaderTeamsRecord != null) {
+    if (oldLeaderTeamsRecord == null) {
+      throw new WrongTeamRoleException(teamId, TeamRole.LEADER);
+    } else if (newLeaderTeamsRecord == null) {
+      throw new UserNotOnTeamException(userData.getUserId(), teamId);
+    } else {
       newLeaderTeamsRecord.setTeamRole(TeamRole.LEADER);
       oldLeaderTeamsRecord.setTeamRole(TeamRole.MEMBER);
       newLeaderTeamsRecord.update();
       oldLeaderTeamsRecord.update();
-    } else {
-      // TODO Create a new exception for explaining that the newLeader Team has the wrong
-      // permissions.
-      throw new WrongTeamRoleException(teamId, TeamRole.LEADER);
     }
   }
 
