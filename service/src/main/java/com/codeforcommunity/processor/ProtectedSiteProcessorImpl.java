@@ -3,6 +3,7 @@ package com.codeforcommunity.processor;
 import static org.jooq.generated.Tables.ADOPTED_SITES;
 import static org.jooq.generated.Tables.BLOCKS;
 import static org.jooq.generated.Tables.NEIGHBORHOODS;
+import static org.jooq.generated.Tables.PARENT_ACCOUNTS;
 import static org.jooq.generated.Tables.SITES;
 import static org.jooq.generated.Tables.SITE_ENTRIES;
 import static org.jooq.generated.Tables.STEWARDSHIP;
@@ -16,6 +17,7 @@ import com.codeforcommunity.dto.site.AddSitesRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.EditSiteRequest;
 import com.codeforcommunity.dto.site.NameSiteEntryRequest;
+import com.codeforcommunity.dto.site.ParentAdoptSiteRequest;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.enums.PrivilegeLevel;
@@ -28,6 +30,7 @@ import java.sql.Timestamp;
 import java.util.List;
 import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.AdoptedSitesRecord;
+import org.jooq.generated.tables.records.ParentAccountsRecord;
 import org.jooq.generated.tables.records.SiteEntriesRecord;
 import org.jooq.generated.tables.records.SitesRecord;
 import org.jooq.generated.tables.records.StewardshipRecord;
@@ -96,6 +99,37 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
     return level.equals(PrivilegeLevel.ADMIN) || level.equals(PrivilegeLevel.SUPER_ADMIN);
   }
 
+  /**
+   * Throws an exception if the user account is not the parent of the other user account.
+   *
+   * @param parentUserId the user id of the parent account
+   * @param childUserId the user id of the child account
+   */
+  void checkParent(int parentUserId, int childUserId) {
+    if (!isParent(parentUserId, childUserId)) {
+      throw new LinkedResourceDoesNotExistException("Parent->Child",
+          parentUserId,
+          "Parent User",
+          childUserId,
+          "Child User");
+    }
+  }
+
+  /**
+   * Determines if a user account is the parent of another user account.
+   *
+   * @param parentUserId the user id of the parent account
+   * @param childUserId the user if of the child account
+   * @return true if the user is a parent of the other user, else false
+   */
+  boolean isParent(int parentUserId, int childUserId) {
+    ParentAccountsRecord parentAccountsRecord = db.selectFrom(PARENT_ACCOUNTS)
+        .where(PARENT_ACCOUNTS.PARENT_ID.eq(parentUserId))
+        .and(PARENT_ACCOUNTS.CHILD_ID.eq(childUserId))
+        .fetchOne();
+    return parentAccountsRecord != null;
+  }
+
   @Override
   public void adoptSite(JWTData userData, int siteId, Date dateAdopted) {
     checkSiteExists(siteId);
@@ -147,6 +181,23 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
     }
 
     db.deleteFrom(ADOPTED_SITES).where(ADOPTED_SITES.SITE_ID.eq(siteId)).execute();
+  }
+
+  @Override
+  public void parentAdoptSite(JWTData parentUserData, int siteId, ParentAdoptSiteRequest parentAdoptSiteRequest,
+                              Date dateAdopted) {
+    Integer parentId = parentUserData.getUserId();
+    Integer childId = parentAdoptSiteRequest.getChildUserId();
+    checkParent(parentId, childId);
+
+    UsersRecord child = db.selectFrom(USERS)
+        .where(USERS.ID.eq(childId))
+        .fetchOne();
+    PrivilegeLevel childPrivilegeLevel = child.getPrivilegeLevel();
+
+    JWTData childUserData = new JWTData(childId, childPrivilegeLevel);
+
+    adoptSite(childUserData, siteId, dateAdopted);
   }
 
   @Override

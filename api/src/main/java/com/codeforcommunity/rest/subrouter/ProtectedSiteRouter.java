@@ -9,6 +9,7 @@ import com.codeforcommunity.dto.site.AddSitesRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.EditSiteRequest;
 import com.codeforcommunity.dto.site.NameSiteEntryRequest;
+import com.codeforcommunity.dto.site.ParentAdoptSiteRequest;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.rest.IRouter;
@@ -87,6 +88,23 @@ public class ProtectedSiteRouter implements IRouter {
     int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
 
     processor.forceUnadoptSite(userData, siteId);
+
+    end(ctx.response(), 200);
+  }
+
+  private void registerParentAdoptSite(Router router) {
+    Route parentAdoptSiteRoute = router.post("/:site_id/parent_adopt");
+    parentAdoptSiteRoute.handler(this::handleParentAdoptSiteRoute);
+  }
+
+  private void handleParentAdoptSiteRoute(RoutingContext ctx) {
+    JWTData parentUserData = ctx.get("jwt_data");
+    int siteId = RestFunctions.getRequestParameterAsInt(ctx.request(), "site_id");
+
+    ParentAdoptSiteRequest parentAdoptSiteRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, ParentAdoptSiteRequest.class);
+
+    processor.parentAdoptSite(parentUserData, siteId, parentAdoptSiteRequest, Date.valueOf(LocalDate.now()));
 
     end(ctx.response(), 200);
   }

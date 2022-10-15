@@ -6,6 +6,7 @@ import com.codeforcommunity.dto.site.AddSitesRequest;
 import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.EditSiteRequest;
 import com.codeforcommunity.dto.site.NameSiteEntryRequest;
+import com.codeforcommunity.dto.site.ParentAdoptSiteRequest;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import java.sql.Date;
@@ -22,6 +23,10 @@ public interface IProtectedSiteProcessor {
 
   /** Removes the record in the adopted sites table linking the site to its current adopter */
   void forceUnadoptSite(JWTData userData, int siteId);
+
+  /** Adopts a tree for the Child through the Parent Account **/
+  void parentAdoptSite(JWTData parentUserData, int siteId, ParentAdoptSiteRequest parentAdoptSiteRequest,
+                       Date dateAdopted);
 
   /** Get users adopted sites */
   AdoptedSitesResponse getAdoptedSites(JWTData userData);
