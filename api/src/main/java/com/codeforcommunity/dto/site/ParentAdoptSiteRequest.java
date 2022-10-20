@@ -25,6 +25,7 @@ public class ParentAdoptSiteRequest extends ApiDto {
     if (childUserId == null) {
       fields.add(fieldName + "child_user_id");
     }
+
     return fields;
   }
 }

@@ -18,6 +18,7 @@ import com.codeforcommunity.dto.site.AdoptedSitesResponse;
 import com.codeforcommunity.dto.site.EditSiteRequest;
 import com.codeforcommunity.dto.site.NameSiteEntryRequest;
 import com.codeforcommunity.dto.site.ParentAdoptSiteRequest;
+import com.codeforcommunity.dto.site.ParentRecordStewardshipRequest;
 import com.codeforcommunity.dto.site.RecordStewardshipRequest;
 import com.codeforcommunity.dto.site.UpdateSiteRequest;
 import com.codeforcommunity.enums.PrivilegeLevel;
@@ -130,6 +131,21 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
     return parentAccountsRecord != null;
   }
 
+  /**
+   * Gets the JWTData of the user with the given userId.
+   *
+   * @param userId user id of the user to get JWTData for
+   * @return JWTData of the user
+   */
+  private JWTData getUserData(int userId) {
+    UsersRecord user = db.selectFrom(USERS)
+        .where(USERS.ID.eq(userId))
+        .fetchOne();
+    PrivilegeLevel userPrivilegeLevel = user.getPrivilegeLevel();
+
+    return new JWTData(userId, userPrivilegeLevel);
+  }
+
   @Override
   public void adoptSite(JWTData userData, int siteId, Date dateAdopted) {
     checkSiteExists(siteId);
@@ -184,18 +200,13 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
   }
 
   @Override
-  public void parentAdoptSite(JWTData parentUserData, int siteId, ParentAdoptSiteRequest parentAdoptSiteRequest,
-                              Date dateAdopted) {
+  public void parentAdoptSite(
+      JWTData parentUserData, int siteId, ParentAdoptSiteRequest parentAdoptSiteRequest, Date dateAdopted) {
     Integer parentId = parentUserData.getUserId();
     Integer childId = parentAdoptSiteRequest.getChildUserId();
     checkParent(parentId, childId);
 
-    UsersRecord child = db.selectFrom(USERS)
-        .where(USERS.ID.eq(childId))
-        .fetchOne();
-    PrivilegeLevel childPrivilegeLevel = child.getPrivilegeLevel();
-
-    JWTData childUserData = new JWTData(childId, childPrivilegeLevel);
+    JWTData childUserData = getUserData(childId);
 
     adoptSite(childUserData, siteId, dateAdopted);
   }
@@ -231,6 +242,18 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
   }
 
   @Override
+  public void parentRecordStewardship(
+      JWTData parentUserData, int siteId, ParentRecordStewardshipRequest parentRecordStewardshipRequest) {
+    Integer parentId = parentUserData.getUserId();
+    Integer childId = parentRecordStewardshipRequest.getChildUserId();
+    checkParent(parentId, childId);
+
+    JWTData childUserData = getUserData(childId);
+
+    recordStewardship(childUserData, siteId, parentRecordStewardshipRequest);
+  }
+
+                                      @Override
   public void addSite(JWTData userData, AddSiteRequest addSiteRequest) {
     if (addSiteRequest.getBlockId() != null) {
       checkBlockExists(addSiteRequest.getBlockId());
