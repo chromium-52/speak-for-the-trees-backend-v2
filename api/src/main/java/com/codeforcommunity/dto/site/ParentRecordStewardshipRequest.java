@@ -7,12 +7,22 @@ import java.util.List;
 
 public class ParentRecordStewardshipRequest extends RecordStewardshipRequest {
 
-  Integer childUserId;
+  private Integer childUserId;
 
-  public ParentRecordStewardshipRequest(Integer childUserId, Date date, boolean watered, boolean mulched, boolean cleaned, boolean weeded) {
+  public ParentRecordStewardshipRequest(
+      Date date,
+      boolean watered,
+      boolean mulched,
+      boolean cleaned,
+      boolean weeded,
+      Integer childUserId) {
     super(date, watered, mulched, cleaned, weeded);
     this.childUserId = childUserId;
   }
+
+  private ParentRecordStewardshipRequest() {
+    super();
+  };
 
   public Integer getChildUserId() {
     return childUserId;
