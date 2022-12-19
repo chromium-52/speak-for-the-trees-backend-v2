@@ -1,7 +1,7 @@
 package com.codeforcommunity.dto.site;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import java.util.Date;
+import java.sql.Date;
 
 public class StewardshipActivity {
   private final int id;
