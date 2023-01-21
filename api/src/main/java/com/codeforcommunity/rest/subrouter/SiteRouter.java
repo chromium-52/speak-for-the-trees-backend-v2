@@ -5,6 +5,7 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 import com.codeforcommunity.api.ISiteProcessor;
 import com.codeforcommunity.dto.site.GetSiteResponse;
 import com.codeforcommunity.dto.site.StewardshipActivitiesResponse;
+import com.codeforcommunity.logger.SLogger;
 import com.codeforcommunity.rest.IRouter;
 import com.codeforcommunity.rest.RestFunctions;
 import io.vertx.core.Vertx;
@@ -14,6 +15,8 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 
 public class SiteRouter implements IRouter {
+
+  private final SLogger logger = new SLogger(SiteRouter.class);
 
   private final ISiteProcessor processor;
 
@@ -54,6 +57,8 @@ public class SiteRouter implements IRouter {
 
     StewardshipActivitiesResponse stewardshipActivitiesResponse =
         processor.getStewardshipActivities(siteId);
+
+    logger.info(JsonObject.mapFrom(stewardshipActivitiesResponse).toString());
 
     end(ctx.response(), 200, JsonObject.mapFrom(stewardshipActivitiesResponse).toString());
   }
