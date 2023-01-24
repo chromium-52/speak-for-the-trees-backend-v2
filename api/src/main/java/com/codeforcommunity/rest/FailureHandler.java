@@ -180,12 +180,7 @@ public class FailureHandler {
 
   public void handleInvalidURL(RoutingContext ctx) {
     String message = "Given URL is invalid";
-    end(ctx, message, 400);
-  }
-
-  public void handleInvalidCSV(RoutingContext ctx) {
-    String message = "Given CSV is invalid and cannot be parsed";
-    end(ctx, message, 400);
+    end(ctx, message, 401);
   }
 
   public void handleExpiredToken(RoutingContext ctx) {
