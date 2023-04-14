@@ -1,0 +1,69 @@
+name: deploy
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Checkout source code
+        uses: actions/checkout@v2
+
+      - name: Copy example properties
+        run: cp common/src/main/resources/properties/server.properties.example common/src/main/resources/properties/server.properties
+
+      - name: Install requests
+        run: python3 -m pip install requests
+
+      - name: Run Python deploy script
+        env:
+          AWS_ACCESS_KEY_ID:  ${{ secrets.AWS_ACCESS_KEY_ID_CAMBRIDGE }}
+          AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY_CAMBRIDGE }}
+          DB_DOMAIN:  ${{ secrets.DB_DOMAIN_CAMBRIDGE }}
+          DB_USERNAME:  ${{ secrets.DB_USERNAME_CAMBRIDGE }}
+          DB_PASSWORD:  ${{ secrets.DB_PASSWORD_CAMBRIDGE }}
+          JWT_SECRET_KEY:  ${{ secrets.JWT_SECRET_KEY }}
+          SLACK_WEBHOOK_URL:  ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_ENABLED:  ${{ secrets.SLACK_ENABLED }}
+          GMAIL_APP_PASSWORD:  ${{ secrets.GMAIL_APP_PASSWORD }}
+          GMAIL_APP_ENABLED:  ${{ secrets.GMAIL_APP_ENABLED }}
+        run: python3 ./deploy.py
+
+      - name: Build the thing :)
+        run: mvn -B clean verify
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID_CAMBRIDGE }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY_CAMBRIDGE }}
+          aws-region: us-east-2
+
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: cambridge-backend
+          IMAGE_TAG: "latest"
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"  
+
+      - name: Deploy to App Runner Image
+        id: deploy-apprunner
+        uses: awslabs/amazon-app-runner-deploy@main
+        with:
+          service: cambridge-backend
+          image: ${{ steps.build-image.outputs.image }}
+          access-role-arn: ${{ secrets.ROLE_ARN }}
+          region: us-east-2
+          port: ${{ secrets.PORT }}
+          wait-for-service-stability-seconds: 600

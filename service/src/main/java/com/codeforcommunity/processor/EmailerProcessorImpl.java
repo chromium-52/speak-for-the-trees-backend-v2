@@ -14,14 +14,12 @@ public class EmailerProcessorImpl extends AbstractProcessor
 
   private final S3Requester requester;
 
+  public EmailerProcessorImpl(S3Requester requester) {
+    this.requester = requester;
+  }
+
   @Override
   public void addTemplate(JWTData userData, AddTemplateRequest addTemplateRequest) {
-    System.out.format("Uploading %s to S3 bucket %s...\n", file_path, bucket_name);
-    final AmazonS3 s3 = AmazonS3ClientBuilder.standard().withRegion(Regions.DEFAULT_REGION).build();
-    try {
-      s3.putObject(bucket_name, key_name, new File(file_path));
-    } catch (AmazonServiceException e) {
-      System.err.println(e.getErrorMessage());
-      System.exit(1);
+    return;
   }
 }
