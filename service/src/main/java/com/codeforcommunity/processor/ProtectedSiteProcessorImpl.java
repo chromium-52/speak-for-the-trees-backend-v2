@@ -81,6 +81,17 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
   }
 
   /**
+   * Check if an entry with the given entryId exists.
+   *
+   * @param entryId to check
+   */
+  private void checkEntryExists(int entryId) {
+    if (!db.fetchExists(db.selectFrom(SITE_ENTRIES).where(SITE_ENTRIES.ID.eq(entryId)))) {
+      throw new ResourceDoesNotExistException(entryId, "Entry");
+    }
+  }
+
+  /**
    * Check if a block with the given blockId exists.
    *
    * @param blockId to check
@@ -663,5 +674,60 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
           lastActivityWeeks
       );
     }).collect(Collectors.toList());
+  }
+
+  public void editSiteEntry(
+          JWTData userData, int entryId, UpdateSiteRequest editSiteEntryRequest) {
+    checkEntryExists(entryId);
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
+
+    SiteEntriesRecord siteEntriesRecord =
+            db.selectFrom(SITE_ENTRIES)
+                    .where(SITE_ENTRIES.SITE_ID.eq(entryId))
+                    .fetchOne();
+
+    siteEntriesRecord.setUserId(userData.getUserId());
+    siteEntriesRecord.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
+    siteEntriesRecord.setTreePresent(editSiteEntryRequest.isTreePresent());
+    siteEntriesRecord.setStatus(editSiteEntryRequest.getStatus());
+    siteEntriesRecord.setGenus(editSiteEntryRequest.getGenus());
+    siteEntriesRecord.setSpecies(editSiteEntryRequest.getSpecies());
+    siteEntriesRecord.setCommonName(editSiteEntryRequest.getCommonName());
+    siteEntriesRecord.setConfidence(editSiteEntryRequest.getConfidence());
+    siteEntriesRecord.setDiameter(editSiteEntryRequest.getDiameter());
+    siteEntriesRecord.setCircumference(editSiteEntryRequest.getCircumference());
+    siteEntriesRecord.setMultistem(editSiteEntryRequest.isMultistem());
+    siteEntriesRecord.setCoverage(editSiteEntryRequest.getCoverage());
+    siteEntriesRecord.setPruning(editSiteEntryRequest.getPruning());
+    siteEntriesRecord.setCondition(editSiteEntryRequest.getCondition());
+    siteEntriesRecord.setDiscoloring(editSiteEntryRequest.isDiscoloring());
+    siteEntriesRecord.setLeaning(editSiteEntryRequest.isLeaning());
+    siteEntriesRecord.setConstrictingGrate(editSiteEntryRequest.isConstrictingGrate());
+    siteEntriesRecord.setWounds(editSiteEntryRequest.isWounds());
+    siteEntriesRecord.setPooling(editSiteEntryRequest.isPooling());
+    siteEntriesRecord.setStakesWithWires(editSiteEntryRequest.isStakesWithWires());
+    siteEntriesRecord.setStakesWithoutWires(editSiteEntryRequest.isStakesWithoutWires());
+    siteEntriesRecord.setLight(editSiteEntryRequest.isLight());
+    siteEntriesRecord.setBicycle(editSiteEntryRequest.isBicycle());
+    siteEntriesRecord.setBagEmpty(editSiteEntryRequest.isBagEmpty());
+    siteEntriesRecord.setBagFilled(editSiteEntryRequest.isBagFilled());
+    siteEntriesRecord.setTape(editSiteEntryRequest.isTape());
+    siteEntriesRecord.setSuckerGrowth(editSiteEntryRequest.isSuckerGrowth());
+    siteEntriesRecord.setSiteType(editSiteEntryRequest.getSiteType());
+    siteEntriesRecord.setSidewalkWidth(editSiteEntryRequest.getSidewalkWidth());
+    siteEntriesRecord.setSiteWidth(editSiteEntryRequest.getSiteWidth());
+    siteEntriesRecord.setSiteLength(editSiteEntryRequest.getSiteLength());
+    siteEntriesRecord.setMaterial(editSiteEntryRequest.getMaterial());
+    siteEntriesRecord.setRaisedBed(editSiteEntryRequest.isRaisedBed());
+    siteEntriesRecord.setFence(editSiteEntryRequest.isFence());
+    siteEntriesRecord.setTrash(editSiteEntryRequest.isTrash());
+    siteEntriesRecord.setWires(editSiteEntryRequest.isWires());
+    siteEntriesRecord.setGrate(editSiteEntryRequest.isGrate());
+    siteEntriesRecord.setStump(editSiteEntryRequest.isStump());
+    siteEntriesRecord.setTreeNotes(editSiteEntryRequest.getTreeNotes());
+    siteEntriesRecord.setSiteNotes(editSiteEntryRequest.getSiteNotes());
+    siteEntriesRecord.setPlantingDate(editSiteEntryRequest.getPlantingDate());
+
+    siteEntriesRecord.store();
   }
 }

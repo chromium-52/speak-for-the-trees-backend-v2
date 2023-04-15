@@ -59,6 +59,7 @@ public class ProtectedSiteRouter implements IRouter {
     registerUploadSiteImage(router);
     registerDeleteSiteImage(router);
     registerFilterSites(router);
+    registerEditSiteEntry(router);
 
     return router;
   }
@@ -337,5 +338,22 @@ public class ProtectedSiteRouter implements IRouter {
     List<FilterSitesResponse> filterSitesResponse = processor.filterSites(userData, filterSitesRequest);
 
     end(ctx.response(), 200, JsonObject.mapFrom(Collections.singletonMap("filteredSites", filterSitesResponse)).toString());
+  }
+
+  private void registerEditSiteEntry(Router router) {
+    Route editSiteEntry = router.post("/edit_entry/:entry_id");
+    editSiteEntry.handler(this::handleEditSiteEntry);
+  }
+
+  private void handleEditSiteEntry(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int entryId = RestFunctions.getRequestParameterAsInt(ctx.request(), "entry_id");
+
+    UpdateSiteRequest editSiteEntryRequest =
+            RestFunctions.getJsonBodyAsClass(ctx, UpdateSiteRequest.class);
+
+    processor.editSiteEntry(userData, entryId, editSiteEntryRequest);
+
+    end(ctx.response(), 200);
   }
 }
