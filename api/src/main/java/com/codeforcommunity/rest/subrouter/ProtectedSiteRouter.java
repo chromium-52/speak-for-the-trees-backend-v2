@@ -333,11 +333,17 @@ public class ProtectedSiteRouter implements IRouter {
 
   private void handleFilterSites(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
-    FilterSitesRequest filterSitesRequest = RestFunctions.getJsonBodyAsClass(ctx, FilterSitesRequest.class);
+    FilterSitesRequest filterSitesRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, FilterSitesRequest.class);
 
-    List<FilterSitesResponse> filterSitesResponse = processor.filterSites(userData, filterSitesRequest);
+    List<FilterSitesResponse> filterSitesResponse =
+        processor.filterSites(userData, filterSitesRequest);
 
-    end(ctx.response(), 200, JsonObject.mapFrom(Collections.singletonMap("filteredSites", filterSitesResponse)).toString());
+    end(
+        ctx.response(),
+        200,
+        JsonObject.mapFrom(Collections.singletonMap("filteredSites", filterSitesResponse))
+            .toString());
   }
 
   private void registerEditSiteEntry(Router router) {
@@ -350,7 +356,7 @@ public class ProtectedSiteRouter implements IRouter {
     int entryId = RestFunctions.getRequestParameterAsInt(ctx.request(), "entry_id");
 
     UpdateSiteRequest editSiteEntryRequest =
-            RestFunctions.getJsonBodyAsClass(ctx, UpdateSiteRequest.class);
+        RestFunctions.getJsonBodyAsClass(ctx, UpdateSiteRequest.class);
 
     processor.editSiteEntry(userData, entryId, editSiteEntryRequest);
 
