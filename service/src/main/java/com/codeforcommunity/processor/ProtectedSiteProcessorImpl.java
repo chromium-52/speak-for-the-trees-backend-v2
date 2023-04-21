@@ -326,91 +326,7 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
     recordStewardship(childUserData, siteId, parentRecordStewardshipRequest);
   }
 
-  @Override
-  public void addSite(JWTData userData, AddSiteRequest addSiteRequest) {
-    if (addSiteRequest.getBlockId() != null) {
-      checkBlockExists(addSiteRequest.getBlockId());
-    }
-
-    checkNeighborhoodExists(addSiteRequest.getNeighborhoodId());
-
-    SitesRecord sitesRecord = db.newRecord(SITES);
-
-    int newId = db.select(max(SITES.ID)).from(SITES).fetchOne(0, Integer.class) + 1;
-
-    sitesRecord.setId(newId);
-    sitesRecord.setBlockId(addSiteRequest.getBlockId());
-    sitesRecord.setLat(addSiteRequest.getLat());
-    sitesRecord.setLng(addSiteRequest.getLng());
-    sitesRecord.setCity(addSiteRequest.getCity());
-    sitesRecord.setZip(addSiteRequest.getZip());
-    sitesRecord.setAddress(addSiteRequest.getAddress());
-    sitesRecord.setNeighborhoodId(addSiteRequest.getNeighborhoodId());
-
-    sitesRecord.store();
-
-    SiteEntriesRecord siteEntriesRecord = db.newRecord(SITE_ENTRIES);
-
-    int newSiteEntriesId =
-        db.select(max(SITE_ENTRIES.ID)).from(SITE_ENTRIES).fetchOne(0, Integer.class) + 1;
-
-    siteEntriesRecord.setId(newSiteEntriesId);
-    siteEntriesRecord.setUserId(userData.getUserId());
-    siteEntriesRecord.setSiteId(sitesRecord.getId());
-    siteEntriesRecord.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-    siteEntriesRecord.setTreePresent(addSiteRequest.isTreePresent());
-    siteEntriesRecord.setStatus(addSiteRequest.getStatus());
-    siteEntriesRecord.setGenus(addSiteRequest.getGenus());
-    siteEntriesRecord.setSpecies(addSiteRequest.getSpecies());
-    siteEntriesRecord.setCommonName(addSiteRequest.getCommonName());
-    siteEntriesRecord.setConfidence(addSiteRequest.getConfidence());
-    siteEntriesRecord.setDiameter(addSiteRequest.getDiameter());
-    siteEntriesRecord.setCircumference(addSiteRequest.getCircumference());
-    siteEntriesRecord.setMultistem(addSiteRequest.isMultistem());
-    siteEntriesRecord.setCoverage(addSiteRequest.getCoverage());
-    siteEntriesRecord.setPruning(addSiteRequest.getPruning());
-    siteEntriesRecord.setCondition(addSiteRequest.getCondition());
-    siteEntriesRecord.setDiscoloring(addSiteRequest.isDiscoloring());
-    siteEntriesRecord.setLeaning(addSiteRequest.isLeaning());
-    siteEntriesRecord.setConstrictingGrate(addSiteRequest.isConstrictingGrate());
-    siteEntriesRecord.setWounds(addSiteRequest.isWounds());
-    siteEntriesRecord.setPooling(addSiteRequest.isPooling());
-    siteEntriesRecord.setStakesWithWires(addSiteRequest.isStakesWithWires());
-    siteEntriesRecord.setStakesWithoutWires(addSiteRequest.isStakesWithoutWires());
-    siteEntriesRecord.setLight(addSiteRequest.isLight());
-    siteEntriesRecord.setBicycle(addSiteRequest.isBicycle());
-    siteEntriesRecord.setBagEmpty(addSiteRequest.isBagEmpty());
-    siteEntriesRecord.setBagFilled(addSiteRequest.isBagFilled());
-    siteEntriesRecord.setTape(addSiteRequest.isTape());
-    siteEntriesRecord.setSuckerGrowth(addSiteRequest.isSuckerGrowth());
-    siteEntriesRecord.setSiteType(addSiteRequest.getSiteType());
-    siteEntriesRecord.setSidewalkWidth(addSiteRequest.getSidewalkWidth());
-    siteEntriesRecord.setSiteWidth(addSiteRequest.getSiteWidth());
-    siteEntriesRecord.setSiteLength(addSiteRequest.getSiteLength());
-    siteEntriesRecord.setMaterial(addSiteRequest.getMaterial());
-    siteEntriesRecord.setRaisedBed(addSiteRequest.isRaisedBed());
-    siteEntriesRecord.setFence(addSiteRequest.isFence());
-    siteEntriesRecord.setTrash(addSiteRequest.isTrash());
-    siteEntriesRecord.setWires(addSiteRequest.isWires());
-    siteEntriesRecord.setGrate(addSiteRequest.isGrate());
-    siteEntriesRecord.setStump(addSiteRequest.isStump());
-    siteEntriesRecord.setTreeNotes(addSiteRequest.getTreeNotes());
-    siteEntriesRecord.setSiteNotes(addSiteRequest.getSiteNotes());
-    siteEntriesRecord.setPlantingDate(addSiteRequest.getPlantingDate());
-
-    siteEntriesRecord.store();
-  }
-
-  public void updateSite(JWTData userData, int siteId, UpdateSiteRequest updateSiteRequest) {
-    checkSiteExists(siteId);
-
-    SiteEntriesRecord record = db.newRecord(SITE_ENTRIES);
-
-    int newId = db.select(max(SITE_ENTRIES.ID)).from(SITE_ENTRIES).fetchOne(0, Integer.class) + 1;
-
-    record.setId(newId);
-    record.setUserId(userData.getUserId());
-    record.setSiteId(siteId);
+  private void populateSiteEntry(SiteEntriesRecord record, UpdateSiteRequest updateSiteRequest) {
     record.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
     record.setTreePresent(updateSiteRequest.isTreePresent());
     record.setStatus(updateSiteRequest.getStatus());
@@ -451,6 +367,55 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
     record.setTreeNotes(updateSiteRequest.getTreeNotes());
     record.setSiteNotes(updateSiteRequest.getSiteNotes());
     record.setPlantingDate(updateSiteRequest.getPlantingDate());
+  }
+
+  @Override
+  public void addSite(JWTData userData, AddSiteRequest addSiteRequest) {
+    if (addSiteRequest.getBlockId() != null) {
+      checkBlockExists(addSiteRequest.getBlockId());
+    }
+
+    checkNeighborhoodExists(addSiteRequest.getNeighborhoodId());
+
+    SitesRecord sitesRecord = db.newRecord(SITES);
+
+    int newId = db.select(max(SITES.ID)).from(SITES).fetchOne(0, Integer.class) + 1;
+
+    sitesRecord.setId(newId);
+    sitesRecord.setBlockId(addSiteRequest.getBlockId());
+    sitesRecord.setLat(addSiteRequest.getLat());
+    sitesRecord.setLng(addSiteRequest.getLng());
+    sitesRecord.setCity(addSiteRequest.getCity());
+    sitesRecord.setZip(addSiteRequest.getZip());
+    sitesRecord.setAddress(addSiteRequest.getAddress());
+    sitesRecord.setNeighborhoodId(addSiteRequest.getNeighborhoodId());
+
+    sitesRecord.store();
+
+    SiteEntriesRecord siteEntriesRecord = db.newRecord(SITE_ENTRIES);
+
+    int newSiteEntriesId =
+        db.select(max(SITE_ENTRIES.ID)).from(SITE_ENTRIES).fetchOne(0, Integer.class) + 1;
+
+    siteEntriesRecord.setId(newSiteEntriesId);
+    siteEntriesRecord.setUserId(userData.getUserId());
+    siteEntriesRecord.setSiteId(sitesRecord.getId());
+    populateSiteEntry(siteEntriesRecord, addSiteRequest);
+
+    siteEntriesRecord.store();
+  }
+
+  public void updateSite(JWTData userData, int siteId, UpdateSiteRequest updateSiteRequest) {
+    checkSiteExists(siteId);
+
+    SiteEntriesRecord record = db.newRecord(SITE_ENTRIES);
+
+    int newId = db.select(max(SITE_ENTRIES.ID)).from(SITE_ENTRIES).fetchOne(0, Integer.class) + 1;
+
+    record.setId(newId);
+    record.setUserId(userData.getUserId());
+    record.setSiteId(siteId);
+    populateSiteEntry(record, updateSiteRequest);
 
     record.store();
   }
@@ -697,46 +662,7 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
         db.selectFrom(SITE_ENTRIES).where(SITE_ENTRIES.ID.eq(entryId)).fetchOne();
 
     siteEntriesRecord.setUserId(userData.getUserId());
-    siteEntriesRecord.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-    siteEntriesRecord.setTreePresent(editSiteEntryRequest.isTreePresent());
-    siteEntriesRecord.setStatus(editSiteEntryRequest.getStatus());
-    siteEntriesRecord.setGenus(editSiteEntryRequest.getGenus());
-    siteEntriesRecord.setSpecies(editSiteEntryRequest.getSpecies());
-    siteEntriesRecord.setCommonName(editSiteEntryRequest.getCommonName());
-    siteEntriesRecord.setConfidence(editSiteEntryRequest.getConfidence());
-    siteEntriesRecord.setDiameter(editSiteEntryRequest.getDiameter());
-    siteEntriesRecord.setCircumference(editSiteEntryRequest.getCircumference());
-    siteEntriesRecord.setMultistem(editSiteEntryRequest.isMultistem());
-    siteEntriesRecord.setCoverage(editSiteEntryRequest.getCoverage());
-    siteEntriesRecord.setPruning(editSiteEntryRequest.getPruning());
-    siteEntriesRecord.setCondition(editSiteEntryRequest.getCondition());
-    siteEntriesRecord.setDiscoloring(editSiteEntryRequest.isDiscoloring());
-    siteEntriesRecord.setLeaning(editSiteEntryRequest.isLeaning());
-    siteEntriesRecord.setConstrictingGrate(editSiteEntryRequest.isConstrictingGrate());
-    siteEntriesRecord.setWounds(editSiteEntryRequest.isWounds());
-    siteEntriesRecord.setPooling(editSiteEntryRequest.isPooling());
-    siteEntriesRecord.setStakesWithWires(editSiteEntryRequest.isStakesWithWires());
-    siteEntriesRecord.setStakesWithoutWires(editSiteEntryRequest.isStakesWithoutWires());
-    siteEntriesRecord.setLight(editSiteEntryRequest.isLight());
-    siteEntriesRecord.setBicycle(editSiteEntryRequest.isBicycle());
-    siteEntriesRecord.setBagEmpty(editSiteEntryRequest.isBagEmpty());
-    siteEntriesRecord.setBagFilled(editSiteEntryRequest.isBagFilled());
-    siteEntriesRecord.setTape(editSiteEntryRequest.isTape());
-    siteEntriesRecord.setSuckerGrowth(editSiteEntryRequest.isSuckerGrowth());
-    siteEntriesRecord.setSiteType(editSiteEntryRequest.getSiteType());
-    siteEntriesRecord.setSidewalkWidth(editSiteEntryRequest.getSidewalkWidth());
-    siteEntriesRecord.setSiteWidth(editSiteEntryRequest.getSiteWidth());
-    siteEntriesRecord.setSiteLength(editSiteEntryRequest.getSiteLength());
-    siteEntriesRecord.setMaterial(editSiteEntryRequest.getMaterial());
-    siteEntriesRecord.setRaisedBed(editSiteEntryRequest.isRaisedBed());
-    siteEntriesRecord.setFence(editSiteEntryRequest.isFence());
-    siteEntriesRecord.setTrash(editSiteEntryRequest.isTrash());
-    siteEntriesRecord.setWires(editSiteEntryRequest.isWires());
-    siteEntriesRecord.setGrate(editSiteEntryRequest.isGrate());
-    siteEntriesRecord.setStump(editSiteEntryRequest.isStump());
-    siteEntriesRecord.setTreeNotes(editSiteEntryRequest.getTreeNotes());
-    siteEntriesRecord.setSiteNotes(editSiteEntryRequest.getSiteNotes());
-    siteEntriesRecord.setPlantingDate(editSiteEntryRequest.getPlantingDate());
+    populateSiteEntry(siteEntriesRecord, editSiteEntryRequest);
 
     siteEntriesRecord.store();
   }
