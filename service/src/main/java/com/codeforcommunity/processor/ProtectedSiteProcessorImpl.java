@@ -576,6 +576,12 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
 
     String ACTIVITY_COUNT_COLUMN = "act_count";
 
+    // Table containing the number of stewardship activities performed by a user on a site
+    Table<org.jooq.Record3<Integer, Integer, Integer>> activityCounts = db
+        .select(count().as(ACTIVITY_COUNT_COLUMN), STEWARDSHIP.SITE_ID, STEWARDSHIP.USER_ID)
+        .from(STEWARDSHIP)
+        .groupBy(STEWARDSHIP.SITE_ID, STEWARDSHIP.USER_ID).asTable("activityCounts");
+
     Condition filterCondition = noCondition();
     if (filterSitesRequest.getTreeCommonNames() != null)
       filterCondition = filterCondition.and(SITE_ENTRIES.COMMON_NAME.in(filterSitesRequest.getTreeCommonNames()));
@@ -588,6 +594,13 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
     if (filterSitesRequest.getNeighborhoodIds() != null)
       filterCondition =
           filterCondition.and(SITES.NEIGHBORHOOD_ID.in(filterSitesRequest.getNeighborhoodIds()));
+    if (filterSitesRequest.getActivityCountMin() != null)
+      filterCondition = filterCondition.and(
+          activityCounts.field(ACTIVITY_COUNT_COLUMN, Integer.class).ge(filterSitesRequest.getActivityCountMin()));
+    if (filterSitesRequest.getActivityCountMax() != null)
+      filterCondition = filterCondition.and(
+        activityCounts.field(ACTIVITY_COUNT_COLUMN, Integer.class).le(filterSitesRequest.getActivityCountMax())
+      );
 
     Condition stewardshipCondition = noCondition();
     if (filterSitesRequest.getLastActivityStart() != null)
@@ -598,13 +611,6 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
       stewardshipCondition =
           stewardshipCondition.and(
               max(STEWARDSHIP.PERFORMED_ON).le(filterSitesRequest.getLastActivityEnd()));
-
-    // Table containing the number of stewardship activities performed by a user on a site
-    Table<org.jooq.Record3<Integer, Integer, Integer>> activityCounts =
-        db.select(count().as(ACTIVITY_COUNT_COLUMN), STEWARDSHIP.SITE_ID, STEWARDSHIP.USER_ID)
-            .from(STEWARDSHIP)
-            .groupBy(STEWARDSHIP.SITE_ID, STEWARDSHIP.USER_ID)
-            .asTable("activityCounts");
 
     Result<org.jooq.Record12<Integer, String, Integer, Integer, Date, Date, Timestamp, String, String, String, String, Integer>>
         records = db
