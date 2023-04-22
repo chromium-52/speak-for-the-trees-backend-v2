@@ -3,18 +3,18 @@ package com.codeforcommunity.dto.map;
 import java.math.BigDecimal;
 
 public class BlockFeatureProperties {
-  private final Integer block_id;
+  private final Integer blockId;
   private final BigDecimal lat;
   private final BigDecimal lng;
 
-  public BlockFeatureProperties(Integer block_id, BigDecimal lat, BigDecimal lng) {
-    this.block_id = block_id;
+  public BlockFeatureProperties(Integer blockId, BigDecimal lat, BigDecimal lng) {
+    this.blockId = blockId;
     this.lat = lat;
     this.lng = lng;
   }
 
-  public Integer getBlock_id() {
-    return block_id;
+  public Integer getBlockId() {
+    return blockId;
   }
 
   public BigDecimal getLat() {

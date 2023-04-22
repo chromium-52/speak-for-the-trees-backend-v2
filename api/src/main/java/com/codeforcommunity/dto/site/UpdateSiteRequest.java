@@ -2,8 +2,11 @@ package com.codeforcommunity.dto.site;
 
 import com.codeforcommunity.dto.ApiDto;
 import com.codeforcommunity.exceptions.HandledException;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class UpdateSiteRequest extends ApiDto {
   private Boolean treePresent;
@@ -45,6 +48,12 @@ public class UpdateSiteRequest extends ApiDto {
   private String treeNotes;
   private String siteNotes;
 
+  @JsonFormat(
+      shape = JsonFormat.Shape.STRING,
+      pattern = "MM/dd/yyyy",
+      timezone = "America/New_York")
+  private Date plantingDate;
+
   public UpdateSiteRequest(
       Boolean treePresent,
       String status,
@@ -83,7 +92,8 @@ public class UpdateSiteRequest extends ApiDto {
       Boolean grate,
       Boolean stump,
       String treeNotes,
-      String siteNotes) {
+      String siteNotes,
+      Date plantingDate) {
     this.treePresent = treePresent;
     this.status = status;
     this.genus = genus;
@@ -122,12 +132,13 @@ public class UpdateSiteRequest extends ApiDto {
     this.stump = stump;
     this.treeNotes = treeNotes;
     this.siteNotes = siteNotes;
+    this.plantingDate = plantingDate;
   }
 
   public UpdateSiteRequest() {}
 
   public Boolean isTreePresent() {
-    return treePresent;
+    return falseIfNull(treePresent);
   }
 
   public void setTreePresent(Boolean treePresent) {
@@ -191,7 +202,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isMultistem() {
-    return multistem;
+    return falseIfNull(multistem);
   }
 
   public void setMultistem(Boolean multistem) {
@@ -223,7 +234,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isDiscoloring() {
-    return discoloring;
+    return falseIfNull(discoloring);
   }
 
   public void setDiscoloring(Boolean discoloring) {
@@ -231,7 +242,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isLeaning() {
-    return leaning;
+    return falseIfNull(leaning);
   }
 
   public void setLeaning(Boolean leaning) {
@@ -239,7 +250,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isConstrictingGrate() {
-    return constrictingGrate;
+    return falseIfNull(constrictingGrate);
   }
 
   public void setConstrictingGrate(Boolean constrictingGrate) {
@@ -247,7 +258,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isWounds() {
-    return wounds;
+    return falseIfNull(wounds);
   }
 
   public void setWounds(Boolean wounds) {
@@ -255,7 +266,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isPooling() {
-    return pooling;
+    return falseIfNull(pooling);
   }
 
   public void setPooling(Boolean pooling) {
@@ -263,7 +274,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isStakesWithWires() {
-    return stakesWithWires;
+    return falseIfNull(stakesWithWires);
   }
 
   public void setStakesWithWires(Boolean stakesWithWires) {
@@ -271,7 +282,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isStakesWithoutWires() {
-    return stakesWithoutWires;
+    return falseIfNull(stakesWithoutWires);
   }
 
   public void setStakesWithoutWires(Boolean stakesWithoutWires) {
@@ -279,7 +290,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isLight() {
-    return light;
+    return falseIfNull(light);
   }
 
   public void setLight(Boolean light) {
@@ -287,7 +298,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isBicycle() {
-    return bicycle;
+    return falseIfNull(bicycle);
   }
 
   public void setBicycle(Boolean bicycle) {
@@ -295,7 +306,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isBagEmpty() {
-    return bagEmpty;
+    return falseIfNull(bagEmpty);
   }
 
   public void setBagEmpty(Boolean bagEmpty) {
@@ -303,7 +314,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isBagFilled() {
-    return bagFilled;
+    return falseIfNull(bagFilled);
   }
 
   public void setBagFilled(Boolean bagFilled) {
@@ -311,7 +322,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isTape() {
-    return tape;
+    return falseIfNull(tape);
   }
 
   public void setTape(Boolean tape) {
@@ -319,7 +330,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isSuckerGrowth() {
-    return suckerGrowth;
+    return falseIfNull(suckerGrowth);
   }
 
   public void setSuckerGrowth(Boolean suckerGrowth) {
@@ -367,7 +378,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isRaisedBed() {
-    return raisedBed;
+    return falseIfNull(raisedBed);
   }
 
   public void setRaisedBed(Boolean raisedBed) {
@@ -375,7 +386,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isFence() {
-    return fence;
+    return falseIfNull(fence);
   }
 
   public void setFence(Boolean fence) {
@@ -383,7 +394,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isTrash() {
-    return trash;
+    return falseIfNull(trash);
   }
 
   public void setTrash(Boolean trash) {
@@ -391,7 +402,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isWires() {
-    return wires;
+    return falseIfNull(wires);
   }
 
   public void setWires(Boolean wires) {
@@ -399,7 +410,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isGrate() {
-    return grate;
+    return falseIfNull(grate);
   }
 
   public void setGrate(Boolean grate) {
@@ -407,7 +418,7 @@ public class UpdateSiteRequest extends ApiDto {
   }
 
   public Boolean isStump() {
-    return stump;
+    return falseIfNull(stump);
   }
 
   public void setStump(Boolean stump) {
@@ -428,6 +439,18 @@ public class UpdateSiteRequest extends ApiDto {
 
   public void setSiteNotes(String siteNotes) {
     this.siteNotes = siteNotes;
+  }
+
+  public Date getPlantingDate() {
+    return this.plantingDate;
+  }
+
+  public void setPlantingDate(Date plantingDate) {
+    this.plantingDate = plantingDate;
+  }
+
+  private boolean falseIfNull(Boolean bool) {
+    return Optional.ofNullable(bool).orElse(false);
   }
 
   @Override

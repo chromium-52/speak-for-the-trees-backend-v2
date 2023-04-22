@@ -3,12 +3,13 @@ package com.codeforcommunity.requester;
 import com.codeforcommunity.email.EmailOperations;
 import com.codeforcommunity.propertiesLoader.PropertiesLoader;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 
 public class Emailer {
   private final EmailOperations emailOperations;
-  private final String loginUrl;
+  private final String frontendUrl;
   private final String passwordResetTemplate;
 
   private final String subjectWelcome = PropertiesLoader.loadProperty("email_subject_welcome");
@@ -20,6 +21,8 @@ public class Emailer {
       PropertiesLoader.loadProperty("email_subject_password_reset_confirm");
   private final String subjectAccountDeleted =
       PropertiesLoader.loadProperty("email_subject_account_deleted");
+  private final String subjectEmailNeighborhoods =
+      PropertiesLoader.loadProperty("email_subject_neighborhood_notification");
 
   public Emailer() {
     String senderName = PropertiesLoader.loadProperty("email_sender_name");
@@ -34,9 +37,9 @@ public class Emailer {
         new EmailOperations(
             shouldSendEmails, senderName, sendEmail, sendPassword, emailHost, emailPort);
 
-    this.loginUrl = PropertiesLoader.loadProperty("frontend_base_url");
+    this.frontendUrl = PropertiesLoader.loadProperty("frontend_base_url");
     this.passwordResetTemplate =
-        this.loginUrl + PropertiesLoader.loadProperty("frontend_password_reset_route");
+        this.frontendUrl + PropertiesLoader.loadProperty("frontend_password_reset_route");
   }
 
   public void sendWelcomeEmail(String sendToEmail, String sendToName) {
@@ -44,10 +47,12 @@ public class Emailer {
 
     Map<String, String> templateValues = new HashMap<>();
     templateValues.put("name", sendToName);
-    templateValues.put("link", loginUrl);
+    templateValues.put("faqLink", frontendUrl + "/faq");
+    templateValues.put("link", frontendUrl);
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
-    emailBody.ifPresent(s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectWelcome, s));
+    emailBody.ifPresent(
+        s -> emailOperations.sendEmailToOneRecipient(sendToName, sendToEmail, subjectWelcome, s));
   }
 
   public void sendEmailChangeConfirmationEmail(
@@ -59,7 +64,9 @@ public class Emailer {
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
     emailBody.ifPresent(
-        s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectEmailChange, s));
+        s ->
+            emailOperations.sendEmailToOneRecipient(
+                sendToName, sendToEmail, subjectEmailChange, s));
   }
 
   public void sendPasswordChangeRequestEmail(
@@ -71,7 +78,9 @@ public class Emailer {
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
     emailBody.ifPresent(
-        s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectPasswordResetRequest, s));
+        s ->
+            emailOperations.sendEmailToOneRecipient(
+                sendToName, sendToEmail, subjectPasswordResetRequest, s));
   }
 
   public void sendPasswordChangeConfirmationEmail(String sendToEmail, String sendToName) {
@@ -81,7 +90,9 @@ public class Emailer {
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
     emailBody.ifPresent(
-        s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectPasswordResetConfirm, s));
+        s ->
+            emailOperations.sendEmailToOneRecipient(
+                sendToName, sendToEmail, subjectPasswordResetConfirm, s));
   }
 
   public void sendAccountDeactivatedEmail(String sendToEmail, String sendToName) {
@@ -91,7 +102,9 @@ public class Emailer {
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
 
     emailBody.ifPresent(
-        s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectAccountDeleted, s));
+        s ->
+            emailOperations.sendEmailToOneRecipient(
+                sendToName, sendToEmail, subjectAccountDeleted, s));
   }
 
   public void sendInviteTeamEmail(String sendToEmail, String sendToName, String teamName) {
@@ -102,7 +115,21 @@ public class Emailer {
     templateValues.put("team_name", teamName);
     Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
     emailBody.ifPresent(
-        s -> emailOperations.sendEmail(sendToName, sendToEmail, subjectAccountDeleted, s));
+        s ->
+            emailOperations.sendEmailToOneRecipient(
+                sendToName, sendToEmail, subjectAccountDeleted, s));
     // TODO implement this
+  }
+
+  public void sendArbitraryEmail(HashSet<String> sendToEmails, String subject, String body) {
+    String filePath = "/emails/Email.html";
+
+    Map<String, String> templateValues = new HashMap<>();
+    templateValues.put("body", body.replaceAll("\n", "<br />"));
+    Optional<String> emailBody = emailOperations.getTemplateString(filePath, templateValues);
+
+    emailBody.ifPresent(email ->
+        emailOperations.sendEmailToMultipleRecipients(sendToEmails, subject, email)
+    );
   }
 }

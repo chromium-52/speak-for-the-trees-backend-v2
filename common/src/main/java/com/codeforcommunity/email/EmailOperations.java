@@ -4,6 +4,7 @@ import com.codeforcommunity.logger.SLogger;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Optional;
 import org.simplejavamail.MailException;
@@ -112,10 +113,46 @@ public class EmailOperations {
   }
 
   /**
+   * Send the given email with the given subject.
+   *
+   * @throws RuntimeException if the email could not be sent.
+   */
+  private void sendEmail(Email email, String subject) {
+    try {
+      AsyncResponse mailResponse = mailer.sendMail(email, true);
+
+      if (mailResponse == null) {
+        logger.error("No mail response returned after trying to send email with subject `%s`");
+        return;
+      }
+
+      mailResponse.onException(
+          (e) -> {
+            logger.error(
+                String.format("Exception thrown while sending email with subject `%s`", subject),
+                e);
+            throw new RuntimeException("Something went wrong and the email could not be sent");
+          });
+
+      mailResponse.onSuccess(
+          () -> {
+            logger.info(String.format("Successfully sent email subject `%s`", subject));
+          });
+
+    } catch (MailException e) {
+      logger.error(
+          String.format("`MailException` thrown while sending email with subject `%s`", subject),
+          e);
+      throw new RuntimeException("Something went wrong and the email could not be sent");
+    }
+  }
+
+  /**
    * Send an email with the given subject and body to the user with the given name at the given
    * email.
    */
-  public void sendEmail(String sendToName, String sendToEmail, String subject, String emailBody) {
+  public void sendEmailToOneRecipient(
+      String sendToName, String sendToEmail, String subject, String emailBody) {
     if (!shouldSendEmails) {
       return;
     }
@@ -130,30 +167,26 @@ public class EmailOperations {
             .withHTMLText(emailBody)
             .buildEmail();
 
-    try {
-      AsyncResponse mailResponse = mailer.sendMail(email, true);
+    this.sendEmail(email, subject);
+  }
 
-      if (mailResponse == null) {
-        logger.error("No mail response returned after trying to send email with subject `%s`");
-        return;
-      }
-
-      mailResponse.onException(
-          (e) -> {
-            logger.error(
-                String.format("Exception thrown while sending email with subject `%s`", subject),
-                e);
-          });
-
-      mailResponse.onSuccess(
-          () -> {
-            logger.info(String.format("Successfully sent email subject `%s`", subject));
-          });
-
-    } catch (MailException e) {
-      logger.error(
-          String.format("`MailException` thrown while sending email with subject `%s`", subject),
-          e);
+  /** Send an email with the given subject and body to the users with the given email addresses. */
+  public void sendEmailToMultipleRecipients(
+      HashSet<String> sendToEmails, String subject, String emailBody) {
+    if (!shouldSendEmails) {
+      return;
     }
+
+    logger.info(String.format("Sending emails with subject `%s`", subject));
+
+    Email email =
+        EmailBuilder.startingBlank()
+            .from(senderName, sendEmail)
+            .bccMultiple(sendToEmails.toArray(new String[0]))
+            .withSubject(subject)
+            .withHTMLText(emailBody)
+            .buildEmail();
+
+    this.sendEmail(email, subject);
   }
 }

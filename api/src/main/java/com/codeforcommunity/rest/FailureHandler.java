@@ -7,6 +7,7 @@ import com.codeforcommunity.exceptions.HandledException;
 import com.codeforcommunity.exceptions.IncorrectBlockStatusException;
 import com.codeforcommunity.exceptions.InvalidSecretKeyException;
 import com.codeforcommunity.exceptions.LeaderCannotLeaveTeamException;
+import com.codeforcommunity.exceptions.LinkedResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.MalformedParameterException;
 import com.codeforcommunity.exceptions.MemberApplicationException;
 import com.codeforcommunity.exceptions.MemberStatusException;
@@ -101,6 +102,19 @@ public class FailureHandler {
     end(ctx, message, 400);
   }
 
+  public void handleLinkedResourceDoesNotExist(
+      RoutingContext ctx, LinkedResourceDoesNotExistException e) {
+    String message =
+        String.format(
+            "No linked resource <%s> with resource <%s> of id <%d> and resource <%s> of id <%d> exists",
+            e.getlinkedResourceType(),
+            e.getResource1Type(),
+            e.getResource1Id(),
+            e.getResource2Type(),
+            e.getResource2Id());
+    end(ctx, message, 400);
+  }
+
   public void handleIncorrectBlockStatus(RoutingContext ctx, IncorrectBlockStatusException e) {
     String message =
         String.format("Status of block id <%d> is not <%s>", e.getBlockId(), e.getExpectedStatus());
@@ -162,6 +176,16 @@ public class FailureHandler {
   public void handleInvalidToken(RoutingContext ctx) {
     String message = "Given token is invalid";
     end(ctx, message, 401);
+  }
+
+  public void handleInvalidURL(RoutingContext ctx) {
+    String message = "Given URL is invalid";
+    end(ctx, message, 400);
+  }
+
+  public void handleInvalidCSV(RoutingContext ctx) {
+    String message = "Given CSV is invalid and cannot be parsed";
+    end(ctx, message, 400);
   }
 
   public void handleExpiredToken(RoutingContext ctx) {

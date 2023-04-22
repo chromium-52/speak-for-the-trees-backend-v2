@@ -11,6 +11,7 @@ public class GetSiteResponse {
   private final String city;
   private final String zip;
   private final String address;
+  private final Integer neighborhoodId;
   private final List<SiteEntry> entries;
 
   public GetSiteResponse(
@@ -21,6 +22,7 @@ public class GetSiteResponse {
       String city,
       String zip,
       String address,
+      Integer neighborhoodId,
       List<SiteEntry> entries) {
     this.siteId = siteId;
     this.blockId = blockId;
@@ -29,6 +31,7 @@ public class GetSiteResponse {
     this.city = city;
     this.zip = zip;
     this.address = address;
+    this.neighborhoodId = neighborhoodId;
     this.entries = entries;
   }
 
@@ -58,6 +61,10 @@ public class GetSiteResponse {
 
   public String getAddress() {
     return address;
+  }
+
+  public Integer getNeighborhoodId() {
+    return neighborhoodId;
   }
 
   public List<SiteEntry> getEntries() {

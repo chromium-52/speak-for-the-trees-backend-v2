@@ -11,10 +11,8 @@ import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.dto.reservation.BlockIDRequest;
 import com.codeforcommunity.dto.reservation.CompleteReservationRequest;
 import com.codeforcommunity.dto.reservation.MakeReservationRequest;
-import com.codeforcommunity.enums.PrivilegeLevel;
 import com.codeforcommunity.enums.ReservationAction;
 import com.codeforcommunity.enums.TeamRole;
-import com.codeforcommunity.exceptions.AuthException;
 import com.codeforcommunity.exceptions.IncorrectBlockStatusException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.UserDeletedException;
@@ -26,7 +24,7 @@ import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.ReservationsRecord;
 import org.jooq.generated.tables.records.UsersRecord;
 
-public class ReservationProcessorImpl implements IReservationProcessor {
+public class ReservationProcessorImpl extends AbstractProcessor implements IReservationProcessor {
 
   private final DSLContext db;
 
@@ -82,17 +80,6 @@ public class ReservationProcessorImpl implements IReservationProcessor {
 
     if (user != null && user.getDeletedAt() != null) {
       throw new UserDeletedException(userId);
-    }
-  }
-
-  /**
-   * Throws an exception if the user is not an admin or super admin.
-   *
-   * @param level the privilege level of the user calling the route
-   */
-  void isAdminCheck(PrivilegeLevel level) {
-    if (!(level.equals(PrivilegeLevel.ADMIN) || level.equals(PrivilegeLevel.SUPER_ADMIN))) {
-      throw new AuthException("User does not have the required privilege level.");
     }
   }
 
@@ -231,7 +218,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
 
   @Override
   public void uncompleteReservation(JWTData userData, BlockIDRequest uncompleteReservationRequest) {
-    isAdminCheck(userData.getPrivilegeLevel());
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
     basicChecks(uncompleteReservationRequest.getBlockID(), userData.getUserId(), null);
 
     ReservationsRecord reservationsRecord = db.newRecord(RESERVATIONS);
@@ -247,7 +234,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
 
   @Override
   public void markForQA(JWTData userData, BlockIDRequest markForQARequest) {
-    isAdminCheck(userData.getPrivilegeLevel());
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
     basicChecks(markForQARequest.getBlockID(), userData.getUserId(), null);
 
     ReservationsRecord reservationsRecord = db.newRecord(RESERVATIONS);
@@ -263,7 +250,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
 
   @Override
   public void passQA(JWTData userData, BlockIDRequest passQARequest) {
-    isAdminCheck(userData.getPrivilegeLevel());
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
     basicChecks(passQARequest.getBlockID(), userData.getUserId(), null);
     blockQACheck(passQARequest.getBlockID());
 
@@ -287,7 +274,7 @@ public class ReservationProcessorImpl implements IReservationProcessor {
 
   @Override
   public void failQA(JWTData userData, BlockIDRequest failQARequest) {
-    isAdminCheck(userData.getPrivilegeLevel());
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
     basicChecks(failQARequest.getBlockID(), userData.getUserId(), null);
     blockQACheck(failQARequest.getBlockID());
 

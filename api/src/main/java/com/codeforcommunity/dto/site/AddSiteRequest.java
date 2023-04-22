@@ -2,6 +2,7 @@ package com.codeforcommunity.dto.site;
 
 import com.codeforcommunity.exceptions.HandledException;
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.util.List;
 
 public class AddSiteRequest extends UpdateSiteRequest {
@@ -11,6 +12,7 @@ public class AddSiteRequest extends UpdateSiteRequest {
   private String city;
   private String zip;
   private String address;
+  private Integer neighborhoodId;
 
   public AddSiteRequest(
       Boolean treePresent,
@@ -51,12 +53,14 @@ public class AddSiteRequest extends UpdateSiteRequest {
       Boolean stump,
       String treeNotes,
       String siteNotes,
+      Date plantingDate,
       Integer blockId,
       BigDecimal lat,
       BigDecimal lng,
       String city,
       String zip,
-      String address) {
+      String address,
+      Integer neighborhoodId) {
     super(
         treePresent,
         status,
@@ -95,13 +99,15 @@ public class AddSiteRequest extends UpdateSiteRequest {
         grate,
         stump,
         treeNotes,
-        siteNotes);
+        siteNotes,
+        plantingDate);
     this.blockId = blockId;
     this.lat = lat;
     this.lng = lng;
     this.city = city;
     this.zip = zip;
     this.address = address;
+    this.neighborhoodId = neighborhoodId;
   }
 
   public AddSiteRequest() {
@@ -156,14 +162,19 @@ public class AddSiteRequest extends UpdateSiteRequest {
     this.address = address;
   }
 
+  public Integer getNeighborhoodId() {
+    return neighborhoodId;
+  }
+
+  public void setNeighborhoodId(Integer neighborhoodId) {
+    this.neighborhoodId = neighborhoodId;
+  }
+
   @Override
   public List<String> validateFields(String fieldPrefix) throws HandledException {
     String fieldName = fieldPrefix + "add_site_request.";
     List<String> fields = super.validateFields("");
 
-    if (blockId == null) {
-      fields.add(fieldName + "block_id");
-    }
     if (lat == null) {
       fields.add(fieldName + "lat");
     }
@@ -178,6 +189,9 @@ public class AddSiteRequest extends UpdateSiteRequest {
     }
     if (address == null) {
       fields.add(fieldName + "address");
+    }
+    if (neighborhoodId == null) {
+      fields.add(fieldName + "neighborhood_id");
     }
 
     return fields;

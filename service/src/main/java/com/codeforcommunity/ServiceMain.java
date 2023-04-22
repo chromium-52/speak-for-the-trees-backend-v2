@@ -4,8 +4,11 @@ import com.codeforcommunity.api.IAuthProcessor;
 import com.codeforcommunity.api.IImportProcessor;
 import com.codeforcommunity.api.ILeaderboardProcessor;
 import com.codeforcommunity.api.IMapProcessor;
+import com.codeforcommunity.api.IProtectedNeighborhoodsProcessor;
+import com.codeforcommunity.api.IProtectedReportProcessor;
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.api.IProtectedUserProcessor;
+import com.codeforcommunity.api.IReportProcessor;
 import com.codeforcommunity.api.IReservationProcessor;
 import com.codeforcommunity.api.ISiteProcessor;
 import com.codeforcommunity.api.ITeamsProcessor;
@@ -17,8 +20,11 @@ import com.codeforcommunity.processor.AuthProcessorImpl;
 import com.codeforcommunity.processor.ImportProcessorImpl;
 import com.codeforcommunity.processor.LeaderboardProcessorImpl;
 import com.codeforcommunity.processor.MapProcessorImpl;
+import com.codeforcommunity.processor.ProtectedNeighborhoodsProcessorImpl;
+import com.codeforcommunity.processor.ProtectedReportProcessorImpl;
 import com.codeforcommunity.processor.ProtectedSiteProcessorImpl;
 import com.codeforcommunity.processor.ProtectedUserProcessorImpl;
+import com.codeforcommunity.processor.ReportProcessorImpl;
 import com.codeforcommunity.processor.ReservationProcessorImpl;
 import com.codeforcommunity.processor.SiteProcessorImpl;
 import com.codeforcommunity.processor.TeamsProcessorImpl;
@@ -67,7 +73,7 @@ public class ServiceMain {
     String databaseUsername = PropertiesLoader.loadProperty("database_username");
     String databasePassword = PropertiesLoader.loadProperty("database_password");
 
-    // This throws an exception of the database driver is not on the classpath
+    // This throws an exception if the database driver is not on the classpath
     Class.forName(databaseDriver);
 
     // Create a DSLContext from the above configuration
@@ -103,6 +109,10 @@ public class ServiceMain {
     ITeamsProcessor teamsProc = new TeamsProcessorImpl(this.db);
     IProtectedSiteProcessor protectedSiteProc = new ProtectedSiteProcessorImpl(this.db);
     ISiteProcessor siteProc = new SiteProcessorImpl(this.db);
+    IProtectedReportProcessor protectedReportProc = new ProtectedReportProcessorImpl(this.db);
+    IReportProcessor reportProc = new ReportProcessorImpl(this.db);
+    IProtectedNeighborhoodsProcessor protectedNeighborhoodsProc =
+        new ProtectedNeighborhoodsProcessorImpl(this.db, emailer);
 
     // Create the API router and start the HTTP server
     ApiRouter router =
@@ -116,6 +126,9 @@ public class ServiceMain {
             teamsProc,
             protectedSiteProc,
             siteProc,
+            protectedReportProc,
+            reportProc,
+            protectedNeighborhoodsProc,
             jwtAuthorizer);
 
     startApiServer(router, vertx);

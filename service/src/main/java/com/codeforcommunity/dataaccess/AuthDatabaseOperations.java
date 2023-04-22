@@ -53,7 +53,9 @@ public class AuthDatabaseOperations {
   public JWTData getUserJWTData(String email) {
     Optional<Users> maybeUser =
         Optional.ofNullable(
-            db.selectFrom(USERS).where(USERS.EMAIL.eq(email)).fetchOneInto(Users.class));
+            db.selectFrom(USERS)
+                .where(USERS.EMAIL.equalIgnoreCase(email))
+                .fetchOneInto(Users.class));
 
     if (maybeUser.isPresent()) {
       Users user = maybeUser.get();
@@ -88,7 +90,9 @@ public class AuthDatabaseOperations {
   public boolean isValidLogin(String email, String pass) {
     Optional<Users> maybeUser =
         Optional.ofNullable(
-            db.selectFrom(USERS).where(USERS.EMAIL.eq(email)).fetchOneInto(Users.class));
+            db.selectFrom(USERS)
+                .where(USERS.EMAIL.equalIgnoreCase(email))
+                .fetchOneInto(Users.class));
 
     return maybeUser
         .filter(user -> Passwords.isExpectedPassword(pass, user.getPasswordHash()))
@@ -96,8 +100,7 @@ public class AuthDatabaseOperations {
   }
 
   /**
-   * TODO: Refactor this method to take in a DTO / POJO instance Creates a new row in the USER table
-   * with the given values.
+   * Creates a new row in the USER table with the given values.
    *
    * @throws EmailAlreadyInUseException if the given username and email are already used in the USER
    *     table.
@@ -109,7 +112,7 @@ public class AuthDatabaseOperations {
       throw new UsernameAlreadyInUseException(username);
     }
 
-    boolean emailUsed = db.fetchExists(USERS, USERS.EMAIL.eq(email));
+    boolean emailUsed = db.fetchExists(USERS, USERS.EMAIL.equalIgnoreCase(email));
     if (emailUsed) {
       throw new EmailAlreadyInUseException(email);
     }
@@ -174,7 +177,7 @@ public class AuthDatabaseOperations {
   }
 
   /**
-   * Given a userId and token, stores the token in the verification_keys table for the user and
+   * Given a userId and token, stores the token in the verificationKeys table for the user and
    * invalidates all other keys of this type for this user.
    */
   public String createSecretKey(int userId, VerificationKeyType type) {
