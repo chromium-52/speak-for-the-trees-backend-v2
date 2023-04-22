@@ -1,5 +1,6 @@
 package com.codeforcommunity.processor;
 
+import static org.jooq.generated.Tables.PARENT_ACCOUNTS;
 import static org.jooq.generated.Tables.TEAMS;
 import static org.jooq.generated.Tables.USERS;
 import static org.jooq.generated.Tables.USERS_TEAMS;
@@ -9,11 +10,13 @@ import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.auth.JWTData;
 import com.codeforcommunity.auth.Passwords;
 import com.codeforcommunity.dataaccess.AuthDatabaseOperations;
+import com.codeforcommunity.dto.auth.NewUserRequest;
 import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
 import com.codeforcommunity.dto.user.ChangeUsernameRequest;
 import com.codeforcommunity.dto.user.DeleteUserRequest;
+import com.codeforcommunity.dto.user.GetChildUserResponse;
 import com.codeforcommunity.dto.user.Team;
 import com.codeforcommunity.dto.user.UserDataResponse;
 import com.codeforcommunity.dto.user.UserTeamsResponse;
@@ -29,22 +32,28 @@ import com.codeforcommunity.exceptions.WrongPasswordException;
 import com.codeforcommunity.requester.Emailer;
 import java.sql.Timestamp;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.jooq.DSLContext;
 import org.jooq.Record2;
 import org.jooq.Result;
 import org.jooq.generated.tables.pojos.Users;
+import org.jooq.generated.tables.records.ParentAccountsRecord;
 import org.jooq.generated.tables.records.UsersRecord;
+import org.jooq.impl.DSL;
 
-public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
+public class ProtectedUserProcessorImpl extends AbstractProcessor
+    implements IProtectedUserProcessor {
 
   private final DSLContext db;
   private final Emailer emailer;
+  private final AuthDatabaseOperations authDatabaseOperations;
 
   public ProtectedUserProcessorImpl(DSLContext db, Emailer emailer) {
     this.db = db;
     this.emailer = emailer;
+    this.authDatabaseOperations = new AuthDatabaseOperations(db);
   }
 
   private UsersRecord userExistsCheck(JWTData userData) {
@@ -137,7 +146,7 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
 
     String previousEmail = user.getEmail();
     if (Passwords.isExpectedPassword(changeEmailRequest.getPassword(), user.getPasswordHash())) {
-      if (db.fetchExists(USERS, USERS.EMAIL.eq(changeEmailRequest.getNewEmail()))) {
+      if (db.fetchExists(USERS, USERS.EMAIL.equalIgnoreCase(changeEmailRequest.getNewEmail()))) {
         throw new EmailAlreadyInUseException(changeEmailRequest.getNewEmail());
       }
       user.setEmail(changeEmailRequest.getNewEmail());
@@ -170,20 +179,17 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
   @Override
   public void changePrivilegeLevel(
       JWTData userData, ChangePrivilegeLevelRequest changePrivilegeLevelRequest) {
-    // check if user is admin
-    if (!(userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN
-        || userData.getPrivilegeLevel() == PrivilegeLevel.SUPER_ADMIN)) {
-      throw new AuthException("User does not have the required privilege level");
-    }
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
 
     String targetEmail = changePrivilegeLevelRequest.getTargetUserEmail();
 
     // check if target user exists
-    if (!db.fetchExists(db.selectFrom(USERS).where(USERS.EMAIL.eq(targetEmail)))) {
+    if (!db.fetchExists(db.selectFrom(USERS).where(USERS.EMAIL.equalIgnoreCase(targetEmail)))) {
       throw new UserDoesNotExistException(targetEmail);
     }
 
-    UsersRecord targetUser = db.selectFrom(USERS).where(USERS.EMAIL.eq(targetEmail)).fetchOne();
+    UsersRecord targetUser =
+        db.selectFrom(USERS).where(USERS.EMAIL.equalIgnoreCase(targetEmail)).fetchOne();
 
     // normal admins can't create super admins
     if (userData.getPrivilegeLevel() == PrivilegeLevel.ADMIN
@@ -210,5 +216,51 @@ public class ProtectedUserProcessorImpl implements IProtectedUserProcessor {
     } else {
       throw new WrongPasswordException();
     }
+  }
+
+  @Override
+  public void createChildUser(JWTData userData, NewUserRequest newUserRequest) {
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
+
+    db.transaction(
+        configuration -> {
+          UsersRecord user =
+              authDatabaseOperations.createNewUser(
+                  newUserRequest.getUsername(),
+                  newUserRequest.getEmail(),
+                  newUserRequest.getPassword(),
+                  newUserRequest.getFirstName(),
+                  newUserRequest.getLastName());
+
+          DSL.using(configuration)
+              .insertInto(PARENT_ACCOUNTS, PARENT_ACCOUNTS.PARENT_ID, PARENT_ACCOUNTS.CHILD_ID)
+              .values(userData.getUserId(), user.getId())
+              .execute();
+
+          emailer.sendWelcomeEmail(
+              newUserRequest.getEmail(),
+              AuthDatabaseOperations.getFullName(user.into(Users.class)));
+        });
+  }
+
+  @Override
+  public GetChildUserResponse getChildUser(JWTData userData) {
+    int userId = userData.getUserId();
+    List<ParentAccountsRecord> childUserData =
+        db.selectFrom(PARENT_ACCOUNTS).where(PARENT_ACCOUNTS.PARENT_ID.eq(userId)).fetch();
+    List<UserDataResponse> userDataResponses = new ArrayList<>();
+    for (ParentAccountsRecord parentAccount : childUserData) {
+      int childId = parentAccount.getChildId();
+      UsersRecord usersRecord = db.selectFrom(USERS).where(USERS.ID.eq(childId)).fetchOne();
+      String firstName = usersRecord.getFirstName();
+      String lastName = usersRecord.getLastName();
+      String email = usersRecord.getEmail();
+      String username = usersRecord.getUsername();
+      UserDataResponse userDataResponse =
+          new UserDataResponse(firstName, lastName, email, username);
+      userDataResponses.add(userDataResponse);
+    }
+
+    return new GetChildUserResponse(userDataResponses);
   }
 }

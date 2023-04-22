@@ -34,10 +34,12 @@ Following these steps, all that is left is to import data into the database. Thi
   }
   ```
   - Copy the "accessToken" returned by that call and add it as the _value_ of a header called 'X-Access-Token' for all seeding API calls
-- Call `POST api/v1/protected/import/neighborhoods` with the contents of `persist/src/main/resources/db/seed/neighborhoods.json` as the body
-- Call `POST api/v1/protected/import/blocks` with the contents of `persist/src/main/resources/db/seed/blocks.json` as the body. At this point your database has been populated with neighborhood and block data. The following steps are only necessary if you need to test something related to reservations.
-- Request a SQL script that imports users in the SFTT Slack channel. This is not public due to the sensitivity of the information.
-- Call `POST api/v1/protected/import/reservations` with the contents of `persist/src/main/resources/db/seed/reservations.json` as the body. 
+- Import data is stored in the `SFTT.import.data` S3 bucket. Ask one of the team leads for the .json files
+    - Call `POST api/v1/protected/import/neighborhoods` with the contents of `neighborhoods.json` as the body
+    - Call `POST api/v1/protected/import/blocks` with the contents of `blocks.json` as the body. At this point your database has been populated with neighborhood and block data. The following steps are only necessary if you need to test something related to reservations.
+    - Request a SQL script that imports users in the SFTT Slack channel. This is not public due to the sensitivity of the information.
+    - Call `POST api/v1/protected/import/reservations` with the contents of `reservations.json` as the body. 
+    - Call `POST api/v1/protected/import/sites` with the contents of `sites.json` as the body. 
 
 At this point your database is fully set up and contains real data for blocks, neighborhoods, users and reservations. 
 
@@ -52,3 +54,4 @@ The official API specification for this backend can be found at https://docs.c4c
 
 ## Database Schema :pencil:
 The database schema can be found here: https://lucid.app/lucidchart/2e440718-aca6-4efa-adb1-4fc6112bcf42/view. This is an up-to-date overview of what fields the database contains. 
+ 

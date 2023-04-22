@@ -13,8 +13,11 @@ import com.codeforcommunity.dto.site.SiteEntry;
 import com.codeforcommunity.dto.site.StewardshipActivitiesResponse;
 import com.codeforcommunity.dto.site.StewardshipActivity;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
+import com.codeforcommunity.logger.SLogger;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import org.jooq.DSLContext;
 import org.jooq.generated.tables.records.AdoptedSitesRecord;
 import org.jooq.generated.tables.records.SiteEntriesRecord;
@@ -22,6 +25,8 @@ import org.jooq.generated.tables.records.SitesRecord;
 import org.jooq.generated.tables.records.StewardshipRecord;
 
 public class SiteProcessorImpl implements ISiteProcessor {
+
+  private final SLogger logger = new SLogger(SiteProcessorImpl.class);
 
   private final DSLContext db;
 
@@ -117,7 +122,48 @@ public class SiteProcessorImpl implements ISiteProcessor {
                   record.getStump(),
                   record.getTreeNotes(),
                   record.getSiteNotes(),
-                  adopter);
+                  record.getTreeName(),
+                  adopter,
+                  record.getPlantingDate(),
+
+                  /* Cambridge fields */
+                  record.getTrunks(),
+                  record.getSpeciesShort(),
+                  record.getLocation(),
+                  record.getSiteRetiredReason(),
+                  record.getInspectr(),
+                  record.getAbutsOpenArea(),
+                  record.getTreeWellCover(),
+                  record.getTreeGrateActionReq(),
+                  record.getGlobalId(),
+                  record.getPb(),
+                  record.getSiteReplanted(),
+                  record.getOverheadWires(),
+                  record.getOwnership(),
+                  record.getScheduledRemoval(),
+                  record.getStructuralSoil(),
+                  record.getWateringResponsibility(),
+                  record.getCultivar(),
+                  record.getSolarRating(),
+                  record.getBareRoot(),
+                  record.getAdaCompliant(),
+                  record.getCartegraphPlantDate(),
+                  record.getLocationRetired(),
+                  record.getCreatedDate(),
+                  record.getOrder(),
+                  record.getPlantingSeason(),
+                  record.getExposedRootFlare(),
+                  record.getStTreePruningZone(),
+                  record.getMemTree(),
+                  record.getCartegraphRetireDate(),
+                  record.getRemovalReason(),
+                  record.getOffStTreePruningZone(),
+                  record.getPlantingContract(),
+                  record.getTreeWellDepth(),
+                  record.getRemovalDate(),
+                  record.getScientificName(),
+                  record.getBiocharAdded(),
+                  record.getLastEditedUser());
 
           siteEntries.add(siteEntry);
         });
@@ -141,6 +187,7 @@ public class SiteProcessorImpl implements ISiteProcessor {
         sitesRecord.getCity(),
         sitesRecord.getZip(),
         sitesRecord.getAddress(),
+        sitesRecord.getNeighborhoodId(),
         getSiteEntries(siteId));
   }
 
@@ -155,6 +202,8 @@ public class SiteProcessorImpl implements ISiteProcessor {
 
     records.forEach(
         record -> {
+          logger.info("Stewardship activity recorded on: " + record.getPerformedOn());
+
           StewardshipActivity stewardshipActivity =
               new StewardshipActivity(
                   record.getId(),
@@ -165,8 +214,20 @@ public class SiteProcessorImpl implements ISiteProcessor {
                   record.getCleaned(),
                   record.getWeeded());
           activities.add(stewardshipActivity);
+
+          logger.info("Stewardship recorded on: " + stewardshipActivity.getDate());
         });
 
     return new StewardshipActivitiesResponse(activities);
+  }
+
+  @Override
+  public List<String> getAllCommonNames() {
+    return db
+        .selectDistinct(SITE_ENTRIES.COMMON_NAME)
+        .from(SITE_ENTRIES)
+        .where(SITE_ENTRIES.COMMON_NAME.isNotNull())
+        .and(SITE_ENTRIES.COMMON_NAME.notEqual(""))
+        .orderBy(SITE_ENTRIES.COMMON_NAME.asc()).fetchInto(String.class);
   }
 }

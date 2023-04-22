@@ -4,11 +4,13 @@ import static com.codeforcommunity.rest.ApiRouter.end;
 
 import com.codeforcommunity.api.IProtectedUserProcessor;
 import com.codeforcommunity.auth.JWTData;
+import com.codeforcommunity.dto.auth.NewUserRequest;
 import com.codeforcommunity.dto.user.ChangeEmailRequest;
 import com.codeforcommunity.dto.user.ChangePasswordRequest;
 import com.codeforcommunity.dto.user.ChangePrivilegeLevelRequest;
 import com.codeforcommunity.dto.user.ChangeUsernameRequest;
 import com.codeforcommunity.dto.user.DeleteUserRequest;
+import com.codeforcommunity.dto.user.GetChildUserResponse;
 import com.codeforcommunity.dto.user.UserDataResponse;
 import com.codeforcommunity.dto.user.UserTeamsResponse;
 import com.codeforcommunity.rest.IRouter;
@@ -38,6 +40,8 @@ public class ProtectedUserRouter implements IRouter {
     registerChangeEmail(router);
     registerChangeUsername(router);
     registerChangePrivilegeLevel(router);
+    registerCreateChildUser(router);
+    registerGetChildUser(router);
 
     return router;
   }
@@ -142,5 +146,32 @@ public class ProtectedUserRouter implements IRouter {
     processor.changePrivilegeLevel(userData, changePrivilegeLevelRequest);
 
     end(ctx.response(), 200);
+  }
+
+  private void registerCreateChildUser(Router router) {
+    Route createChildUser = router.post("/create_child");
+    createChildUser.handler(this::handleCreateChildUser);
+  }
+
+  private void handleCreateChildUser(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    NewUserRequest newUserRequest = RestFunctions.getJsonBodyAsClass(ctx, NewUserRequest.class);
+
+    processor.createChildUser(userData, newUserRequest);
+
+    end(ctx.response(), 201);
+  }
+
+  private void registerGetChildUser(Router router) {
+    Route getChildUser = router.get("/child_data");
+    getChildUser.handler(this::handleGetChildUser);
+  }
+
+  private void handleGetChildUser(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+
+    GetChildUserResponse response = processor.getChildUser(userData);
+
+    end(ctx.response(), 200, JsonObject.mapFrom(response).toString());
   }
 }

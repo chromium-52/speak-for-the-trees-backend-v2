@@ -1,0 +1,1 @@
+ALTER TABLE adopted_sites ADD COLUMN date_adopted DATE DEFAULT NULL;

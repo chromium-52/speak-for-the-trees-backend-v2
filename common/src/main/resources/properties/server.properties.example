@@ -20,7 +20,7 @@ database_password = placeholder_db_password
 # =======================================================================================================
 # EMAIL PROPERTIES
 # =======================================================================================================
-email_send_email = map.treeboston@gmail.com
+email_send_email = adopt@treeboston.org
 email_send_password = gmail-App-Password
 email_sender_name = Speak For The Trees Boston
 email_host = smtp.gmail.com
@@ -32,6 +32,8 @@ email_subject_email_change = Your Email Has Changed
 email_subject_password_reset_request = Password Reset Request
 email_subject_password_reset_confirm = Your Password Was Reset
 email_subject_account_deleted = Your Account Has Been Deleted
+email_subject_inactive_user = Inactivity at your Tree Site
+email_subject_neighborhood_notification = Neighborhood Notification
 
 
 # =======================================================================================================

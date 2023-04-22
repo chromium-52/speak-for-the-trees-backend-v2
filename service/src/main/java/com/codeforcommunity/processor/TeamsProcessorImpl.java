@@ -24,6 +24,7 @@ import com.codeforcommunity.exceptions.MemberStatusException;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.exceptions.UserDeletedException;
 import com.codeforcommunity.exceptions.UserDoesNotExistException;
+import com.codeforcommunity.exceptions.UserNotOnTeamException;
 import com.codeforcommunity.exceptions.WrongTeamRoleException;
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -72,20 +73,25 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
     return new UsersResponse(users);
   }
 
+  private UsersTeamsRecord getUsersLeadTeams(JWTData userData, int teamId) {
+    return db.selectFrom(USERS_TEAMS)
+        .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
+        .and(USERS_TEAMS.TEAM_ID.eq(teamId))
+        .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))
+        .fetchOne();
+  }
+
   public TeamsProcessorImpl(DSLContext db) {
     this.db = db;
   }
 
   @Override
   public void disbandTeam(JWTData userData, int teamId) {
-    UsersTeamsRecord usersTeamsRecord =
-        db.selectFrom(USERS_TEAMS)
-            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
-            .fetchOne();
+    checkTeamExists(teamId);
+    UsersTeamsRecord usersTeamsRecord = getUsersLeadTeams(userData, teamId);
 
-    if (usersTeamsRecord == null || usersTeamsRecord.getTeamRole() != TeamRole.LEADER) {
-      throw new WrongTeamRoleException(teamId, usersTeamsRecord.getTeamRole());
+    if (usersTeamsRecord == null) {
+      throw new WrongTeamRoleException(teamId, TeamRole.LEADER);
     }
 
     TeamsRecord team = db.selectFrom(TEAMS).where(TEAMS.ID.eq(teamId)).fetchOne();
@@ -160,19 +166,14 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   @Override
   public void addGoal(JWTData userData, AddGoalRequest addGoalRequest, int teamId) {
     checkTeamExists(teamId);
-    UsersTeamsRecord usersTeamsRecord =
-        db.selectFrom(USERS_TEAMS)
-            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
-            .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))
-            .fetchOne();
+    UsersTeamsRecord usersTeamsRecord = getUsersLeadTeams(userData, teamId);
 
     if (usersTeamsRecord != null) {
       GoalsRecord goal = db.newRecord(GOALS);
       goal.setTeamId(teamId);
       goal.setGoal(addGoalRequest.getGoal());
-      goal.setStartAt(addGoalRequest.getStart_at());
-      goal.setCompleteBy(addGoalRequest.getComplete_by());
+      goal.setStartAt(addGoalRequest.getStartAt());
+      goal.setCompleteBy(addGoalRequest.getCompleteBy());
       goal.store();
     } else {
       throw new WrongTeamRoleException(teamId, usersTeamsRecord.getTeamRole());
@@ -184,12 +185,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
     checkTeamExists(teamId);
     checkGoalExists(goalId);
 
-    UsersTeamsRecord usersTeamsRecord =
-        db.selectFrom(USERS_TEAMS)
-            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
-            .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))
-            .fetchOne();
+    UsersTeamsRecord usersTeamsRecord = getUsersLeadTeams(userData, teamId);
 
     if (usersTeamsRecord != null) {
       db.deleteFrom(GOALS).where(GOALS.ID.eq(goalId)).execute();
@@ -201,12 +197,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   @Override
   public void inviteUser(JWTData userData, InviteUsersRequest inviteUserRequest, int teamId) {
     checkTeamExists(teamId);
-    UsersTeamsRecord inviterUserTeamsRecord =
-        db.selectFrom(USERS_TEAMS)
-            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
-            .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))
-            .fetchOne();
+    UsersTeamsRecord inviterUserTeamsRecord = getUsersLeadTeams(userData, teamId);
 
     if (inviterUserTeamsRecord != null) {
       inviteUserRequest
@@ -241,8 +232,15 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   }
 
   @Override
-  public UsersResponse getApplicants(int teamId) {
-    return getUsers(teamId, TeamRole.PENDING);
+  public UsersResponse getApplicants(JWTData userData, int teamId) {
+    checkTeamExists(teamId);
+    UsersTeamsRecord usersTeamsRecord = getUsersLeadTeams(userData, teamId);
+
+    if (usersTeamsRecord != null) {
+      return getUsers(teamId, TeamRole.PENDING);
+    } else {
+      throw new WrongTeamRoleException(teamId, TeamRole.LEADER);
+    }
   }
 
   @Override
@@ -271,12 +269,8 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   public void approveUser(JWTData userData, int teamId, int memberId) {
     checkUserExists(memberId);
     checkTeamExists(teamId);
-    UsersTeamsRecord leaderTeamsRecord =
-        db.selectFrom(USERS_TEAMS)
-            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
-            .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))
-            .fetchOne();
+    UsersTeamsRecord leaderTeamsRecord = getUsersLeadTeams(userData, teamId);
+
     if (leaderTeamsRecord != null) {
       UsersTeamsRecord approvedUserRecord =
           db.selectFrom(
@@ -301,12 +295,8 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   public void rejectUser(JWTData userData, int teamId, int memberId) {
     checkUserExists(memberId);
     checkTeamExists(teamId);
-    UsersTeamsRecord leaderTeamsRecord =
-        db.selectFrom(USERS_TEAMS)
-            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
-            .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))
-            .fetchOne();
+    UsersTeamsRecord leaderTeamsRecord = getUsersLeadTeams(userData, teamId);
+
     if (leaderTeamsRecord != null) {
       UsersTeamsRecord approvedUserRecord =
           db.selectFrom(
@@ -332,12 +322,8 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
   public void kickUser(JWTData userData, int teamId, int memberId) {
     checkUserExists(memberId);
     checkTeamExists(teamId);
-    UsersTeamsRecord leaderTeamsRecord =
-        db.selectFrom(USERS_TEAMS)
-            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
-            .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))
-            .fetchOne();
+    UsersTeamsRecord leaderTeamsRecord = getUsersLeadTeams(userData, teamId);
+
     if (leaderTeamsRecord != null) {
       UsersTeamsRecord approvedUserRecord =
           db.selectFrom(
@@ -389,12 +375,7 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
       JWTData userData, TransferOwnershipRequest transferOwnershipRequest, int teamId) {
     checkUserExists(transferOwnershipRequest.getNewLeaderId());
     checkTeamExists(teamId);
-    UsersTeamsRecord oldLeaderTeamsRecord =
-        db.selectFrom(USERS_TEAMS)
-            .where(USERS_TEAMS.USER_ID.eq(userData.getUserId()))
-            .and(USERS_TEAMS.TEAM_ID.eq(teamId))
-            .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.LEADER))
-            .fetchOne();
+    UsersTeamsRecord oldLeaderTeamsRecord = getUsersLeadTeams(userData, teamId);
     UsersTeamsRecord newLeaderTeamsRecord =
         db.selectFrom(USERS_TEAMS)
             .where(
@@ -404,15 +385,15 @@ public class TeamsProcessorImpl implements ITeamsProcessor {
                     .and(USERS_TEAMS.TEAM_ID.eq(teamId)))
             .and(USERS_TEAMS.TEAM_ROLE.eq(TeamRole.MEMBER))
             .fetchOne();
-    if (oldLeaderTeamsRecord != null && newLeaderTeamsRecord != null) {
+    if (oldLeaderTeamsRecord == null) {
+      throw new WrongTeamRoleException(teamId, TeamRole.LEADER);
+    } else if (newLeaderTeamsRecord == null) {
+      throw new UserNotOnTeamException(userData.getUserId(), teamId);
+    } else {
       newLeaderTeamsRecord.setTeamRole(TeamRole.LEADER);
       oldLeaderTeamsRecord.setTeamRole(TeamRole.MEMBER);
       newLeaderTeamsRecord.update();
       oldLeaderTeamsRecord.update();
-    } else {
-      // TODO Create a new exception for explaining that the newLeader Team has the wrong
-      // permissions.
-      throw new WrongTeamRoleException(teamId, TeamRole.LEADER);
     }
   }
 

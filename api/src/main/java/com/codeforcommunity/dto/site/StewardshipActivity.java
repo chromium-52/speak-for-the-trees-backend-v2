@@ -1,11 +1,18 @@
 package com.codeforcommunity.dto.site;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import java.sql.Date;
 
 public class StewardshipActivity {
   private final int id;
-  private final int user_id;
+  private final int userId;
+
+  @JsonFormat(
+      shape = JsonFormat.Shape.STRING,
+      pattern = "MM/dd/yyyy",
+      timezone = "America/New_York")
   private final Date date;
+
   private final Boolean watered;
   private final Boolean mulched;
   private final Boolean cleaned;
@@ -13,14 +20,14 @@ public class StewardshipActivity {
 
   public StewardshipActivity(
       int id,
-      int user_id,
+      int userId,
       Date date,
       Boolean watered,
       Boolean mulched,
       Boolean cleaned,
       Boolean weeded) {
     this.id = id;
-    this.user_id = user_id;
+    this.userId = userId;
     this.date = date;
     this.watered = watered;
     this.mulched = mulched;
@@ -32,8 +39,8 @@ public class StewardshipActivity {
     return id;
   }
 
-  public int getUser_id() {
-    return user_id;
+  public int getUserId() {
+    return userId;
   }
 
   public Date getDate() {

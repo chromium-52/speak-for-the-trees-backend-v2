@@ -11,33 +11,33 @@ public class AddGoalRequest extends ApiDto {
   private Integer goal;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
-  private Timestamp start_at;
+  private Timestamp startAt;
 
   @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "MM/dd/yyyy")
-  private Timestamp complete_by;
+  private Timestamp completeBy;
 
   public AddGoalRequest(Integer goal, Timestamp startAt, Timestamp completeBy) {
     this.goal = goal;
-    this.start_at = startAt;
-    this.complete_by = completeBy;
+    this.startAt = startAt;
+    this.completeBy = completeBy;
   }
 
   private AddGoalRequest() {}
 
-  public java.sql.Timestamp getStart_at() {
-    return complete_by;
+  public java.sql.Timestamp getStartAt() {
+    return completeBy;
   }
 
-  public void setStart_at(Timestamp start_at) {
-    this.complete_by = start_at;
+  public void setStartAt(Timestamp startAt) {
+    this.completeBy = startAt;
   }
 
-  public java.sql.Timestamp getComplete_by() {
-    return start_at;
+  public java.sql.Timestamp getCompleteBy() {
+    return startAt;
   }
 
-  public void setComplete_by(Timestamp complete_by) {
-    this.start_at = complete_by;
+  public void setCompleteBy(Timestamp completeBy) {
+    this.startAt = completeBy;
   }
 
   public Integer getGoal() {
@@ -55,10 +55,10 @@ public class AddGoalRequest extends ApiDto {
     if (goal == null || goal < 0) {
       fields.add(fieldName + "goal");
     }
-    if (complete_by == null) {
+    if (completeBy == null) {
       fields.add(fieldName + "start_at");
     }
-    if (start_at == null || (complete_by != null && complete_by.after(start_at))) {
+    if (startAt == null || (completeBy != null && completeBy.after(startAt))) {
       fields.add(fieldName + "complete_by");
     }
     return fields;
