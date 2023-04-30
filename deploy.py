@@ -25,6 +25,7 @@ ENV_VALUES = {
         "database_password": "DB_PASSWORD",
 
         # Email Properties
+        "email_send_email": "GMAIL_APP_EMAIL",
         "email_send_password": "GMAIL_APP_PASSWORD",
         "email_should_send": "GMAIL_APP_ENABLED",
 
@@ -34,6 +35,9 @@ ENV_VALUES = {
         # Slack Properties
         "slack_webhook_url": SLACK_WEBHOOK_ENV_VAR,
         "slack_enabled": "SLACK_ENABLED",
+
+        # Cambridge Properties
+        "is_sftt": IS_SFTT,
     },
 }
 
