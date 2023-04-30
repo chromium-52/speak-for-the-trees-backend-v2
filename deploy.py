@@ -25,7 +25,6 @@ ENV_VALUES = {
         "database_password": "DB_PASSWORD",
 
         # Email Properties
-        "email_send_email": "GMAIL_APP_EMAIL",
         "email_send_password": "GMAIL_APP_PASSWORD",
         "email_should_send": "GMAIL_APP_ENABLED",
 
