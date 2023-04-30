@@ -37,7 +37,7 @@ ENV_VALUES = {
         "slack_enabled": "SLACK_ENABLED",
 
         # Cambridge Properties
-        "is_sftt": IS_SFTT,
+        "is_sftt": "IS_SFTT",
     },
 }
 
