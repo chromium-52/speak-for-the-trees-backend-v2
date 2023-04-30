@@ -34,9 +34,6 @@ ENV_VALUES = {
         # Slack Properties
         "slack_webhook_url": SLACK_WEBHOOK_ENV_VAR,
         "slack_enabled": "SLACK_ENABLED",
-
-        # Cambridge Properties
-        "is_sftt": "IS_SFTT",
     },
 }
 
