@@ -13,6 +13,7 @@ import static org.jooq.impl.DSL.coalesce;
 import static org.jooq.impl.DSL.count;
 import static org.jooq.impl.DSL.max;
 import static org.jooq.impl.DSL.noCondition;
+import static org.jooq.impl.DSL.when;
 
 import com.codeforcommunity.api.IProtectedSiteProcessor;
 import com.codeforcommunity.auth.JWTData;
@@ -40,10 +41,6 @@ import com.codeforcommunity.exceptions.WrongAdoptionStatusException;
 import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
-<<<<<<< HEAD
-=======
-
->>>>>>> e717a55a3b232e1ac2d042a7711011a08445d8ff
 import java.io.IOException;
 import java.sql.Date;
 import java.sql.Timestamp;
@@ -51,7 +48,6 @@ import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.jooq.Condition;
 import org.jooq.DSLContext;
 import org.jooq.Result;
@@ -80,6 +76,17 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
   private void checkSiteExists(int siteId) {
     if (!db.fetchExists(db.selectFrom(SITES).where(SITES.ID.eq(siteId)))) {
       throw new ResourceDoesNotExistException(siteId, "Site");
+    }
+  }
+
+  /**
+   * Check if an entry with the given entryId exists.
+   *
+   * @param entryId to check
+   */
+  private void checkEntryExists(int entryId) {
+    if (!db.fetchExists(db.selectFrom(SITE_ENTRIES).where(SITE_ENTRIES.ID.eq(entryId)))) {
+      throw new ResourceDoesNotExistException(entryId, "Entry");
     }
   }
 
@@ -131,7 +138,7 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
    * Check if the user is an admin or the adopter of the site with the given siteId
    *
    * @param userData the user's data
-   * @param siteId   the ID of the site to check
+   * @param siteId the ID of the site to check
    * @throws AuthException if the user is not an admin or the site's adopter
    */
   private void checkAdminOrSiteAdopter(JWTData userData, int siteId) throws AuthException {
@@ -170,7 +177,7 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
    * Throws an exception if the user account is not the parent of the other user account.
    *
    * @param parentUserId the user id of the parent account
-   * @param childUserId  the user id of the child account
+   * @param childUserId the user id of the child account
    */
   void checkParent(int parentUserId, int childUserId) {
     if (!isParent(parentUserId, childUserId)) {
@@ -183,7 +190,7 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
    * Determines if a user account is the parent of another user account.
    *
    * @param parentUserId the user id of the parent account
-   * @param childUserId  the user if of the child account
+   * @param childUserId the user if of the child account
    * @return true if the user is a parent of the other user, else false
    */
   boolean isParent(int parentUserId, int childUserId) {
@@ -320,91 +327,7 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
     recordStewardship(childUserData, siteId, parentRecordStewardshipRequest);
   }
 
-  @Override
-  public void addSite(JWTData userData, AddSiteRequest addSiteRequest) {
-    if (addSiteRequest.getBlockId() != null) {
-      checkBlockExists(addSiteRequest.getBlockId());
-    }
-
-    checkNeighborhoodExists(addSiteRequest.getNeighborhoodId());
-
-    SitesRecord sitesRecord = db.newRecord(SITES);
-
-    int newId = db.select(max(SITES.ID)).from(SITES).fetchOne(0, Integer.class) + 1;
-
-    sitesRecord.setId(newId);
-    sitesRecord.setBlockId(addSiteRequest.getBlockId());
-    sitesRecord.setLat(addSiteRequest.getLat());
-    sitesRecord.setLng(addSiteRequest.getLng());
-    sitesRecord.setCity(addSiteRequest.getCity());
-    sitesRecord.setZip(addSiteRequest.getZip());
-    sitesRecord.setAddress(addSiteRequest.getAddress());
-    sitesRecord.setNeighborhoodId(addSiteRequest.getNeighborhoodId());
-
-    sitesRecord.store();
-
-    SiteEntriesRecord siteEntriesRecord = db.newRecord(SITE_ENTRIES);
-
-    int newSiteEntriesId =
-        db.select(max(SITE_ENTRIES.ID)).from(SITE_ENTRIES).fetchOne(0, Integer.class) + 1;
-
-    siteEntriesRecord.setId(newSiteEntriesId);
-    siteEntriesRecord.setUserId(userData.getUserId());
-    siteEntriesRecord.setSiteId(sitesRecord.getId());
-    siteEntriesRecord.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
-    siteEntriesRecord.setTreePresent(addSiteRequest.isTreePresent());
-    siteEntriesRecord.setStatus(addSiteRequest.getStatus());
-    siteEntriesRecord.setGenus(addSiteRequest.getGenus());
-    siteEntriesRecord.setSpecies(addSiteRequest.getSpecies());
-    siteEntriesRecord.setCommonName(addSiteRequest.getCommonName());
-    siteEntriesRecord.setConfidence(addSiteRequest.getConfidence());
-    siteEntriesRecord.setDiameter(addSiteRequest.getDiameter());
-    siteEntriesRecord.setCircumference(addSiteRequest.getCircumference());
-    siteEntriesRecord.setMultistem(addSiteRequest.isMultistem());
-    siteEntriesRecord.setCoverage(addSiteRequest.getCoverage());
-    siteEntriesRecord.setPruning(addSiteRequest.getPruning());
-    siteEntriesRecord.setCondition(addSiteRequest.getCondition());
-    siteEntriesRecord.setDiscoloring(addSiteRequest.isDiscoloring());
-    siteEntriesRecord.setLeaning(addSiteRequest.isLeaning());
-    siteEntriesRecord.setConstrictingGrate(addSiteRequest.isConstrictingGrate());
-    siteEntriesRecord.setWounds(addSiteRequest.isWounds());
-    siteEntriesRecord.setPooling(addSiteRequest.isPooling());
-    siteEntriesRecord.setStakesWithWires(addSiteRequest.isStakesWithWires());
-    siteEntriesRecord.setStakesWithoutWires(addSiteRequest.isStakesWithoutWires());
-    siteEntriesRecord.setLight(addSiteRequest.isLight());
-    siteEntriesRecord.setBicycle(addSiteRequest.isBicycle());
-    siteEntriesRecord.setBagEmpty(addSiteRequest.isBagEmpty());
-    siteEntriesRecord.setBagFilled(addSiteRequest.isBagFilled());
-    siteEntriesRecord.setTape(addSiteRequest.isTape());
-    siteEntriesRecord.setSuckerGrowth(addSiteRequest.isSuckerGrowth());
-    siteEntriesRecord.setSiteType(addSiteRequest.getSiteType());
-    siteEntriesRecord.setSidewalkWidth(addSiteRequest.getSidewalkWidth());
-    siteEntriesRecord.setSiteWidth(addSiteRequest.getSiteWidth());
-    siteEntriesRecord.setSiteLength(addSiteRequest.getSiteLength());
-    siteEntriesRecord.setMaterial(addSiteRequest.getMaterial());
-    siteEntriesRecord.setRaisedBed(addSiteRequest.isRaisedBed());
-    siteEntriesRecord.setFence(addSiteRequest.isFence());
-    siteEntriesRecord.setTrash(addSiteRequest.isTrash());
-    siteEntriesRecord.setWires(addSiteRequest.isWires());
-    siteEntriesRecord.setGrate(addSiteRequest.isGrate());
-    siteEntriesRecord.setStump(addSiteRequest.isStump());
-    siteEntriesRecord.setTreeNotes(addSiteRequest.getTreeNotes());
-    siteEntriesRecord.setSiteNotes(addSiteRequest.getSiteNotes());
-    siteEntriesRecord.setPlantingDate(addSiteRequest.getPlantingDate());
-
-    siteEntriesRecord.store();
-  }
-
-  public void updateSite(JWTData userData, int siteId, UpdateSiteRequest updateSiteRequest) {
-    checkSiteExists(siteId);
-
-    SiteEntriesRecord record = db.newRecord(SITE_ENTRIES);
-
-    int newId = db.select(max(SITE_ENTRIES.ID)).from(SITE_ENTRIES).fetchOne(0, Integer.class) + 1;
-
-    record.setId(newId);
-    record.setUserId(userData.getUserId());
-    record.setSiteId(siteId);
+  private void populateSiteEntry(SiteEntriesRecord record, UpdateSiteRequest updateSiteRequest) {
     record.setUpdatedAt(new Timestamp(System.currentTimeMillis()));
     record.setTreePresent(updateSiteRequest.isTreePresent());
     record.setStatus(updateSiteRequest.getStatus());
@@ -445,6 +368,55 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
     record.setTreeNotes(updateSiteRequest.getTreeNotes());
     record.setSiteNotes(updateSiteRequest.getSiteNotes());
     record.setPlantingDate(updateSiteRequest.getPlantingDate());
+  }
+
+  @Override
+  public void addSite(JWTData userData, AddSiteRequest addSiteRequest) {
+    if (addSiteRequest.getBlockId() != null) {
+      checkBlockExists(addSiteRequest.getBlockId());
+    }
+
+    checkNeighborhoodExists(addSiteRequest.getNeighborhoodId());
+
+    SitesRecord sitesRecord = db.newRecord(SITES);
+
+    int newId = db.select(max(SITES.ID)).from(SITES).fetchOne(0, Integer.class) + 1;
+
+    sitesRecord.setId(newId);
+    sitesRecord.setBlockId(addSiteRequest.getBlockId());
+    sitesRecord.setLat(addSiteRequest.getLat());
+    sitesRecord.setLng(addSiteRequest.getLng());
+    sitesRecord.setCity(addSiteRequest.getCity());
+    sitesRecord.setZip(addSiteRequest.getZip());
+    sitesRecord.setAddress(addSiteRequest.getAddress());
+    sitesRecord.setNeighborhoodId(addSiteRequest.getNeighborhoodId());
+
+    sitesRecord.store();
+
+    SiteEntriesRecord siteEntriesRecord = db.newRecord(SITE_ENTRIES);
+
+    int newSiteEntriesId =
+        db.select(max(SITE_ENTRIES.ID)).from(SITE_ENTRIES).fetchOne(0, Integer.class) + 1;
+
+    siteEntriesRecord.setId(newSiteEntriesId);
+    siteEntriesRecord.setUserId(userData.getUserId());
+    siteEntriesRecord.setSiteId(sitesRecord.getId());
+    populateSiteEntry(siteEntriesRecord, addSiteRequest);
+
+    siteEntriesRecord.store();
+  }
+
+  public void updateSite(JWTData userData, int siteId, UpdateSiteRequest updateSiteRequest) {
+    checkSiteExists(siteId);
+
+    SiteEntriesRecord record = db.newRecord(SITE_ENTRIES);
+
+    int newId = db.select(max(SITE_ENTRIES.ID)).from(SITE_ENTRIES).fetchOne(0, Integer.class) + 1;
+
+    record.setId(newId);
+    record.setUserId(userData.getUserId());
+    record.setSiteId(siteId);
+    populateSiteEntry(record, updateSiteRequest);
 
     record.store();
   }
@@ -599,39 +571,53 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
   }
 
   @Override
-  public List<FilterSitesResponse> filterSites(JWTData userData, FilterSitesRequest filterSitesRequest) {
+  public List<FilterSitesResponse> filterSites(
+      JWTData userData, FilterSitesRequest filterSitesRequest) {
     assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
 
     String ACTIVITY_COUNT_COLUMN = "act_count";
 
-    Condition filterCondition = noCondition();
-    if (filterSitesRequest.getTreeSpecies() != null)
-      filterCondition = filterCondition.and(SITE_ENTRIES.SPECIES.in(filterSitesRequest.getTreeSpecies()));
+    // Table containing the number of stewardship activities performed by a user on a site
+    Table<org.jooq.Record3<Integer, Integer, Integer>> activityCounts = db
+        .select(when(STEWARDSHIP.USER_ID.isNotNull(), count()).otherwise(0).as(ACTIVITY_COUNT_COLUMN), ADOPTED_SITES.SITE_ID, ADOPTED_SITES.USER_ID)
+        .from(ADOPTED_SITES).leftJoin(STEWARDSHIP)
+        .on(ADOPTED_SITES.SITE_ID.eq(STEWARDSHIP.SITE_ID)).and(ADOPTED_SITES.USER_ID.eq(STEWARDSHIP.USER_ID))
+        .groupBy(ADOPTED_SITES.SITE_ID, ADOPTED_SITES.USER_ID, STEWARDSHIP.USER_ID)
+        .asTable("activityCounts");
+
+    Condition filterCondition = activityCounts.field(ACTIVITY_COUNT_COLUMN, Integer.class).ge(filterSitesRequest.getActivityCountMin());
+    if (filterSitesRequest.getTreeCommonNames() != null)
+      filterCondition = filterCondition.and(SITE_ENTRIES.COMMON_NAME.in(filterSitesRequest.getTreeCommonNames()));
     if (filterSitesRequest.getAdoptedStart() != null)
-      filterCondition = filterCondition.and(ADOPTED_SITES.DATE_ADOPTED.ge(filterSitesRequest.getAdoptedStart()));
+      filterCondition =
+          filterCondition.and(ADOPTED_SITES.DATE_ADOPTED.ge(filterSitesRequest.getAdoptedStart()));
     if (filterSitesRequest.getAdoptedEnd() != null)
-      filterCondition = filterCondition.and(ADOPTED_SITES.DATE_ADOPTED.le(filterSitesRequest.getAdoptedEnd()));
+      filterCondition =
+          filterCondition.and(ADOPTED_SITES.DATE_ADOPTED.le(filterSitesRequest.getAdoptedEnd()));
     if (filterSitesRequest.getNeighborhoodIds() != null)
-      filterCondition = filterCondition.and(SITES.NEIGHBORHOOD_ID.in(filterSitesRequest.getNeighborhoodIds()));
+      filterCondition =
+          filterCondition.and(SITES.NEIGHBORHOOD_ID.in(filterSitesRequest.getNeighborhoodIds()));
+    if (filterSitesRequest.getActivityCountMax() != null)
+      filterCondition = filterCondition.and(
+        activityCounts.field(ACTIVITY_COUNT_COLUMN, Integer.class).le(filterSitesRequest.getActivityCountMax())
+      );
 
     Condition stewardshipCondition = noCondition();
     if (filterSitesRequest.getLastActivityStart() != null)
-      stewardshipCondition = stewardshipCondition.and(max(STEWARDSHIP.PERFORMED_ON).ge(filterSitesRequest.getLastActivityStart()));
+      stewardshipCondition =
+          stewardshipCondition.and(
+              max(STEWARDSHIP.PERFORMED_ON).ge(filterSitesRequest.getLastActivityStart()));
     if (filterSitesRequest.getLastActivityEnd() != null)
-      stewardshipCondition = stewardshipCondition.and(max(STEWARDSHIP.PERFORMED_ON).le(filterSitesRequest.getLastActivityEnd()));
-
-    // Table containing the number of stewardship activities performed by a user on a site
-    Table<org.jooq.Record3<Integer, Integer, Integer>> activityCounts = db
-        .select(count().as(ACTIVITY_COUNT_COLUMN), STEWARDSHIP.SITE_ID, STEWARDSHIP.USER_ID)
-        .from(STEWARDSHIP)
-        .groupBy(STEWARDSHIP.SITE_ID, STEWARDSHIP.USER_ID).asTable("activityCounts");
+      stewardshipCondition =
+          stewardshipCondition.and(
+              max(STEWARDSHIP.PERFORMED_ON).le(filterSitesRequest.getLastActivityEnd()));
 
     Result<org.jooq.Record12<Integer, String, Integer, Integer, Date, Date, Timestamp, String, String, String, String, Integer>>
         records = db
         .select(SITES.ID, SITES.ADDRESS, SITES.NEIGHBORHOOD_ID, ADOPTED_SITES.USER_ID, ADOPTED_SITES.DATE_ADOPTED,
             max(STEWARDSHIP.PERFORMED_ON).as(STEWARDSHIP.PERFORMED_ON),
             max(SITE_ENTRIES.UPDATED_AT).as(SITE_ENTRIES.UPDATED_AT),
-            SITE_ENTRIES.SPECIES, USERS.FIRST_NAME, USERS.LAST_NAME, USERS.EMAIL, coalesce(activityCounts.field(ACTIVITY_COUNT_COLUMN, Integer.class), 0).as(ACTIVITY_COUNT_COLUMN))
+            SITE_ENTRIES.COMMON_NAME, USERS.FIRST_NAME, USERS.LAST_NAME, USERS.EMAIL, coalesce(activityCounts.field(ACTIVITY_COUNT_COLUMN, Integer.class), 0).as(ACTIVITY_COUNT_COLUMN))
         .from(ADOPTED_SITES)
         .join(SITES).on(ADOPTED_SITES.SITE_ID.eq(SITES.ID))
         .join(USERS).on(ADOPTED_SITES.USER_ID.eq(USERS.ID))
@@ -641,30 +627,49 @@ public class ProtectedSiteProcessorImpl extends AbstractProcessor
             ADOPTED_SITES.SITE_ID.eq(activityCounts.field(STEWARDSHIP.SITE_ID))
                 .and(ADOPTED_SITES.USER_ID.eq(activityCounts.field(STEWARDSHIP.USER_ID))))
         .where(filterCondition)
-        .groupBy(SITES.ID, SITES.ADDRESS, SITES.NEIGHBORHOOD_ID, ADOPTED_SITES.USER_ID, ADOPTED_SITES.DATE_ADOPTED, SITE_ENTRIES.SPECIES, USERS.FIRST_NAME, USERS.LAST_NAME, USERS.EMAIL, activityCounts.field(ACTIVITY_COUNT_COLUMN))
+        .groupBy(SITES.ID, SITES.ADDRESS, SITES.NEIGHBORHOOD_ID, ADOPTED_SITES.USER_ID, ADOPTED_SITES.DATE_ADOPTED, SITE_ENTRIES.COMMON_NAME, USERS.FIRST_NAME, USERS.LAST_NAME, USERS.EMAIL, activityCounts.field(ACTIVITY_COUNT_COLUMN))
         .having(stewardshipCondition)
         .fetch();
 
-    return records.stream().map(rec -> {
-      String adopterName = rec.get(USERS.FIRST_NAME) + ' ' + rec.get(USERS.LAST_NAME);
-      Integer lastActivityWeeks = rec.get(STEWARDSHIP.PERFORMED_ON) != null
-          ? (int) ChronoUnit.WEEKS.between(rec.get(STEWARDSHIP.PERFORMED_ON).toLocalDate(), LocalDate.now())
-          : null;
-      String dateAdopted = rec.get(ADOPTED_SITES.DATE_ADOPTED) != null
-          ? rec.get(ADOPTED_SITES.DATE_ADOPTED).toString()
-          : "";
+    return records.stream()
+        .map(
+            rec -> {
+              String adopterName = rec.get(USERS.FIRST_NAME) + ' ' + rec.get(USERS.LAST_NAME);
+              Integer lastActivityWeeks =
+                  rec.get(STEWARDSHIP.PERFORMED_ON) != null
+                      ? (int)
+                          ChronoUnit.WEEKS.between(
+                              rec.get(STEWARDSHIP.PERFORMED_ON).toLocalDate(), LocalDate.now())
+                      : null;
+              String dateAdopted =
+                  rec.get(ADOPTED_SITES.DATE_ADOPTED) != null
+                      ? rec.get(ADOPTED_SITES.DATE_ADOPTED).toString()
+                      : "";
 
-      return new FilterSitesResponse(
-          rec.get(SITES.ID),
-          rec.get(SITES.ADDRESS),
-          rec.get(ADOPTED_SITES.USER_ID),
-          adopterName,
-          rec.get(USERS.EMAIL),
-          dateAdopted,
-          rec.get(ACTIVITY_COUNT_COLUMN, Integer.class),
-          rec.get(SITES.NEIGHBORHOOD_ID),
-          lastActivityWeeks
-      );
-    }).collect(Collectors.toList());
+              return new FilterSitesResponse(
+                  rec.get(SITES.ID),
+                  rec.get(SITES.ADDRESS),
+                  rec.get(ADOPTED_SITES.USER_ID),
+                  adopterName,
+                  rec.get(USERS.EMAIL),
+                  dateAdopted,
+                  rec.get(ACTIVITY_COUNT_COLUMN, Integer.class),
+                  rec.get(SITES.NEIGHBORHOOD_ID),
+                  lastActivityWeeks);
+            })
+        .collect(Collectors.toList());
+  }
+
+  public void editSiteEntry(JWTData userData, int entryId, UpdateSiteRequest editSiteEntryRequest) {
+    checkEntryExists(entryId);
+    assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
+
+    SiteEntriesRecord siteEntriesRecord =
+        db.selectFrom(SITE_ENTRIES).where(SITE_ENTRIES.ID.eq(entryId)).fetchOne();
+
+    siteEntriesRecord.setUserId(userData.getUserId());
+    populateSiteEntry(siteEntriesRecord, editSiteEntryRequest);
+
+    siteEntriesRecord.store();
   }
 }

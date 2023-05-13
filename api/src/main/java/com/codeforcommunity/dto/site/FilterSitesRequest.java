@@ -9,7 +9,7 @@ import java.util.List;
 
 public class FilterSitesRequest extends ApiDto {
 
-  private List<String> treeSpecies;
+  private List<String> treeCommonNames;
 
   @JsonFormat(timezone = "America/New_York", pattern = "yyyy-MM-dd")
   private Date adoptedStart;
@@ -25,12 +25,37 @@ public class FilterSitesRequest extends ApiDto {
 
   private List<Integer> neighborhoodIds;
 
-  public List<String> getTreeSpecies() {
-    return treeSpecies;
+  private int activityCountMin;
+
+  private Integer activityCountMax;
+
+  public FilterSitesRequest(
+      List<String> treeCommonNames,
+      Date adoptedStart,
+      Date adoptedEnd,
+      Date lastActivityStart,
+      Date lastActivityEnd,
+      List<Integer> neighborhoodIds,
+      Integer activityCountMin,
+      Integer activityCountMax) {
+    this.treeCommonNames = treeCommonNames;
+    this.adoptedStart = adoptedStart;
+    this.adoptedEnd = adoptedEnd;
+    this.lastActivityStart = lastActivityStart;
+    this.lastActivityEnd = lastActivityEnd;
+    this.neighborhoodIds = neighborhoodIds;
+    this.activityCountMin = activityCountMin;
+    this.activityCountMax = activityCountMax;
   }
 
-  public void setTreeSpecies(List<String> treeSpecies) {
-    this.treeSpecies = treeSpecies;
+  public FilterSitesRequest() {}
+
+  public List<String> getTreeCommonNames() {
+    return treeCommonNames;
+  }
+
+  public void setTreeCommonNames(List<String> treeCommonNames) {
+    this.treeCommonNames = treeCommonNames;
   }
 
   public Date getAdoptedStart() {
@@ -71,6 +96,22 @@ public class FilterSitesRequest extends ApiDto {
 
   public void setNeighborhoodIds(List<Integer> neighborhoodIds) {
     this.neighborhoodIds = neighborhoodIds;
+  }
+
+  public int getActivityCountMin() {
+    return activityCountMin;
+  }
+
+  public void setActivityCountMin(int activityCountMin) {
+    this.activityCountMin = activityCountMin;
+  }
+
+  public Integer getActivityCountMax() {
+    return activityCountMax;
+  }
+
+  public void setActivityCountMax(Integer activityCountMax) {
+    this.activityCountMax = activityCountMax;
   }
 
   @Override

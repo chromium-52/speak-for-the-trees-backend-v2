@@ -26,8 +26,12 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.RoutingContext;
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 public class ProtectedSiteRouter implements IRouter {
 
@@ -59,6 +63,7 @@ public class ProtectedSiteRouter implements IRouter {
     registerUploadSiteImage(router);
     registerDeleteSiteImage(router);
     registerFilterSites(router);
+    registerEditSiteEntry(router);
 
     return router;
   }
@@ -332,10 +337,59 @@ public class ProtectedSiteRouter implements IRouter {
 
   private void handleFilterSites(RoutingContext ctx) {
     JWTData userData = ctx.get("jwt_data");
-    FilterSitesRequest filterSitesRequest = RestFunctions.getJsonBodyAsClass(ctx, FilterSitesRequest.class);
 
-    List<FilterSitesResponse> filterSitesResponse = processor.filterSites(userData, filterSitesRequest);
+    int activityCountMin = RestFunctions.getRequestParameterAsInt(ctx.request(), "activityCountMin");
 
-    end(ctx.response(), 200, JsonObject.mapFrom(Collections.singletonMap("filteredSites", filterSitesResponse)).toString());
+    Optional<List<String>> treeCommonNames =
+        RestFunctions.getOptionalQueryParam(ctx, "treeCommonNames", (string) -> Arrays.stream(string.split(",")).collect(Collectors.toList()));
+    Optional<Date> adoptedStart =
+        RestFunctions.getOptionalQueryParam(ctx, "adoptedStart", Date::valueOf);
+    Optional<Date> adoptedEnd =
+        RestFunctions.getOptionalQueryParam(ctx, "adoptedEnd", Date::valueOf);
+    Optional<Date> lastActivityStart =
+        RestFunctions.getOptionalQueryParam(ctx, "lastActivityStart", Date::valueOf);
+    Optional<Date> lastActivityEnd =
+        RestFunctions.getOptionalQueryParam(ctx, "lastActivityEnd", Date::valueOf);
+    Optional<List<Integer>> neighborhoodIds =
+        RestFunctions.getOptionalQueryParam(ctx, "neighborhoodIds", (string) -> Arrays.stream(string.split(",")).map(Integer::parseInt).collect(Collectors.toList()));
+    Optional<Integer> activityCountMax =
+        RestFunctions.getOptionalQueryParam(ctx, "activityCountMax", Integer::parseInt);
+
+    FilterSitesRequest filterSitesRequest = new FilterSitesRequest(
+        treeCommonNames.orElse(null),
+        adoptedStart.orElse(null),
+        adoptedEnd.orElse(null),
+        lastActivityStart.orElse(null),
+        lastActivityEnd.orElse(null),
+        neighborhoodIds.orElse(null),
+        activityCountMin,
+        activityCountMax.orElse(null)
+    );
+
+    List<FilterSitesResponse> filterSitesResponse =
+        processor.filterSites(userData, filterSitesRequest);
+
+    end(
+        ctx.response(),
+        200,
+        JsonObject.mapFrom(Collections.singletonMap("filteredSites", filterSitesResponse))
+            .toString());
+  }
+
+  private void registerEditSiteEntry(Router router) {
+    Route editSiteEntry = router.post("/edit_entry/:entry_id");
+    editSiteEntry.handler(this::handleEditSiteEntry);
+  }
+
+  private void handleEditSiteEntry(RoutingContext ctx) {
+    JWTData userData = ctx.get("jwt_data");
+    int entryId = RestFunctions.getRequestParameterAsInt(ctx.request(), "entry_id");
+
+    UpdateSiteRequest editSiteEntryRequest =
+        RestFunctions.getJsonBodyAsClass(ctx, UpdateSiteRequest.class);
+
+    processor.editSiteEntry(userData, entryId, editSiteEntryRequest);
+
+    end(ctx.response(), 200);
   }
 }
