@@ -219,14 +219,7 @@ public class S3Requester {
   }
 
   /**
-   * Validate the given base64 encoding of an image and upload it to the LLB public S3 bucket.
    *
-   * @param fileName the desired name of the new file in S3 (without a file extension).
-   * @param directoryName the desired directory of the file in S3 (without leading or trailing '/').
-   * @param base64Encoding the base64 encoding of the image to upload.
-   * @return null if the encoding fails validation and image URL if the upload was successful.
-   * @throws BadRequestImageException if the base64 image validation or image decoding failed.
-   * @throws S3FailedUploadException if the upload to S3 failed.
    */
   public static String uploadHTML(Integer adminID, String name, HTMLDocument htmlDocument) {
     // Save HTML to temp file
@@ -247,7 +240,7 @@ public class S3Requester {
       fos.close();
     }
     catch (BadLocationException | IOException e) {
-      throw new
+      throw new BadRequestImageException();
     }
 
     // Create the request to upload the HTML
