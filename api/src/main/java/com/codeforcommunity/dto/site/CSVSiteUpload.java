@@ -17,7 +17,7 @@ public class CSVSiteUpload {
   private String zip;
   private String address;
   private String neighborhood;
-  private SiteOwner owner;
+  private String owner;
 
   /* site entries columns */
   private Boolean treePresent;
@@ -112,7 +112,7 @@ public class CSVSiteUpload {
       String zip,
       String address,
       String neighborhood,
-      SiteOwner owner) {
+      String owner) {
     this.blockId = blockId;
     this.lat = lat;
     this.lng = lng;
@@ -169,6 +169,7 @@ public class CSVSiteUpload {
 
   public AddSiteRequest toAddSiteRequest() {
     Integer neighborhoodId = CSVSiteUpload.mapNeighborhoodNameToId(neighborhood);
+    SiteOwner siteOwner = owner != null ? SiteOwner.from(owner) : null;
 
     return new AddSiteRequest(
         treePresent,
@@ -217,7 +218,7 @@ public class CSVSiteUpload {
         zip,
         address,
         neighborhoodId,
-        owner);
+        siteOwner);
   }
 
   public Integer getBlockId() {
@@ -246,6 +247,10 @@ public class CSVSiteUpload {
 
   public String getNeighborhood() {
     return neighborhood;
+  }
+
+  public String getOwner() {
+    return owner;
   }
 
   public Boolean isTreePresent() {
@@ -401,7 +406,7 @@ public class CSVSiteUpload {
   }
 
   public Date getPlantingDate() {
-    return getPlantingDate();
+    return plantingDate;
   }
 
   private boolean falseIfNull(Boolean bool) {
