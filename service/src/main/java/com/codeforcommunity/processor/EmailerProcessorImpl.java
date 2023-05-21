@@ -12,8 +12,9 @@ public class EmailerProcessorImpl extends AbstractProcessor
   public void addTemplate(JWTData userData, AddTemplateRequest addTemplateRequest) {
     assertAdminOrSuperAdmin(userData.getPrivilegeLevel());
     S3Requester.uploadHTML(
-            userData.getUserId(),
             addTemplateRequest.getName(),
+            "email_templates",
+            userData.getUserId(),
             addTemplateRequest.getTemplate());
   }
 }

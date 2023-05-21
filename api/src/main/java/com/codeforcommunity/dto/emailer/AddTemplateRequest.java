@@ -6,26 +6,24 @@ import com.codeforcommunity.exceptions.HandledException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.text.html.HTMLDocument;
-
 public class AddTemplateRequest extends ApiDto {
-  private HTMLDocument template;
   private String name;
+  private String template;
 
-  public AddTemplateRequest(HTMLDocument template, String name) {
+  public AddTemplateRequest(String template, String name) {
     this.template = template;
     this.name = name;
   }
 
   private AddTemplateRequest() {}
 
-  public HTMLDocument getTemplate() {
+  public String getTemplate() {
     return this.template;
   }
 
   public String getName() { return this.name; }
 
-  public void setTemplate(HTMLDocument template) {
+  public void setTemplate(String template) {
     this.template = template;
   }
 

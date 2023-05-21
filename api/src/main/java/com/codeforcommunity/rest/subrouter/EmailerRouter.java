@@ -38,7 +38,7 @@ public class EmailerRouter implements IRouter {
   }
 
   private void registerAddTemplate(Router router) {
-    Route addTemplate = router.get("/add_template");
+    Route addTemplate = router.post("/add_template");
     addTemplate.handler(this::handleAddTemplate);
   }
 
