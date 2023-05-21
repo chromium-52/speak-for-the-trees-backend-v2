@@ -207,7 +207,7 @@ public class S3Requester {
    * @param directoryName the desired directory of the file in S3 (without leading or trailing '/').
    * @param adminID the desired ID of the user uploading the HTML to S3.
    * @param htmlContent the string encoding of the HTML to upload.
-   * @return null if the encoding fails validation and image URL if the upload was successful.
+   * @return null if the encoding fails validation and HTML file URL if the upload was successful.
    * @throws BadRequestHTMLException if the string to HTML decoding failed.
    * @throws S3FailedUploadException if the upload to S3 failed.
    */
