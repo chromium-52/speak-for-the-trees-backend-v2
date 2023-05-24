@@ -2,7 +2,6 @@ package com.codeforcommunity.dto.emailer;
 
 import com.codeforcommunity.dto.ApiDto;
 import com.codeforcommunity.exceptions.HandledException;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,13 +20,17 @@ public class AddTemplateRequest extends ApiDto {
     return this.template;
   }
 
-  public String getName() { return this.name; }
+  public String getName() {
+    return this.name;
+  }
 
   public void setTemplate(String template) {
     this.template = template;
   }
 
-  public void setName(String name) { this.name = name; }
+  public void setName(String name) {
+    this.name = name;
+  }
 
   @Override
   public List<String> validateFields(String fieldPrefix) throws HandledException {

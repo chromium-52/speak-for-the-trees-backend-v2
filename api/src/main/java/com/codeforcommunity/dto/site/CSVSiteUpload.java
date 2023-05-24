@@ -56,6 +56,7 @@ public class CSVSiteUpload {
   private Boolean stump;
   private String treeNotes;
   private String siteNotes;
+
   @JsonFormat(
       shape = JsonFormat.Shape.STRING,
       pattern = "MM/dd/yyyy",

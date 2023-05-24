@@ -205,8 +205,8 @@ public class FailureHandler {
     end(ctx, message, 400);
   }
 
-  public void handleBadHTMLRequest(RoutingContext ctx) {
-    String message = "The uploaded file could not be processed as an HTML file";
+  public void handleBadHTMLRequest(RoutingContext ctx, String HTMLErrors) {
+    String message = "The uploaded file could not be processed as an HTML file:\n" + HTMLErrors;
     end(ctx, message, 400);
   }
 

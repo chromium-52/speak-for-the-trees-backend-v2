@@ -19,6 +19,10 @@ import java.io.IOException;
 import java.util.Base64;
 import java.util.HashMap;
 import java.util.Map;
+import org.jsoup.Jsoup;
+import org.jsoup.parser.ParseError;
+import org.jsoup.parser.ParseErrorList;
+import org.jsoup.parser.Parser;
 
 public class S3Requester {
   // Contains information about S3 that is not part of this class's implementation
@@ -26,9 +30,11 @@ public class S3Requester {
     private static final AmazonS3 s3Client =
         AmazonS3ClientBuilder.standard().withRegion(Regions.US_EAST_2).build();
 
-    private static final String BUCKET_PUBLIC_URL = PropertiesLoader.loadProperty("aws_s3_bucket_url");
+    private static final String BUCKET_PUBLIC_URL =
+        PropertiesLoader.loadProperty("aws_s3_bucket_url");
     private static final String BUCKET_PUBLIC = PropertiesLoader.loadProperty("aws_s3_bucket_name");
     private static final String DIR_PUBLIC = PropertiesLoader.loadProperty("aws_s3_upload_dir");
+
     public AmazonS3 getS3Client() {
       return s3Client;
     }
@@ -196,8 +202,7 @@ public class S3Requester {
     String title =
         eventTitle.replaceAll(
             "[!@#$%^&*()=+./\\\\|<>`~\\[\\]{}?]", ""); // Remove special characters
-    return title.replace(" ", "_").toLowerCase()
-        + suffix; // The desired name of the file in S3
+    return title.replace(" ", "_").toLowerCase() + suffix; // The desired name of the file in S3
   }
 
   /**
@@ -207,14 +212,27 @@ public class S3Requester {
    * @param directoryName the desired directory of the file in S3 (without leading or trailing '/').
    * @param adminID the desired ID of the user uploading the HTML to S3.
    * @param htmlContent the string encoding of the HTML to upload.
-   * @return null if the encoding fails validation and HTML file URL if the upload was successful.
+   * @return HTML file URL if the upload was successful, otherwise a log of HTML parsing errors.
    * @throws BadRequestHTMLException if the string to HTML decoding failed.
    * @throws S3FailedUploadException if the upload to S3 failed.
    */
-  public static String uploadHTML(String name, String directoryName, Integer adminID, String htmlContent) {
+  public static String uploadHTML(
+      String name, String directoryName, Integer adminID, String htmlContent) {
     // Save HTML to temp file
     String fullFileName = getFileNameWithoutExtension(name, "_template") + ".html";
     File tempFile;
+
+    // try to create a clean parse
+    Parser parser = Parser.htmlParser().setTrackErrors(10);
+    Jsoup.parse(htmlContent, parser);
+    ParseErrorList errors = parser.getErrors();
+    String errorLog = "";
+    if (errors.size() > 0) {
+      for (ParseError e : errors) {
+        errorLog += e.getErrorMessage() + "\n";
+      }
+      throw new BadRequestHTMLException(errorLog);
+    }
 
     try {
       // Temporarily writes the string to HTML file on disk
@@ -223,15 +241,16 @@ public class S3Requester {
       byte[] bytesArray = htmlContent.getBytes();
       fos.write(bytesArray);
       fos.flush();
+      fos.close();
     } catch (IllegalArgumentException | IOException e) {
       // The string failed to decode to HTML
-      throw new BadRequestHTMLException();
+      throw new BadRequestHTMLException("HTML could not be written to disk.");
     }
 
     // Create the request to upload the HTML
     PutObjectRequest awsRequest =
-            new PutObjectRequest(
-                    externs.getBucketPublic(), directoryName + "/" + fullFileName, tempFile);
+        new PutObjectRequest(
+            externs.getBucketPublic(), directoryName + "/" + fullFileName, tempFile);
 
     // Set the HTML file metadata to have the userID of the uploader
     ObjectMetadata awsObjectMetadata = new ObjectMetadata();

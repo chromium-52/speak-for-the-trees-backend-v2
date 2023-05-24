@@ -1,10 +1,10 @@
 package com.codeforcommunity;
 
 import com.codeforcommunity.api.IAuthProcessor;
-import com.codeforcommunity.api.IEmailerProcessor;
 import com.codeforcommunity.api.IImportProcessor;
 import com.codeforcommunity.api.ILeaderboardProcessor;
 import com.codeforcommunity.api.IMapProcessor;
+import com.codeforcommunity.api.IProtectedEmailerProcessor;
 import com.codeforcommunity.api.IProtectedNeighborhoodsProcessor;
 import com.codeforcommunity.api.IProtectedReportProcessor;
 import com.codeforcommunity.api.IProtectedSiteProcessor;
@@ -18,10 +18,10 @@ import com.codeforcommunity.auth.JWTCreator;
 import com.codeforcommunity.auth.JWTHandler;
 import com.codeforcommunity.logger.SLogger;
 import com.codeforcommunity.processor.AuthProcessorImpl;
-import com.codeforcommunity.processor.EmailerProcessorImpl;
 import com.codeforcommunity.processor.ImportProcessorImpl;
 import com.codeforcommunity.processor.LeaderboardProcessorImpl;
 import com.codeforcommunity.processor.MapProcessorImpl;
+import com.codeforcommunity.processor.ProtectedEmailerProcessorImpl;
 import com.codeforcommunity.processor.ProtectedNeighborhoodsProcessorImpl;
 import com.codeforcommunity.processor.ProtectedReportProcessorImpl;
 import com.codeforcommunity.processor.ProtectedSiteProcessorImpl;
@@ -32,7 +32,6 @@ import com.codeforcommunity.processor.SiteProcessorImpl;
 import com.codeforcommunity.processor.TeamsProcessorImpl;
 import com.codeforcommunity.propertiesLoader.PropertiesLoader;
 import com.codeforcommunity.requester.Emailer;
-import com.codeforcommunity.requester.S3Requester;
 import com.codeforcommunity.rest.ApiRouter;
 import io.vertx.core.Vertx;
 import java.util.Properties;
@@ -116,7 +115,7 @@ public class ServiceMain {
     IReportProcessor reportProc = new ReportProcessorImpl(this.db);
     IProtectedNeighborhoodsProcessor protectedNeighborhoodsProc =
         new ProtectedNeighborhoodsProcessorImpl(this.db, emailer);
-    IEmailerProcessor emailerProc = new EmailerProcessorImpl();
+    IProtectedEmailerProcessor emailerProc = new ProtectedEmailerProcessorImpl();
 
     // Create the API router and start the HTTP server
     ApiRouter router =
