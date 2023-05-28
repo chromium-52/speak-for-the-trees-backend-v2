@@ -12,6 +12,7 @@ import com.codeforcommunity.dto.site.GetSiteResponse;
 import com.codeforcommunity.dto.site.SiteEntry;
 import com.codeforcommunity.dto.site.StewardshipActivitiesResponse;
 import com.codeforcommunity.dto.site.StewardshipActivity;
+import com.codeforcommunity.enums.SiteOwner;
 import com.codeforcommunity.exceptions.ResourceDoesNotExistException;
 import com.codeforcommunity.logger.SLogger;
 import java.util.ArrayList;
@@ -186,6 +187,7 @@ public class SiteProcessorImpl implements ISiteProcessor {
         sitesRecord.getZip(),
         sitesRecord.getAddress(),
         sitesRecord.getNeighborhoodId(),
+        SiteOwner.from(sitesRecord.getOwner()),
         getSiteEntries(siteId));
   }
 
